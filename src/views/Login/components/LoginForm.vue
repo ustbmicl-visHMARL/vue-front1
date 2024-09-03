@@ -230,7 +230,6 @@ const signIn = async () => {
 
       try {
         const res = await loginApi(formData)
-
         if (res) {
           // 是否记住我
           if (unref(remember)) {
@@ -254,6 +253,8 @@ const signIn = async () => {
             permissionStore.setIsAddRouters(true)
             push({ path: redirect.value || permissionStore.addRouters[0].path })
           }
+        } else {
+          loading.value = false
         }
       } catch {
         loading.value = false
