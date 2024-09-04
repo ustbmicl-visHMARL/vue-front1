@@ -307,3 +307,351 @@ export const wordOptions = {
     }
   ]
 }
+
+// 动作选择散点图
+export const actionScatterOptions: EChartsOption = {
+  grid: {
+    width: '75%'
+  },
+  title: {
+    text: '动作选择',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  xAxis: {
+    name: 'step',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    type: 'category',
+    data: [0, 1, 2, 3, ''],
+    min: 0,
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    boundaryGap: false, // 设置为 false
+    axisTick: 'false' // 隐藏 x 轴刻度
+  },
+  yAxis: {
+    name: 'action',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow'],
+      onZero: true
+    },
+    data: ['右下', '右上', '左下', '左上', ''],
+    axisTick: 'false' // 隐藏 y 轴刻度
+  },
+  series: [
+    {
+      symbolSize: 15,
+      data: [
+        [1, '右下'],
+        [2, '右上'],
+        [3, '左下']
+      ],
+      type: 'scatter'
+    }
+  ]
+}
+
+// 价值函数散点图
+export const valueScatterOptions: EChartsOption = {
+  grid: {
+    width: '75%'
+  },
+  title: {
+    text: '价值函数',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  xAxis: {
+    name: 'step',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 6,
+    interval: 1
+  },
+  yAxis: {
+    name: 'value',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 5,
+    interval: 1
+  },
+  series: [
+    {
+      symbolSize: 15,
+      data: [
+        [1, 1],
+        [2, 4]
+      ],
+      type: 'scatter'
+    }
+  ]
+}
+
+// 重要性
+export const importanceBarOptions: EChartsOption = {
+  title: {
+    text: '重要性得分',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  grid: {
+    left: 'center',
+    height: '70%',
+    width: '50%',
+    bottom: '60px'
+  },
+  xAxis: {
+    name: 'step',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow'],
+      show: true
+    },
+    type: 'value',
+    min: 0
+  },
+  yAxis: {
+    name: 'features',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    axisTick: 'false',
+    type: 'category',
+    data: [1, 2, 3, 4, 5, '']
+  },
+  series: [
+    {
+      data: [2, 1, 2, 3, 4],
+      type: 'bar'
+    }
+  ]
+}
+
+// 奖励
+export const rewardLineOptions: EChartsOption = {
+  grid: {
+    width: '50%',
+    left: 'center',
+    bottom: '60px',
+    height: '70%'
+  },
+  title: {
+    text: '奖励',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  xAxis: {
+    name: 'episode',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 6,
+    interval: 1
+  },
+  yAxis: {
+    name: 'reward',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 5,
+    interval: 1
+  },
+  series: [
+    {
+      symbolSize: 15,
+      data: [
+        [0, 0],
+        [1, 1],
+        [2, 4]
+      ],
+      symbol: 'none',
+      type: 'line'
+    },
+    {
+      symbolSize: 10,
+      data: [
+        [1, 1],
+        [2, 4]
+      ],
+      color: 'blue',
+      type: 'scatter'
+    }
+  ]
+}
+
+// 学习曲线
+export const learnLineOptions: EChartsOption = {
+  grid: {
+    width: '50%',
+    left: 'center',
+    bottom: '60px',
+    height: '70%'
+  },
+  title: {
+    text: '学习曲线',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  xAxis: {
+    name: 'episode',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 6,
+    interval: 1
+  },
+  yAxis: {
+    name: 'episode',
+    nameTextStyle: {
+      fontWeight: 'bold'
+    },
+    axisLine: {
+      symbol: ['none', 'arrow']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: 'false', // 隐藏 x 轴刻度
+    min: 0,
+    max: 5,
+    interval: 1
+  },
+  series: [
+    {
+      symbolSize: 15,
+      data: [
+        [0, 0],
+        [1, 4],
+        [2, 2],
+        [3, 1]
+      ],
+      symbol: 'none',
+      type: 'line'
+    },
+    {
+      symbolSize: 10,
+      data: [
+        [1, 4],
+        [2, 2],
+        [3, 1]
+      ],
+      color: 'blue',
+      type: 'scatter'
+    }
+  ]
+}
+
+// Q值函数
+export const qvalueOptions: EChartsOption = {
+  title: {
+    text: '简单热力图',
+    left: 'center',
+    bottom: 'bottom'
+  },
+  tooltip: {
+    position: 'top'
+  },
+  grid: {
+    left: '30%',
+    height: '70%',
+    width: '50%',
+    bottom: '60px'
+  },
+  xAxis: {
+    type: 'category',
+    data: ['0', '1', '2', '3', '4', '5'],
+    axisLine: {
+      symbol: ['none', 'triangle']
+    },
+    axisTick: 'false'
+  },
+  yAxis: {
+    type: 'category',
+    data: ['右下', '右上', '左下', '左上', ''],
+    splitArea: {
+      show: true
+    },
+    axisLine: {
+      symbol: ['none', 'triangle']
+    },
+    axisTick: 'false'
+  },
+  visualMap: {
+    min: 2,
+    max: 12,
+    calculable: true,
+    left: '6%',
+    bottom: 'center'
+  },
+  series: [
+    {
+      name: '热力图',
+      type: 'heatmap',
+      data: [
+        [0, 0, 1], // 横坐标0，纵坐标a（索引0），值为5
+        [0, 1, 4], // 横坐标0，纵坐标b（索引1），值为1
+        [0, 2, 9], // 横坐标0，纵坐标c（索引2），值为0
+        [0, 3, 11] // 横坐标0，纵坐标d（索引3），值为2
+      ],
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      }
+    }
+  ]
+}
