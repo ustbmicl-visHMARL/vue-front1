@@ -1,46 +1,3 @@
-<div align="center"> <a href="https://github.com/kailong321200875/vue-element-plus-admin"> <img width="100" src="./public/logo.png"> </a> <br> <br>
-
-[![license](https://img.shields.io/github/license/kailong321200875/vue-element-plus-admin.svg)](LICENSE) [![repo-size](https://img.shields.io/github/repo-size/kailong321200875/vue-element-plus-admin.svg)](repo-size) [![last-commit](https://img.shields.io/github/last-commit/kailong321200875/vue-element-plus-admin.svg)](last-commit) [![stars](https://img.shields.io/github/stars/kailong321200875/vue-element-plus-admin.svg)](stars) [![forks](https://img.shields.io/github/forks/kailong321200875/vue-element-plus-admin.svg)](forks) [![release](https://img.shields.io/github/release/kailong321200875/vue-element-plus-admin.svg)](release) [![watchers](https://img.shields.io/github/watchers/kailong321200875/vue-element-plus-admin.svg)](watchers)
-
-<h1>vue-element-plus-admin</h1>
-</div>
-
-[English](./README.md) | **中文**
-
-## 介绍
-
-vue-element-plus-admin 是一个基于 `element-plus` 免费开源的中后台模版。使用了最新的`vue3`，`vite`，`TypeScript`等主流技术开发，开箱即用的中后台前端解决方案，可以用来作为项目的启动模版，也可用于学习参考。并且时刻关注着最新技术动向，尽可能的第一时间更新。
-
-vue-element-plus-admin 的定位是后台集成方案，不太适合当基础模板来进行二次开发。因为集成了很多你可能用不到的功能，会造成不少的代码冗余。如果你的项目不关注这方面的问题，也可以直接基于它进行二次开发。
-
-如需要基础模版，请切换到 `mini` 分支，`mini` 只简单集成了一些如：布局、动态菜单等常用布局功能，更适合开发者进行二次开发。
-
-## 特性
-
-- **最新技术栈**：使用 Vue3/vite4 等前端前沿技术开发
-- **TypeScript**: 应用程序级 JavaScript 的语言
-- **主题**: 可配置的主题
-- **国际化**：内置完善的国际化方案
-- **自定义数据** 内置 Mock 数据方案
-- **权限** 内置完善的动态路由权限生成方案
-- **组件** 二次封装了多个常用的组件
-- **示例** 内置丰富的示例
-
-## 预览
-
-- [vue-element-plus-admin](https://element-plus-admin.cn/) - 完整版 github 站点
-- [vue-element-plus-admin](https://kailong110120130.gitee.io/vue-element-plus-admin) - 完整版 gitee 站点
-
-帐号：**admin/admin**
-
-在线例子默认不适用菜单过滤，而是直接使用静态路由表
-
-## 文档
-
-[文档地址 Github](https://element-plus-admin-doc.cn/)
-
-[文档地址 Gitee](https://kailong110120130.gitee.io/vue-element-plus-admin-doc)
-
 ## 前序准备
 
 - [node](http://nodejs.org/) 和 [git](https://git-scm.com/) - 项目开发环境
@@ -81,17 +38,14 @@ pnpm run dev
 pnpm run build:pro
 ```
 
-## 更新日志
+## 预览效果
+![](./images/image-20240905181415237.png)
+![](./images/image-20240905181508897.png)
+![](./images/image-20240905181520801.png)
+![](./images/image-20240905181532932.png)
+![](./images/image-20240905181545652.png)
 
-[更新日志](./CHANGELOG.md)
 
-## 如何贡献
-
-<a href="https://github.com/kailong321200875/vue-element-plus-admin/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=kailong321200875/vue-element-plus-admin" />
-</a>
-
-你可以[提一个 issue](https://github.com/kailong321200875/vue-element-plus-admin/issues/new) 或者提交一个 Pull Request。
 
 **Pull Request:**
 
@@ -118,31 +72,3 @@ pnpm run build:pro
 - `mod` 不确定分类的修改
 - `wip` 开发中
 - `types` 类型
-
-## 浏览器支持
-
-本地开发推荐使用 `Chrome 80+` 浏览器
-
-支持现代浏览器, 不支持 IE
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :-: | :-: | :-: | :-: | :-: |
-| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
-## Donate
-
-如果你觉得这个项目有帮助，欢迎赞助以示支持~
-
-[Paypal Me](https://www.paypal.com/paypalme/ckl94)
-
-<img src="https://gitee.com/kailong110120130/my-image/raw/master/pay.jpg" />
-
-### 我的二维码
-
-如有项目合作或项目外包，扫码加我好友，请备注来意。
-
-<img src="https://gitee.com/kailong110120130/my-image/raw/master/me.jpg" />
-
-## 许可证
-
-[MIT](./LICENSE)
