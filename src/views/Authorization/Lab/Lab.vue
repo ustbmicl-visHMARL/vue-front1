@@ -74,6 +74,22 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.labname')
   },
   {
+    field: 'containerName',
+    label: t('labDemo.containerName')
+  },
+  {
+    field: 'algName',
+    label: t('labDemo.algName')
+  },
+  {
+    field: 'envName',
+    label: t('labDemo.envName')
+  },
+  {
+    field: 'dataPath',
+    label: t('labDemo.dataPath')
+  },
+  {
     field: 'username',
     label: t('labDemo.username'),
     form: {
@@ -197,7 +213,6 @@ const crudSchemas = reactive<CrudSchema[]>([
 ])
 
 const { allSchemas } = useCrudSchemas(crudSchemas)
-
 const searchParams = ref({})
 const setSearchParams = (params: any) => {
   currentPage.value = 1
@@ -340,6 +355,7 @@ const save = async () => {
 .search-f .el-form {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 .search-f .el-form .el-form-item {
   margin-right: 10px;

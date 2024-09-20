@@ -174,6 +174,15 @@ const adminList = [
     }
   },
   {
+    path: '/authorization/container',
+    component: 'views/Authorization/Container/Container',
+    name: 'Container',
+    meta: {
+      title: 'router.container',
+      icon: "mdi:docker"
+    }
+  },
+  {
     path: '/authorization/message',
     component: 'views/Authorization/Message/Message',
     name: 'Message',
@@ -200,6 +209,15 @@ const adminList = [
         meta: {
           title: 'router.lab',
           icon: "icomoon-free:lab"
+        }
+      },
+      {
+        path: 'container',
+        component: 'views/Authorization/Container/Container',
+        name: 'Container',
+        meta: {
+          title: 'router.container',
+          icon: "mdi:docker"
         }
       },
       {

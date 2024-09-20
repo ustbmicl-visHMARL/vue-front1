@@ -597,7 +597,7 @@ export const learnLineOptions: EChartsOption = {
 // Q值函数
 export const qvalueOptions: EChartsOption = {
   title: {
-    text: '简单热力图',
+    text: 'Q值函数',
     left: 'center',
     bottom: 'bottom'
   },

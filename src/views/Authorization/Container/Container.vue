@@ -1,23 +1,28 @@
 <script setup lang="tsx">
-import { reactive, ref, unref } from 'vue'
-import { getMessageListApi } from '@/api/message'
-import { useTable } from '@/hooks/web/useTable'
+import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElMessage } from 'element-plus'
 import { Table } from '@/components/Table'
+import { ref, unref, reactive } from 'vue'
+import { ElMessage, ElTree } from 'element-plus'
+import { usersApi } from '@/api/user'
+import type { DepartmentUserItem } from '@/api/department/types'
+import { useTable } from '@/hooks/web/useTable'
 import { Search } from '@/components/Search'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
-import { BaseButton } from '@/components/Button'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
+import { BaseButton } from '@/components/Button'
+import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
-    const res = await getMessageListApi({
+    const res = await labsApi({
+      id: unref(currentNodeKey),
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
       ...unref(searchParams)
@@ -28,11 +33,10 @@ const { tableRegister, tableState, tableMethods } = useTable({
     }
   },
   fetchDelApi: async () => {
-    // 假设删除逻辑，这里可以根据实际情况修改
-    return true
+    const res = await deleteLabByIdApi(unref(ids))
+    return !!res
   }
 })
-
 const { total, loading, dataList, pageSize, currentPage } = tableState
 const { getList, getElTableExpose, delList } = tableMethods
 
@@ -66,14 +70,66 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'title',
-    label: t('message.title')
+    field: 'containerName',
+    label: t('labDemo.containerName')
   },
   {
-    field: 'detail',
-    label: t('message.detail'),
+    field: 'username',
+    label: t('labDemo.creater'),
+    form: {
+      component: 'Select',
+      componentProps: {
+        multiple: false,
+        collapseTags: true,
+        maxCollapseTags: 1
+      },
+      optionApi: async () => {
+        const res = await usersApi({
+          id: '',
+          pageIndex: 1,
+          pageSize: 100000
+        })
+        return res.data.list.map((v) => ({
+          label: v.username,
+          value: v.account
+        }))
+      }
+    }
+  },
+  {
+    field: 'labstatus',
+    label: t('labDemo.containerStatus'),
+    form: {
+      component: 'Select',
+      componentProps: {
+        multiple: false,
+        collapseTags: true,
+        maxCollapseTags: 1
+      },
+      optionApi: async () => {
+        const res = ['ON', 'OFF']
+        return res.map((v, i) => ({
+          label: v,
+          value: i
+        }))
+      }
+    },
     search: {
-      hidden: true
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: t('labDemo.completed'), value: 'completed' }, // 已完成
+          { label: t('labDemo.pending'), value: 'pending' } // 未完成
+        ],
+        defaultValue: ''
+      }
+    },
+    table: {
+      slots: {
+        default: ({ row }: any) => {
+          return row.labstatus ? t('labDemo.off') : t('labDemo.on')
+        }
+      }
     }
   },
   {
@@ -82,6 +138,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     form: {
       component: 'Input',
       componentProps: {
+        // readonly: true // 设置为只读模式
+        // 或者使用 disabled: true 来完全禁用输入框
         disabled: true
       },
       hidden: false
@@ -101,7 +159,7 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'action',
-    label: t('userDemo.action'),
+    label: t('labDemo.action'),
     form: {
       hidden: true
     },
@@ -112,10 +170,10 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      width: 300,
+      width: 340,
       slots: {
         default: (data: any) => {
-          const row = data.row
+          const row = data.row as DepartmentUserItem
           return (
             <>
               <BaseButton type="primary" onClick={() => action(row, 'edit')}>
@@ -136,7 +194,6 @@ const crudSchemas = reactive<CrudSchema[]>([
 ])
 
 const { allSchemas } = useCrudSchemas(crudSchemas)
-
 const searchParams = ref({})
 const setSearchParams = (params: any) => {
   currentPage.value = 1
@@ -144,14 +201,18 @@ const setSearchParams = (params: any) => {
   getList()
 }
 
+const treeEl = ref<typeof ElTree>()
+
+const currentNodeKey = ref('')
+
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 
-const currentRow = ref()
+const currentRow = ref<DepartmentUserItem>()
 const actionType = ref('')
 
 const AddAction = () => {
-  dialogTitle.value = t('message.publish')
+  dialogTitle.value = t('exampleDemo.add')
   currentRow.value = undefined
   dialogVisible.value = true
   actionType.value = ''
@@ -160,9 +221,11 @@ const AddAction = () => {
 const delLoading = ref(false)
 const ids = ref<string[]>([])
 
-const delData = async (row?: any) => {
+const delData = async (row?: DepartmentUserItem) => {
   const elTableExpose = await getElTableExpose()
-  ids.value = row ? [row.id] : elTableExpose?.getSelectionRows().map((v: any) => v.id) || []
+  ids.value = row
+    ? [row.id]
+    : elTableExpose?.getSelectionRows().map((v: DepartmentUserItem) => v.id) || []
   delLoading.value = true
 
   await delList(unref(ids).length).finally(() => {
@@ -170,10 +233,10 @@ const delData = async (row?: any) => {
   })
 }
 
-const action = (row: any, type: string) => {
+const action = (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   actionType.value = type
-  currentRow.value = { ...row }
+  currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
   dialogVisible.value = true
 }
 
@@ -187,10 +250,12 @@ const save = async () => {
   if (formData) {
     saveLoading.value = true
     try {
-      // 假设保存逻辑，这里可以根据实际情况修改
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      getList()
-      ElMessage.success('编辑成功')
+      const res = await saveLabApi(formData)
+      if (res) {
+        // currentPage.value = 1
+        getList()
+        ElMessage.success('编辑成功')
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -203,7 +268,7 @@ const save = async () => {
 
 <template>
   <div class="flex w-100% h-100%">
-    <div class="flex-[3] ml-20px">
+    <ContentWrap class="flex-[3] ml-20px">
       <div class="search-f">
         <Search
           :schema="allSchemas.searchSchema"
@@ -213,7 +278,7 @@ const save = async () => {
       </div>
 
       <div class="mb-10px">
-        <BaseButton type="primary" @click="AddAction">{{ t('message.publish') }}</BaseButton>
+        <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
         <BaseButton :loading="delLoading" type="danger" @click="delData()">
           {{ t('exampleDemo.del') }}
         </BaseButton>
@@ -229,7 +294,7 @@ const save = async () => {
           total
         }"
       />
-    </div>
+    </ContentWrap>
 
     <Dialog v-model="dialogVisible" :title="dialogTitle">
       <Write
@@ -260,14 +325,16 @@ const save = async () => {
   </div>
 </template>
 
-<style scoped>
-.search-f {
-  margin: 0 300px;
+<style>
+.search-f .el-form {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
-.search-f.el-form.el-form-item {
+.search-f .el-form .el-form-item {
   margin-right: 10px;
 }
-.search-f.el-form.el-form-item:nth-child(3) {
+.search-f .el-form .el-form-item:nth-child(3) {
   margin-right: 30px;
 }
 </style>

@@ -144,7 +144,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 4000,
       proxy: {
         // 选项写法
-
         '/localapi': {
           target: 'http://127.0.0.1:8888/api',
           changeOrigin: true,

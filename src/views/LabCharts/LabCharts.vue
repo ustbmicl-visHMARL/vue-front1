@@ -12,7 +12,7 @@ import {
   learnLineOptions,
   qvalueOptions
 } from '../Dashboard/echarts-data'
-import { ref, reactive, Ref, nextTick } from 'vue'
+import { ref, reactive, Ref, nextTick, watchEffect, watch } from 'vue'
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
@@ -126,13 +126,15 @@ const currentIndex = ref(0)
 const blockElement: Ref<HTMLElement | null> = ref(null)
 const lastImg = () => {
   currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
-  console.log(pics.value, currentIndex.value, pics.value[currentIndex.value])
 }
 const nextImg = () => {
   currentIndex.value = (currentIndex.value + 1) % totalPics
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
 }
+
+watch(currentIndex, (newvalue, oldvalue) => {
+  console.log('watch', newvalue, oldvalue)
+  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+})
 
 const getSwiperImg = async () => {
   const res = await getSwiperApi({ name: '122' })
@@ -162,7 +164,7 @@ getAllApi()
   <ElRow class="header">
     <div class="select">
       <label for="inputNumber">episode(1~300)</label>
-      <el-input-number v-model="num" :min="1" :max="300" @change="handleChange" id="inputNumber" />
+      <el-input-number v-model="num" :min="0" :max="300" @change="handleChange" id="inputNumber" />
     </div>
     <div class="action">
       <BaseButton type="primary" @click="handleSearch">
@@ -202,7 +204,15 @@ getAllApi()
             </div>
           </div>
           <div class="swiper-title" style="height: 50px">
-            <span>step: {{ currentIndex + 1 }}</span>
+            <span>
+              step:
+              <el-input-number
+                class="step-input"
+                v-model="currentIndex"
+                :min="0"
+                :max="pics.length - 1"
+              />
+            </span>
             <h3>环境状态</h3>
           </div>
         </ElSkeleton>
@@ -317,5 +327,10 @@ getAllApi()
   margin: 0;
   text-align: center;
   user-select: none;
+}
+
+.step-input {
+  width: 100px;
+  height: 20px;
 }
 </style>
