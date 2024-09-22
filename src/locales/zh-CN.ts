@@ -552,6 +552,7 @@ export default {
     containerName: '容器名',
     algName: '算法名',
     dataPath: '数据路径',
+    comment: '备注',
     envName: '环境名',
     creater: '创建者',
     containerStatus: '容器状态',

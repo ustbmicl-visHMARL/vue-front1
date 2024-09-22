@@ -145,7 +145,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       proxy: {
         // 选项写法
         '/localapi': {
-          target: 'http://127.0.0.1:8888/api',
+          target: 'http://rl.java.back:8010/api',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/localapi/, '')
         },

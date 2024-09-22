@@ -569,6 +569,7 @@ export default {
     action: 'Action',
     username: 'Expreimenter',
     labname: 'Labname',
+    comment: 'Comment',
     status: 'Lab status',
     password: 'Password',
     role: 'Role',
