@@ -173,6 +173,7 @@ export default {
     authorization: 'Authorization',
     user: 'User management',
     lab: 'Lab management',
+    container: 'Container management',
     role: 'Role management',
     document: 'Document',
     inputPassword: 'InputPassword',
@@ -557,9 +558,18 @@ export default {
     message:
       'Because it is simulated data, only two accounts with different permissions are provided, which can be modified and combined by developers according to the actual situation.',
     index: 'Index',
+    containerName: 'containerName',
+    algName: 'algName',
+    dataPath: 'dataPath',
+    envName: 'envName',
+    creater: 'creater',
+    containerStatus: 'containerStatus',
+    on: 'ON',
+    off: 'OFF',
     action: 'Action',
     username: 'Expreimenter',
     labname: 'Labname',
+    comment: 'Comment',
     status: 'Lab status',
     password: 'Password',
     role: 'Role',
@@ -639,5 +649,14 @@ export default {
   avatarsDemo: {
     title:
       'Avatar component for avatar list, secondary packaging based on element plus Avatar component'
+  },
+  lidaDemo: {
+    title: 'Lida algorithm',
+    message:
+      'Upload your CSV file, generate visual images using the Lida algorithm, and generate code.',
+    step3: '3. Upload data (select a CSV file)',
+    step2: '2. Describe your goals',
+    step1: '1. Choose a visualization library',
+    codeTitle: 'Visualize code'
   }
 }

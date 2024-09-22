@@ -19,8 +19,7 @@ const props = defineProps({
 })
 
 const rules = reactive({
-  username: [required()],
-  labname: [required()]
+  expname: [required()]
 })
 
 const { formRegister, formMethods } = useForm()

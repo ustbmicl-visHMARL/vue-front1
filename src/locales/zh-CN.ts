@@ -172,6 +172,7 @@ export default {
     authorization: '权限管理',
     user: '用户管理',
     lab: '实验管理',
+    container: '容器管理',
     role: '角色管理',
     document: '文档',
     inputPassword: '密码输入框',
@@ -548,6 +549,15 @@ export default {
   labDemo: {
     title: '实验管理',
     message: '由于是模拟数据，所以只提供了两种不同权限的帐号，开发者可根据实际情况自行改造结合。',
+    containerName: '容器名',
+    algName: '算法名',
+    dataPath: '数据路径',
+    comment: '备注',
+    envName: '环境名',
+    creater: '创建者',
+    containerStatus: '容器状态',
+    on: '运行中',
+    off: '已关闭',
     index: '序号',
     action: '操作',
     username: '实验者',
@@ -628,5 +638,13 @@ export default {
   },
   avatarsDemo: {
     title: '头像列表组件，基于element-plus的Avatar组件二次封装'
+  },
+  lidaDemo: {
+    title: 'Lida算法',
+    message: '上传你的csv文件，通过lida算法生成可视化图像并生成代码。',
+    step3: '3. 上传数据( 选择一个 CSV 文件)',
+    step2: '2. 描述你的目标',
+    step1: '1. 选择一个可视化库',
+    codeTitle: '可视化代码'
   }
 }
