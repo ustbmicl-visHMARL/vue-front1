@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
+// import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
 import { Echart } from '@/components/Echart'
 import {
   pieOptions,
@@ -10,9 +10,13 @@ import {
   importanceBarOptions,
   rewardLineOptions,
   learnLineOptions,
-  qvalueOptions
+  qvalueSquareOptions
 } from '../Dashboard/echarts-data'
-import { ref, reactive, Ref, nextTick, watchEffect, watch } from 'vue'
+//<<<<<<< dev-zyf
+//import { ref, reactive, Ref, nextTick, watchEffect, watch } from 'vue'
+//=======
+import { ref, reactive, Ref, nextTick, onMounted } from 'vue'
+//>>>>>>> dev
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
@@ -102,12 +106,12 @@ const getMonthlySales = async () => {
   }
 }
 
-const actionScatterData = reactive<EChartsOption>(actionScatterOptions) as EChartsOption
-const valueScatterData = reactive<EChartsOption>(valueScatterOptions) as EChartsOption
+// const actionScatterData = reactive<EChartsOption>(actionScatterOptions) as EChartsOption
+// const valueScatterData = reactive<EChartsOption>(valueScatterOptions) as EChartsOption
 const importanceBarData = reactive<EChartsOption>(importanceBarOptions) as EChartsOption
-const rewardLineData = reactive<EChartsOption>(rewardLineOptions) as EChartsOption
-const learnLineData = reactive<EChartsOption>(learnLineOptions) as EChartsOption
-const qvalueData = reactive<EChartsOption>(qvalueOptions) as EChartsOption
+// const rewardLineData = reactive<EChartsOption>(rewardLineOptions) as EChartsOption
+// const learnLineData = reactive<EChartsOption>(learnLineOptions) as EChartsOption
+// const qvalueData = reactive<EChartsOption>(qvalueSquareOptions) as EChartsOption
 
 const num = ref(1)
 const handleChange = (value: number) => {
@@ -120,33 +124,88 @@ const handleSearch = () => {
   console.log('handleSearch')
 }
 
-const pics = ref([])
-let totalPics = 1
-const currentIndex = ref(0)
+const pics = ref([]) // 存储从后端获取的图片URL列表
+const currentIndex = ref(0) // 当前图片的索引
+const totalPics = ref(0) // 总图片数量
+// const blockElement = ref(null); // 图片展示的DOM元素
 const blockElement: Ref<HTMLElement | null> = ref(null)
-const lastImg = () => {
-  currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
-}
-const nextImg = () => {
-  currentIndex.value = (currentIndex.value + 1) % totalPics
-}
 
-watch(currentIndex, (newvalue, oldvalue) => {
-  console.log('watch', newvalue, oldvalue)
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
-})
-
-const getSwiperImg = async () => {
-  const res = await getSwiperApi({ name: '122' })
-  if (res) {
-    pics.value = res.data.imgs
-    totalPics = res.data.imgs.length
+// 获取图片列表的函数
+const fetchImages = async () => {
+  try {
+    const response = await fetch('/java/images/list') // 从后端获取图片列表
+    const data = await response.json()
+    pics.value = data.map((img) => `/java/images/${img}`) // 构建完整的图片URL
+    totalPics.value = pics.value.length
+    await nextTick()
+    if (totalPics.value > 0 && blockElement.value) {
+      // 初始化显示第一张图片
+      blockElement.value.style.backgroundImage = `url(${pics.value[0]})`
+    }
+  } catch (error) {
+    console.error('Failed to fetch images:', error)
   }
 }
 
+// 切换到上一张图片
+const lastImg = () => {
+//<<<<<<< dev-zyf
+//  currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
+//=======
+  currentIndex.value = !currentIndex.value
+    ? totalPics.value - 1
+    : (currentIndex.value - 1) % totalPics.value
+  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+//>>>>>>> dev
+}
+
+// 切换到下一张图片
+const nextImg = () => {
+
+  currentIndex.value = (currentIndex.value + 1) % totalPics.value
+  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+}
+
+// 组件挂载时调用获取图片列表
+onMounted(() => {
+  fetchImages()
+})
+
+// return {
+//   pics,
+//   currentIndex,
+//   totalPics,
+//   blockElement,
+//   lastImg,
+//   nextImg
+// }
+
+// const pics = ref([])
+// let totalPics = 1
+// const currentIndex = ref(0)
+// const blockElement: Ref<HTMLElement | null> = ref(null)
+// const lastImg = () => {
+//   currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
+//   blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+//   console.log(pics.value, currentIndex.value, pics.value[currentIndex.value])
+// }
+// const nextImg = () => {
+//   currentIndex.value = (currentIndex.value + 1) % totalPics
+//   blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+// }
+
+// const getSwiperImg = async () => {
+//   const res = await getSwiperApi({ name: '122' })
+//   if (res) {
+//     pics.value = res.data.imgs
+//     totalPics = res.data.imgs.length
+//   }
+// }
+//>>>>>>> dev
+
 const getAllApi = async () => {
   await Promise.all([
-    getSwiperImg(),
+    // getSwiperImg(),
     getUserAccessSource(),
     getWeeklyUserActivity(),
     getMonthlySales()
@@ -158,8 +217,30 @@ const getAllApi = async () => {
 }
 
 getAllApi()
-</script>
 
+const learnLineData = ref({}) // 使用ref创建响应式引用
+const rewardLineData = ref({})
+const actionScatterData = ref({})
+const valueScatterData = ref({})
+const qvalueData = ref({})
+onMounted(async () => {
+  try {
+    const actionOptions = await actionScatterOptions(1)
+    actionScatterData.value = actionOptions // 更新响应式引用的值
+    const valueOptions = await valueScatterOptions(1)
+    valueScatterData.value = valueOptions
+    const learnOptions = await learnLineOptions(1)
+    learnLineData.value = learnOptions // 更新响应式引用的值
+    const rewardOptions = await rewardLineOptions(1)
+    rewardLineData.value = rewardOptions
+    const qvalueOptions = await qvalueSquareOptions(1)
+    qvalueData.value = qvalueOptions
+  } catch (error) {
+    console.error('Failed to load chart data:', error)
+    // 处理错误情况，例如设置一个错误信息或默认配置
+  }
+})
+</script>
 <template>
   <ElRow class="header">
     <div class="select">
