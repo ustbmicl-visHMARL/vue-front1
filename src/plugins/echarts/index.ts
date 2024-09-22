@@ -6,8 +6,11 @@ import {
   PieChart,
   MapChart,
   PictorialBarChart,
-  RadarChart
+  RadarChart,
+  ScatterChart,
+  HeatmapChart
 } from 'echarts/charts'
+import { VisualMapComponent } from 'echarts/components'
 
 import {
   TitleComponent,
@@ -35,7 +38,10 @@ echarts.use([
   MapChart,
   CanvasRenderer,
   PictorialBarChart,
-  RadarChart
+  RadarChart,
+  ScatterChart,
+  HeatmapChart,
+  VisualMapComponent
 ])
 
 export default echarts

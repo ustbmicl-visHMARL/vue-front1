@@ -126,6 +126,7 @@ export default {
   },
   router: {
     login: 'Login',
+    view: 'View',
     level: 'Multi level menu',
     menu: 'Menu',
     menu1: 'Menu1',
@@ -511,6 +512,7 @@ export default {
     title: 'Title',
     add: 'Add',
     del: 'Delete',
+    view: 'View',
     edit: 'Edit',
     author: 'Author',
     displayTime: 'Display time',

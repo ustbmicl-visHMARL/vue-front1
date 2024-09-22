@@ -124,6 +124,7 @@ export default {
   },
   router: {
     login: '登录',
+    view: '视图',
     level: '多级菜单',
     menu: '菜单',
     menu1: '菜单1',
@@ -504,6 +505,7 @@ export default {
     title: '标题',
     add: '新增',
     del: '删除',
+    view: '视图',
     edit: '编辑',
     author: '作者',
     displayTime: '创建时间',

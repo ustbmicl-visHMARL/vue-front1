@@ -14,6 +14,7 @@ import { Dialog } from '@/components/Dialog'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
 import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
@@ -169,7 +170,7 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      width: 300,
+      width: 340,
       slots: {
         default: (data: any) => {
           const row = data.row as DepartmentUserItem
@@ -183,6 +184,9 @@ const crudSchemas = reactive<CrudSchema[]>([
               </BaseButton>
               <BaseButton type="danger" onClick={() => delData(row)}>
                 {t('exampleDemo.del')}
+              </BaseButton>
+              <BaseButton type="warning" onClick={() => toView(row)}>
+                {t('exampleDemo.view')}
               </BaseButton>
             </>
           )
@@ -240,6 +244,13 @@ const action = (row: DepartmentUserItem, type: string) => {
   dialogVisible.value = true
 }
 
+const router = useRouter()
+const toView = (row: DepartmentUserItem) => {
+  console.log(row)
+  router.push({
+    name: 'LabCharts'
+  })
+}
 const writeRef = ref<ComponentRef<typeof Write>>()
 
 const saveLoading = ref(false)

@@ -141,6 +141,17 @@ const adminList = [
           noCache: true,
           affix: true
         }
+      },
+      {
+        path: 'lab-charts',
+        component: 'views/LabCharts/LabCharts',
+        name: 'LabCharts',
+        meta: {
+          title: 'router.view',
+          icon: 'ph:chart-line',
+          nocache: true,
+          hidden: true
+        }
       }
     ]
   },
