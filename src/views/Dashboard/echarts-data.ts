@@ -1,5 +1,8 @@
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
+import echarts from 'echarts/types/dist/echarts'
+import { readFileSync } from 'fs'
+import Papa from 'papaparse'
 
 const { t } = useI18n()
 
@@ -307,108 +310,194 @@ export const wordOptions = {
     }
   ]
 }
-
-// 动作选择散点图
-export const actionScatterOptions: EChartsOption = {
-  grid: {
-    width: '75%'
-  },
-  title: {
-    text: '动作选择',
-    left: 'center',
-    bottom: 'bottom'
-  },
-  xAxis: {
-    name: 'step',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    type: 'category',
-    data: [0, 1, 2, 3, ''],
-    min: 0,
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    boundaryGap: false, // 设置为 false
-    axisTick: 'false' // 隐藏 x 轴刻度
-  },
-  yAxis: {
-    name: 'action',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow'],
-      onZero: true
-    },
-    data: ['右下', '右上', '左下', '左上', ''],
-    axisTick: 'false' // 隐藏 y 轴刻度
-  },
-  series: [
-    {
-      symbolSize: 15,
-      data: [
-        [1, '右下'],
-        [2, '右上'],
-        [3, '左下']
-      ],
-      type: 'scatter'
+//动作函数
+export const actionScatterOptions = async (episodeId: number): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartAction?episodeId=${episodeId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  ]
+  })
+  if (!response.ok) {
+    const errorData = await response.text()
+    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
+  }
+
+  const result = await response.json()
+  const parsedData = result.data // 解析返回的 data
+  // console.log(parsedData.length)
+
+  const steps = parsedData.map((item) => parseInt(item.step, 10))
+  // console.log(episodes)
+
+  const maxX = Math.max(...steps)
+  // const minY = Math.min(...values)
+  // const maxY = Math.max(...values)
+  // 返回动态生成的图表配置
+  return {
+    tooltip: {
+      trigger: 'item', // 或者 'axis'，取决于你的需求
+      axisPointer: {
+        type: 'cross'
+      },
+      formatter: function (params) {
+        // params 是一个包含数据点信息的对象
+        // 对于散点图，params.data 是一个包含 x 和 y 值的数组
+        // 对于折线图，params.value 也是一个包含 x 和 y 值的数组
+        if (params.componentType === 'series') {
+          return `Step: ${params.value[0]}, Action:${params.value[1]}`
+        }
+        return ''
+      }
+    },
+    grid: {
+      width: '80%',
+      left: 'center',
+      bottom: '60px',
+      height: '70%'
+    },
+    title: {
+      text: '动作选择',
+      left: 'center',
+      bottom: 'bottom'
+    },
+    xAxis: {
+      name: 'step',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      type: 'category',
+      min: 0,
+      max: maxX // 间隔一个显示一个
+    },
+    yAxis: {
+      name: 'action',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow'],
+        onZero: true
+      },
+      data: ['右下', '右上', '左下', '左上'],
+      axisTick: 'false' // 隐藏 y 轴刻度
+    },
+    series: [
+      {
+        symbolSize: 15,
+        data: parsedData
+          // .filter((_, index) => index % 2 === 0) // 保留每隔一个数据点
+          .map((item) => [parseInt(item.step, 10), item.action]),
+        type: 'scatter'
+      }
+    ]
+  }
 }
-
-// 价值函数散点图
-export const valueScatterOptions: EChartsOption = {
-  grid: {
-    width: '75%'
-  },
-  title: {
-    text: '价值函数',
-    left: 'center',
-    bottom: 'bottom'
-  },
-  xAxis: {
-    name: 'step',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 6,
-    interval: 1
-  },
-  yAxis: {
-    name: 'value',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 5,
-    interval: 1
-  },
-  series: [
-    {
-      symbolSize: 15,
-      data: [
-        [1, 1],
-        [2, 4]
-      ],
-      type: 'scatter'
+//价值函数
+export const valueScatterOptions = async (episodeId: number): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartValue?episodeId=${episodeId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  ]
+  })
+  if (!response.ok) {
+    const errorData = await response.text()
+    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
+  }
+
+  const result = await response.json()
+  const parsedData = result.data // 解析返回的 data
+  // console.log(parsedData.length)
+
+  const steps = parsedData.map((item) => parseInt(item.step, 10))
+  const values = parsedData.map((item) => parseFloat(item.value))
+
+  const maxX = Math.max(...steps)
+  const minY = Math.min(...values)
+  const maxY = Math.max(...values)
+  // 返回动态生成的图表配置
+  return {
+    tooltip: {
+      trigger: 'item', // 或者 'axis'，取决于你的需求
+      axisPointer: {
+        type: 'cross'
+      },
+      formatter: function (params) {
+        // params 是一个包含数据点信息的对象
+        // 对于散点图，params.data 是一个包含 x 和 y 值的数组
+        // 对于折线图，params.value 也是一个包含 x 和 y 值的数组
+        if (params.componentType === 'series') {
+          return `Episode: ${params.value[0]}, Reward:${params.value[1]}`
+        }
+        return ''
+      }
+    },
+    grid: {
+      width: '80%',
+      left: 'center',
+      bottom: '60px',
+      height: '70%'
+    },
+    title: {
+      text: '价值函数',
+      left: 'center',
+      bottom: 'bottom'
+    },
+    xAxis: {
+      name: 'step',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: 0,
+      max: maxX
+    },
+    yAxis: {
+      name: 'value',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: Math.floor(minY),
+      max: Math.ceil(maxY)
+    },
+    series: [
+      {
+        symbolSize: 10,
+        data: parsedData
+          // .filter((_, index) => index % 10 === 0) // 保留每隔一个数据点
+          .map((item) => [parseInt(item.step, 10), parseFloat(item.value)]),
+        // symbol: 'none',
+        type: 'line'
+      }
+    ]
+  }
 }
 
 // 重要性
@@ -455,203 +544,325 @@ export const importanceBarOptions: EChartsOption = {
     }
   ]
 }
-
 // 奖励
-export const rewardLineOptions: EChartsOption = {
-  grid: {
-    width: '50%',
-    left: 'center',
-    bottom: '60px',
-    height: '70%'
-  },
-  title: {
-    text: '奖励',
-    left: 'center',
-    bottom: 'bottom'
-  },
-  xAxis: {
-    name: 'episode',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 6,
-    interval: 1
-  },
-  yAxis: {
-    name: 'reward',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 5,
-    interval: 1
-  },
-  series: [
-    {
-      symbolSize: 15,
-      data: [
-        [0, 0],
-        [1, 1],
-        [2, 4]
-      ],
-      symbol: 'none',
-      type: 'line'
-    },
-    {
-      symbolSize: 10,
-      data: [
-        [1, 1],
-        [2, 4]
-      ],
-      color: 'blue',
-      type: 'scatter'
+export const rewardLineOptions = async (experimentId: number): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartReward?experimentId=${experimentId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  ]
+  })
+  if (!response.ok) {
+    const errorData = await response.text()
+    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
+  }
+
+  const result = await response.json()
+  const parsedData = result.data // 解析返回的 data
+  // console.log(parsedData.length)
+
+  const episodes = parsedData.map((item) => parseInt(item.episode, 10))
+  // console.log(episodes)
+  const values = parsedData.map((item) => parseFloat(item.reward))
+
+  const maxX = Math.max(...episodes)
+  const minY = Math.min(...values)
+  const maxY = Math.max(...values)
+  // 返回动态生成的图表配置
+  return {
+    tooltip: {
+      trigger: 'item', // 或者 'axis'，取决于你的需求
+      axisPointer: {
+        type: 'cross'
+      },
+      formatter: function (params) {
+        // params 是一个包含数据点信息的对象
+        // 对于散点图，params.data 是一个包含 x 和 y 值的数组
+        // 对于折线图，params.value 也是一个包含 x 和 y 值的数组
+        if (params.componentType === 'series') {
+          return `Episode: ${params.value[0]}, Reward:${params.value[1]}`
+        }
+        return ''
+      }
+    },
+    grid: {
+      width: '80%',
+      left: 'center',
+      bottom: '60px',
+      height: '70%'
+    },
+    title: {
+      text: '奖励',
+      left: 'center',
+      bottom: 'bottom'
+    },
+    xAxis: {
+      name: 'episode',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: 0,
+      max: maxX,
+      interval: Math.floor(maxX / 10)
+    },
+    yAxis: {
+      name: 'reward',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: Math.floor(minY),
+      max: Math.ceil(maxY),
+      interval: 0.3
+    },
+    series: [
+      {
+        symbolSize: 10,
+        data: parsedData
+          .filter((_, index) => index % 10 === 0) // 保留每隔一个数据点
+          .map((item) => [parseInt(item.episode, 10), parseFloat(item.reward)]),
+        // symbol: 'none',
+        type: 'line'
+      }
+    ]
+  }
 }
 
 // 学习曲线
-export const learnLineOptions: EChartsOption = {
-  grid: {
-    width: '50%',
-    left: 'center',
-    bottom: '60px',
-    height: '70%'
-  },
-  title: {
-    text: '学习曲线',
-    left: 'center',
-    bottom: 'bottom'
-  },
-  xAxis: {
-    name: 'episode',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 6,
-    interval: 1
-  },
-  yAxis: {
-    name: 'episode',
-    nameTextStyle: {
-      fontWeight: 'bold'
-    },
-    axisLine: {
-      symbol: ['none', 'arrow']
-    },
-    splitLine: {
-      show: false
-    },
-    axisTick: 'false', // 隐藏 x 轴刻度
-    min: 0,
-    max: 5,
-    interval: 1
-  },
-  series: [
-    {
-      symbolSize: 15,
-      data: [
-        [0, 0],
-        [1, 4],
-        [2, 2],
-        [3, 1]
-      ],
-      symbol: 'none',
-      type: 'line'
-    },
-    {
-      symbolSize: 10,
-      data: [
-        [1, 4],
-        [2, 2],
-        [3, 1]
-      ],
-      color: 'blue',
-      type: 'scatter'
+export const learnLineOptions = async (experimentId: number): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartLoss?experimentId=${experimentId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  ]
+  })
+  if (!response.ok) {
+    const errorData = await response.text()
+    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
+  }
+
+  const result = await response.json()
+  const parsedData = result.data // 解析返回的 data
+  // console.log(parsedData.length)
+
+  const episodes = parsedData.map((item) => parseInt(item.episode, 10))
+  // console.log(episodes)
+  const values = parsedData.map((item) => parseFloat(item.loss))
+
+  const maxX = Math.max(...episodes)
+  const maxY = Math.max(...values)
+
+  // 返回动态生成的图表配置
+  return {
+    tooltip: {
+      trigger: 'item', // 或者 'axis'，取决于你的需求
+      axisPointer: {
+        type: 'cross'
+      },
+      formatter: function (params) {
+        // params 是一个包含数据点信息的对象
+        // 对于散点图，params.data 是一个包含 x 和 y 值的数组
+        // 对于折线图，params.value 也是一个包含 x 和 y 值的数组
+        if (params.componentType === 'series') {
+          return `Episode: ${params.value[0]}, Loss:${params.value[1]}`
+        }
+        return ''
+      }
+    },
+    grid: {
+      width: '80%',
+      left: 'center',
+      bottom: '60px',
+      height: '70%'
+    },
+    title: {
+      text: '学习曲线',
+      left: 'center',
+      bottom: 'bottom'
+    },
+    xAxis: {
+      name: 'episode',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: 0,
+      max: maxX,
+      interval: Math.floor(maxX / 10)
+    },
+    yAxis: {
+      name: 'loss',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
+      axisLine: {
+        symbol: ['none', 'arrow']
+      },
+      splitLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }, // 修正为正确的属性名
+      min: 0,
+      max: maxY,
+      interval: 1
+    },
+    series: [
+      {
+        symbolSize: 10,
+        data: parsedData
+          .filter((_, index) => index % 10 === 0) // 保留每隔一个数据点
+          .map((item) => [parseInt(item.episode, 10), parseFloat(item.loss)]),
+        // symbol: 'none',
+        type: 'line'
+      }
+    ]
+  }
 }
 
 // Q值函数
-export const qvalueOptions: EChartsOption = {
-  title: {
-    text: 'Q值函数',
-    left: 'center',
-    bottom: 'bottom'
-  },
-  tooltip: {
-    position: 'top'
-  },
-  grid: {
-    left: '30%',
-    height: '70%',
-    width: '50%',
-    bottom: '60px'
-  },
-  xAxis: {
-    type: 'category',
-    data: ['0', '1', '2', '3', '4', '5'],
-    axisLine: {
-      symbol: ['none', 'triangle']
+// <<<<<<< dev-zyf
+// export const qvalueOptions: EChartsOption = {
+//   title: {
+//     text: 'Q值函数',
+//     left: 'center',
+//     bottom: 'bottom'
+//   },
+//   tooltip: {
+//     position: 'top'
+//   },
+//   grid: {
+//     left: '30%',
+//     height: '70%',
+//     width: '50%',
+//     bottom: '60px'
+//   },
+//   xAxis: {
+//     type: 'category',
+//     data: ['0', '1', '2', '3', '4', '5'],
+//     axisLine: {
+//       symbol: ['none', 'triangle']
+//     },
+//     axisTick: 'false'
+//   },
+//   yAxis: {
+//     type: 'category',
+//     data: ['右下', '右上', '左下', '左上', ''],
+//     splitArea: {
+//       show: true
+//     },
+//     axisLine: {
+//       symbol: ['none', 'triangle']
+// =======
+export const qvalueSquareOptions = async (episodeId: number): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartQValue?episodeId=${episodeId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  if (!response.ok) {
+    const errorData = await response.text()
+    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
+  }
+
+  const result = await response.json()
+  const parsedData = result.data.qvalue // 解析返回的 data
+  console.log(parsedData.length)
+
+  // const episodes = parsedData.map((item) => parseInt(item.episode, 10))
+  // console.log(episodes)
+  // const values = parsedData.map((item) => parseFloat(item.loss))
+  const xdata = Array.from({ length: parsedData.length }, (_, index) => index)
+  const ydata = ['右下', '右上', '左下', '左上']
+  type TransformedArrayType = [number, string, number]
+  const transformedArray: TransformedArrayType[] = [];
+  parsedData.forEach((subArray, index) => {
+    subArray.forEach((value, directionIndex) => {
+      transformedArray.push([index, ydata[directionIndex], value])
+    })
+  })
+  // console.log(transformedArray)
+  return {
+    title: {
+      text: 'Q值函数',
+      left: 'center',
+      bottom: 'bottom'
     },
-    axisTick: 'false'
-  },
-  yAxis: {
-    type: 'category',
-    data: ['右下', '右上', '左下', '左上', ''],
-    splitArea: {
-      show: true
+    tooltip: {
+      position: 'top'
     },
-    axisLine: {
-      symbol: ['none', 'triangle']
+    grid: {
+      left: '20%',
+      height: '70%',
+      width: '80%',
+      bottom: '60px'
     },
-    axisTick: 'false'
-  },
-  visualMap: {
-    min: 2,
-    max: 12,
-    calculable: true,
-    left: '6%',
-    bottom: 'center'
-  },
-  series: [
-    {
-      name: '热力图',
-      type: 'heatmap',
-      data: [
-        [0, 0, 1], // 横坐标0，纵坐标a（索引0），值为5
-        [0, 1, 4], // 横坐标0，纵坐标b（索引1），值为1
-        [0, 2, 9], // 横坐标0，纵坐标c（索引2），值为0
-        [0, 3, 11] // 横坐标0，纵坐标d（索引3），值为2
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
+    xAxis: {
+      type: 'category',
+      data: xdata,
+      axisLine: {
+        symbol: ['none', 'triangle']
+      },
+      axisTick: 'false'
+//>>>>>>> dev
+    },
+    yAxis: {
+      type: 'category',
+      data: ydata,
+      splitArea: {
+        show: true
+      },
+      axisLine: {
+        symbol: ['none', 'triangle']
+      },
+      axisTick: 'false'
+    },
+    visualMap: {
+      min: 2,
+      max: 12,
+      calculable: true,
+      left: '6%',
+      bottom: 'center'
+    },
+    series: [
+      {
+        name: 'Q值',
+        type: 'heatmap',
+        data: transformedArray,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
         }
       }
-    }
-  ]
+    ]
+  }
 }
