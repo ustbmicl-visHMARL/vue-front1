@@ -7,15 +7,14 @@ import { ElMessage, ElTree } from 'element-plus'
 import { usersApi } from '@/api/user'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
-import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
 import { Search } from '@/components/Search'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
+import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/store/modules/user'
 
 const { t } = useI18n()
 
@@ -71,12 +70,28 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'expName',
+    field: 'labname',
     label: t('labDemo.labname')
   },
   {
-    field: 'containerId',
-    label: t('labDemo.containerName'),
+    field: 'containerName',
+    label: t('labDemo.containerName')
+  },
+  {
+    field: 'algName',
+    label: t('labDemo.algName')
+  },
+  {
+    field: 'envName',
+    label: t('labDemo.envName')
+  },
+  {
+    field: 'dataPath',
+    label: t('labDemo.dataPath')
+  },
+  {
+    field: 'username',
+    label: t('labDemo.username'),
     form: {
       component: 'Select',
       componentProps: {
@@ -85,58 +100,22 @@ const crudSchemas = reactive<CrudSchema[]>([
         maxCollapseTags: 1
       },
       optionApi: async () => {
-        const res = await labsApi({
+        const res = await usersApi({
           id: '',
           pageIndex: 1,
           pageSize: 100000
         })
-        console.log('@@@', res)
         return res.data.list.map((v) => ({
-          label: v.containerName,
-          value: v.containerId
+          label: v.username,
+          value: v.account
         }))
       }
     }
   },
   {
-    field: 'note',
-    label: t('labDemo.comment')
-  },
-  {
-    field: 'envName',
-    label: t('labDemo.envName'),
-    form: {
-      hidden: true
-    }
-  },
-  {
-    field: 'expNote',
-    label: t('labDemo.comment'),
-    form: {
-      hidden: true
-    },
-    table: {
-      hidden: true
-    },
-    search: {
-      hidden: true
-    }
-  },
-  {
-    field: 'dataPath',
-    label: t('labDemo.dataPath'),
-    form: {
-      hidden: true
-    }
-  },
-  {
     field: 'labstatus',
     label: t('labDemo.status'),
-    detail: {
-      hidden: true
-    },
     form: {
-      hidden: true,
       component: 'Select',
       componentProps: {
         multiple: false,
@@ -173,13 +152,13 @@ const crudSchemas = reactive<CrudSchema[]>([
     field: 'createTime',
     label: t('labDemo.createTime'),
     form: {
-      hidden: true,
       component: 'Input',
       componentProps: {
         // readonly: true // 设置为只读模式
         // 或者使用 disabled: true 来完全禁用输入框
         disabled: true
-      }
+      },
+      hidden: false
     },
     search: {
       hidden: true
@@ -297,10 +276,7 @@ const save = async () => {
   if (formData) {
     saveLoading.value = true
     try {
-      const res = await saveLabApi({
-        ...formData,
-        userId: (useUserStore() as any).userInfo.user_id
-      })
+      const res = await saveLabApi(formData)
       if (res) {
         // currentPage.value = 1
         getList()
