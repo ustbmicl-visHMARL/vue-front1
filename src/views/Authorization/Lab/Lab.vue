@@ -58,7 +58,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'id',
+    field: 'userId',
     label: t('labDemo.index'),
     form: {
       hidden: true
@@ -75,7 +75,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.labname')
   },
   {
-    field: 'containerId',
+    field: 'containerName',
     label: t('labDemo.containerName'),
     form: {
       component: 'Select',
@@ -99,10 +99,6 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'note',
-    label: t('labDemo.comment')
-  },
-  {
     field: 'envName',
     label: t('labDemo.envName'),
     form: {
@@ -111,16 +107,7 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'expNote',
-    label: t('labDemo.comment'),
-    form: {
-      hidden: true
-    },
-    table: {
-      hidden: true
-    },
-    search: {
-      hidden: true
-    }
+    label: t('labDemo.comment')
   },
   {
     field: 'dataPath',
@@ -130,7 +117,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'labstatus',
+    field: 'expStatus',
     label: t('labDemo.status'),
     detail: {
       hidden: true
