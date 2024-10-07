@@ -35,7 +35,7 @@
       </div>
     </div>
     -->
-    <iframe src="http://127.0.0.1:8080/demo" frameborder="0"></iframe>
+    <iframe src="http://127.0.0.1:8088/demo" frameborder="0"></iframe>
   </ContentWrap>
 </template>
 
