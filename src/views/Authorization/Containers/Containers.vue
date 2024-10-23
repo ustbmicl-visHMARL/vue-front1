@@ -18,9 +18,10 @@ import {
   deleteContainerByIdApi,
   startContainerApi,
   stopContainerApi,
-  expsApi
+  containersApi
 } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
+import { imagesApi } from '@/api/containers'
 
 const userStore = useUserStore()
 
@@ -29,7 +30,7 @@ const { t } = useI18n()
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
-    const res = await expsApi({
+    const res = await containersApi({
       id: unref(currentNodeKey),
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
@@ -76,7 +77,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      width: 70
+      width: 70,
+      hidden: true
     }
   },
   {
@@ -84,12 +86,15 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.containerName')
   },
   {
-    field: 'port',
-    label: t('labDemo.port')
-  },
-  {
-    field: 'username',
-    label: t('labDemo.username'),
+    field: 'imageId',
+    label: t('labDemo.image'),
+    table: {
+      slots: {
+        default: ({ row }: any) => {
+          return row.imageVersion
+        }
+      }
+    },
     form: {
       component: 'Select',
       componentProps: {
@@ -98,41 +103,34 @@ const crudSchemas = reactive<CrudSchema[]>([
         maxCollapseTags: 1
       },
       optionApi: async () => {
-        const res = await usersApi({
+        const res = await imagesApi({
           id: '',
           pageIndex: 1,
           pageSize: 100000
         })
-        return res.data.list.map((v) => ({
-          label: v.username,
+        return res.data.map((v) => ({
+          label: v.version,
           value: v.id
         }))
       }
     }
   },
   {
-    field: 'internal',
-    label: 'internal',
+    field: 'portMappingList',
+    form: {
+      component: 'JsonEditor',
+      label: t('labDemo.port'),
+      value: Array.from({ length: 10 }, () =>
+        Object.assign(
+          {},
+          {
+            external: 0,
+            internal: 0
+          }
+        )
+      )
+    },
     table: {
-      hidden: true
-    },
-    detail: {
-      hidden: true
-    },
-    search: {
-      hidden: true
-    }
-  },
-  {
-    field: 'external',
-    label: 'external',
-    table: {
-      hidden: true
-    },
-    detail: {
-      hidden: true
-    },
-    search: {
       hidden: true
     }
   },
@@ -273,19 +271,19 @@ const delData = async (row?: DepartmentUserItem) => {
   })
 }
 
-const startContainer = async (row: DepartmentUserItem) => {
+const startContainer = async (row: any) => {
   console.log('startContainer', row)
-  startContainerApi(row.id)
+  startContainerApi(row.containerId)
 }
 
-const openContainer = async (row: DepartmentUserItem) => {
+const openContainer = async (row: any) => {
   console.log('openContainer', row)
-  window.open(`http://127.0.0.1:${(row as any).port || 8848}`)
+  window.open(`http://115.25.41.98:${row.webIdePort || 8848}`)
 }
 
-const stopContainer = async (row: DepartmentUserItem) => {
+const stopContainer = async (row: any) => {
   console.log('stopContainer', row)
-  stopContainerApi(row.id)
+  stopContainerApi(row.containerId)
 }
 
 const action = (row: DepartmentUserItem, type: string) => {
@@ -300,7 +298,7 @@ const writeRef = ref<ComponentRef<typeof Write>>()
 const saveLoading = ref(false)
 
 const save = async () => {
-  console.log((userStore.getLoginInfo as any).username, userStore, '@@')
+  console.log((userStore.getUserInfo as any).username, userStore, '@@')
   const write = unref(writeRef)
   const formData = await write?.submit()
   if (formData) {
@@ -308,11 +306,11 @@ const save = async () => {
     try {
       const realForm = {
         name: formData.containerName || '',
-        userId: Number(formData.username) || -1,
-        portMappingList: {
-          external: Number(formData.external) || 0,
-          internal: Number(formData.internal) || 0
-        },
+        userId: Number((userStore.getUserInfo as any).userId) || -1,
+        imageId: formData.imageId || '',
+        portMappingList: formData.portMappingList.filter(
+          (item) => item.external !== 0 && item.internal !== 0
+        ),
         extraConfig: ''
       }
       const res = await saveContainerApi(realForm)

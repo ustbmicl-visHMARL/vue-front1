@@ -9,6 +9,14 @@ export const expsApi = (params: any) => {
   return request.get<LabResponse>({ url: '/localapi/exp/getexplist', params })
 }
 
+export const containersApi = (params: any) => {
+  return request.get({ url: '/localapi/container/list', params })
+}
+
+export const imagesApi = (params: any) => {
+  return request.get({ url: '/localapi/image/list', params })
+}
+
 export const saveContainerApi = (data: any) => {
   return request.post({ url: '/localapi/container/create', data })
 }
