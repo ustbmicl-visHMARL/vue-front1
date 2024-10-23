@@ -173,15 +173,15 @@ const adminList = [
       icon: "icomoon-free:lab"
     }
   },
-  {
-    path: '/authorization/containerList',
-    component: 'views/Authorization/ContainerList/index',
-    name: 'ContainerList',
-    meta: {
-      title: 'router.containerList',
-      icon: "gravity-ui:logo-docker"
-    }
-  },
+  // {
+  //   path: '/authorization/containerList',
+  //   component: 'views/Authorization/ContainerList/index',
+  //   name: 'ContainerList',
+  //   meta: {
+  //     title: 'router.containerList',
+  //     icon: "gravity-ui:logo-docker"
+  //   }
+  // },
   {
     path: '/authorization/containers',
     component: 'views/Authorization/Containers/Containers',
@@ -229,15 +229,15 @@ const adminList = [
           icon: "icomoon-free:lab"
         }
       },
-      {
-        path: 'containerList',
-        component: 'views/Authorization/ContainerList/index',
-        name: 'ContainerList',
-        meta: {
-          title: 'router.containerList',
-          icon: "gravity-ui:logo-docker"
-        }
-      },
+      // {
+      //   path: 'containerList',
+      //   component: 'views/Authorization/ContainerList/index',
+      //   name: 'ContainerList',
+      //   meta: {
+      //     title: 'router.containerList',
+      //     icon: "gravity-ui:logo-docker"
+      //   }
+      // },
       {
         path: 'containers',
         component: 'views/Authorization/Containers/Containers',
