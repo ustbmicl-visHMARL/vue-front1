@@ -173,6 +173,7 @@ export default {
     authorization: 'Authorization',
     user: 'User management',
     lab: 'Lab management',
+    containerList: 'Container List',
     container: 'Container management',
     role: 'Role management',
     document: 'Document',
@@ -510,9 +511,13 @@ export default {
     form: 'Combined with Form component'
   },
   exampleDemo: {
+    document: 'Document',
     title: 'Title',
     add: 'Add',
     del: 'Delete',
+    start: 'Start',
+    open: 'Open',
+    close: 'Close',
     view: 'View',
     edit: 'Edit',
     author: 'Author',
@@ -555,6 +560,7 @@ export default {
   },
   labDemo: {
     title: 'Lab management',
+    port: 'Port',
     message:
       'Because it is simulated data, only two accounts with different permissions are provided, which can be modified and combined by developers according to the actual situation.',
     index: 'Index',
@@ -569,7 +575,6 @@ export default {
     action: 'Action',
     username: 'Expreimenter',
     labname: 'Labname',
-    comment: 'Comment',
     status: 'Lab status',
     password: 'Password',
     role: 'Role',

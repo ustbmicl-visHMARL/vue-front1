@@ -172,6 +172,7 @@ export default {
     authorization: '权限管理',
     user: '用户管理',
     lab: '实验管理',
+    containerList: '容器列表',
     container: '容器管理',
     role: '角色管理',
     document: '文档',
@@ -503,8 +504,12 @@ export default {
     form: '与 Form 组件组合'
   },
   exampleDemo: {
+    document: '文档',
     title: '标题',
     add: '新增',
+    start: '启动',
+    open: '打开',
+    close: '关闭',
     del: '删除',
     view: '视图',
     edit: '编辑',
@@ -548,11 +553,11 @@ export default {
   },
   labDemo: {
     title: '实验管理',
+    port: '端口',
     message: '由于是模拟数据，所以只提供了两种不同权限的帐号，开发者可根据实际情况自行改造结合。',
     containerName: '容器名',
     algName: '算法名',
     dataPath: '数据路径',
-    comment: '备注',
     envName: '环境名',
     creater: '创建者',
     containerStatus: '容器状态',
