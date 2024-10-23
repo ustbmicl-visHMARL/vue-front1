@@ -272,7 +272,7 @@ const getRole = async () => {
   const res =
     appStore.getDynamicRouter && appStore.getServerDynamicRouter && userStore.getUserInfo?.admin
       ? await getAdminRoleApi(params)
-      : await getAdminRoleApi(params)
+      : await getTestRoleApi(params)
   if (res) {
     const routers = res.data || []
     userStore.setRoleRouters(routers)
