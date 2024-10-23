@@ -13,15 +13,23 @@ import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
-import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
-import { useRouter } from 'vue-router'
+import {
+  saveContainerApi,
+  deleteContainerByIdApi,
+  startContainerApi,
+  stopContainerApi,
+  expsApi
+} from '@/api/containers'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 const { t } = useI18n()
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
-    const res = await labsApi({
+    const res = await expsApi({
       id: unref(currentNodeKey),
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
@@ -34,12 +42,12 @@ const { tableRegister, tableState, tableMethods } = useTable({
   },
   fetchDelApi: async () => {
     console.log('fetchDelApi')
-    const res = await deleteLabByIdApi(unref(ids))
+    const res = await deleteContainerByIdApi(unref(ids))
     return !!res
   }
 })
 const { total, loading, dataList, pageSize, currentPage } = tableState
-const { getList, getElTableExpose, delList } = tableMethods
+const { getList, delList } = tableMethods
 
 const crudSchemas = reactive<CrudSchema[]>([
   {
@@ -54,7 +62,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      type: 'selection'
+      type: 'selection',
+      hidden: true
     }
   },
   {
@@ -71,24 +80,12 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'labname',
-    label: t('labDemo.labname')
-  },
-  {
     field: 'containerName',
     label: t('labDemo.containerName')
   },
   {
-    field: 'algName',
-    label: t('labDemo.algName')
-  },
-  {
-    field: 'envName',
-    label: t('labDemo.envName')
-  },
-  {
-    field: 'dataPath',
-    label: t('labDemo.dataPath')
+    field: 'port',
+    label: t('labDemo.port')
   },
   {
     field: 'username',
@@ -108,9 +105,35 @@ const crudSchemas = reactive<CrudSchema[]>([
         })
         return res.data.list.map((v) => ({
           label: v.username,
-          value: v.account
+          value: v.id
         }))
       }
+    }
+  },
+  {
+    field: 'internal',
+    label: 'internal',
+    table: {
+      hidden: true
+    },
+    detail: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    }
+  },
+  {
+    field: 'external',
+    label: 'external',
+    table: {
+      hidden: true
+    },
+    detail: {
+      hidden: true
+    },
+    search: {
+      hidden: true
     }
   },
   {
@@ -123,6 +146,7 @@ const crudSchemas = reactive<CrudSchema[]>([
         collapseTags: true,
         maxCollapseTags: 1
       },
+      hidden: true,
       optionApi: async () => {
         const res = ['Pending', 'Completed']
         return res.map((v, i) => ({
@@ -153,18 +177,13 @@ const crudSchemas = reactive<CrudSchema[]>([
     field: 'createTime',
     label: t('labDemo.createTime'),
     form: {
-      component: 'Input',
-      componentProps: {
-        // readonly: true // 设置为只读模式
-        // 或者使用 disabled: true 来完全禁用输入框
-        disabled: true
-      },
-      hidden: false
+      hidden: true
     },
     search: {
       hidden: true
     },
     table: {
+      width: 180,
       slots: {
         default: ({ row }: any) => {
           const date = new Date(row.createTime)
@@ -193,17 +212,17 @@ const crudSchemas = reactive<CrudSchema[]>([
           const row = data.row as DepartmentUserItem
           return (
             <>
-              <BaseButton type="primary" onClick={() => action(row, 'edit')}>
-                {t('exampleDemo.edit')}
+              <BaseButton type="primary" onClick={() => startContainer(row)}>
+                {t('exampleDemo.start')}
               </BaseButton>
-              <BaseButton type="success" onClick={() => action(row, 'detail')}>
-                {t('exampleDemo.detail')}
+              <BaseButton type="success" onClick={() => openContainer(row)}>
+                {t('exampleDemo.open')}
               </BaseButton>
-              <BaseButton type="danger" onClick={() => delData(row)}>
+              <BaseButton type="info" onClick={() => stopContainer(row)}>
+                {t('exampleDemo.close')}
+              </BaseButton>
+              <BaseButton type="danger" loading={delLoading.value} onClick={() => delData(row)}>
                 {t('exampleDemo.del')}
-              </BaseButton>
-              <BaseButton type="warning" onClick={() => toView(row)}>
-                {t('exampleDemo.view')}
               </BaseButton>
             </>
           )
@@ -238,19 +257,35 @@ const AddAction = () => {
   actionType.value = ''
 }
 
+const toDocument = () => {
+  window.open('https://www.yuque.com/xucheng-iq3fa/rltyby/nnneskleg2avp7i3?singleDoc#')
+}
+
 const delLoading = ref(false)
-const ids = ref<string[]>([])
+const ids = ref('')
 
 const delData = async (row?: DepartmentUserItem) => {
-  const elTableExpose = await getElTableExpose()
-  ids.value = row
-    ? [row.id]
-    : elTableExpose?.getSelectionRows().map((v: DepartmentUserItem) => v.id) || []
+  console.log('delData', row)
+  ids.value = row!.id
   delLoading.value = true
-
-  await delList(unref(ids).length).finally(() => {
+  await delList(1).finally(() => {
     delLoading.value = false
   })
+}
+
+const startContainer = async (row: DepartmentUserItem) => {
+  console.log('startContainer', row)
+  startContainerApi(row.id)
+}
+
+const openContainer = async (row: DepartmentUserItem) => {
+  console.log('openContainer', row)
+  window.open(`http://127.0.0.1:${(row as any).port || 8848}`)
+}
+
+const stopContainer = async (row: DepartmentUserItem) => {
+  console.log('stopContainer', row)
+  stopContainerApi(row.id)
 }
 
 const action = (row: DepartmentUserItem, type: string) => {
@@ -260,24 +295,27 @@ const action = (row: DepartmentUserItem, type: string) => {
   dialogVisible.value = true
 }
 
-const router = useRouter()
-const toView = (row: DepartmentUserItem) => {
-  console.log(row)
-  router.push({
-    name: 'LabCharts'
-  })
-}
 const writeRef = ref<ComponentRef<typeof Write>>()
 
 const saveLoading = ref(false)
 
 const save = async () => {
+  console.log((userStore.getLoginInfo as any).username, userStore, '@@')
   const write = unref(writeRef)
   const formData = await write?.submit()
   if (formData) {
     saveLoading.value = true
     try {
-      const res = await saveLabApi(formData)
+      const realForm = {
+        name: formData.containerName || '',
+        userId: Number(formData.username) || -1,
+        portMappingList: {
+          external: Number(formData.external) || 0,
+          internal: Number(formData.internal) || 0
+        },
+        extraConfig: ''
+      }
+      const res = await saveContainerApi(realForm)
       if (res) {
         // currentPage.value = 1
         getList()
@@ -306,8 +344,8 @@ const save = async () => {
 
       <div class="mb-10px">
         <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
-        <BaseButton :loading="delLoading" type="danger" @click="delData()">
-          {{ t('exampleDemo.del') }}
+        <BaseButton type="success" @click="toDocument()">
+          {{ t('exampleDemo.document') }}
         </BaseButton>
       </div>
       <Table
