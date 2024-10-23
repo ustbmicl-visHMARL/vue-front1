@@ -22,7 +22,6 @@ import { set } from 'lodash-es'
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { BaseButton } from '@/components/Button'
-import { getSwiperApi } from '@/api/labcharts'
 
 const { t } = useI18n()
 

@@ -1,8 +1,5 @@
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
-import echarts from 'echarts/types/dist/echarts'
-import { readFileSync } from 'fs'
-import Papa from 'papaparse'
 
 const { t } = useI18n()
 
@@ -769,7 +766,7 @@ export const qvalueSquareOptions = async (episodeId: number): Promise<EChartsOpt
   const xdata = Array.from({ length: parsedData.length }, (_, index) => index)
   const ydata = ['右下', '右上', '左下', '左上']
   type TransformedArrayType = [number, string, number]
-  const transformedArray: TransformedArrayType[] = [];
+  const transformedArray: TransformedArrayType[] = []
   parsedData.forEach((subArray, index) => {
     subArray.forEach((value, directionIndex) => {
       transformedArray.push([index, ydata[directionIndex], value])
