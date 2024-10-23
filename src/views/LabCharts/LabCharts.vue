@@ -12,11 +12,7 @@ import {
   learnLineOptions,
   qvalueSquareOptions
 } from '../Dashboard/echarts-data'
-<<<<<<< HEAD
 import { ref, reactive, Ref, nextTick, onMounted } from 'vue'
-=======
-import { ref, reactive, Ref, nextTick, watchEffect, watch } from 'vue'
->>>>>>> origin/dev-zyf-half
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
@@ -129,7 +125,6 @@ const currentIndex = ref(0) // 当前图片的索引
 const totalPics = ref(0) // 总图片数量
 // const blockElement = ref(null); // 图片展示的DOM元素
 const blockElement: Ref<HTMLElement | null> = ref(null)
-<<<<<<< HEAD
 
 // 获取图片列表的函数
 const fetchImages = async () => {
@@ -145,25 +140,6 @@ const fetchImages = async () => {
     }
   } catch (error) {
     console.error('Failed to fetch images:', error)
-=======
-const lastImg = () => {
-  currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
-}
-const nextImg = () => {
-  currentIndex.value = (currentIndex.value + 1) % totalPics
-}
-
-watch(currentIndex, (newvalue, oldvalue) => {
-  console.log('watch', newvalue, oldvalue)
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
-})
-
-const getSwiperImg = async () => {
-  const res = await getSwiperApi({ name: '122' })
-  if (res) {
-    pics.value = res.data.imgs
-    totalPics = res.data.imgs.length
->>>>>>> origin/dev-zyf-half
   }
 }
 
