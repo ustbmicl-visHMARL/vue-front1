@@ -174,6 +174,24 @@ const adminList = [
     }
   },
   {
+    path: '/authorization/containerList',
+    component: 'views/Authorization/ContainerList/index',
+    name: 'ContainerList',
+    meta: {
+      title: 'router.containerList',
+      icon: "gravity-ui:logo-docker"
+    }
+  },
+  {
+    path: '/authorization/containers',
+    component: 'views/Authorization/Containers/Containers',
+    name: 'Containers',
+    meta: {
+      title: 'router.containerList',
+      icon: "gravity-ui:logo-docker"
+    }
+  },
+  {
     path: '/authorization/container',
     component: 'views/Authorization/Container/Container',
     name: 'Container',
@@ -209,6 +227,24 @@ const adminList = [
         meta: {
           title: 'router.lab',
           icon: "icomoon-free:lab"
+        }
+      },
+      {
+        path: 'containerList',
+        component: 'views/Authorization/ContainerList/index',
+        name: 'ContainerList',
+        meta: {
+          title: 'router.containerList',
+          icon: "gravity-ui:logo-docker"
+        }
+      },
+      {
+        path: 'containers',
+        component: 'views/Authorization/Containers/Containers',
+        name: 'Containers',
+        meta: {
+          title: 'router.containerList',
+          icon: "gravity-ui:logo-docker"
         }
       },
       {
