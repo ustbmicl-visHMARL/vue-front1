@@ -14,7 +14,6 @@ import { Dialog } from '@/components/Dialog'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
 import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
-import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 

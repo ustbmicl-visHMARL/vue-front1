@@ -1,4 +1,6 @@
 import type { Component } from 'vue'
+import RedInput from '@/components/RedInput/RedInput.vue'
+
 import {
   ElCascader,
   ElCheckboxGroup,
@@ -53,7 +55,8 @@ const componentMap: Recordable<Component, ComponentName> = {
   Upload: ElUpload,
   JsonEditor: JsonEditor,
   IconPicker: IconPicker,
-  IAgree: IAgree
+  IAgree: IAgree,
+  RedInput: RedInput
 }
 
 export { componentMap }

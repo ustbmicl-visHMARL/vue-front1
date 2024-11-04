@@ -22,6 +22,7 @@ import {
 } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
 import { imagesApi } from '@/api/containers'
+import RedInput from '@/components/RedInput/RedInput.vue'
 
 const userStore = useUserStore()
 
@@ -118,57 +119,11 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     field: 'portMappingList',
     form: {
-      component: 'JsonEditor',
-      label: t('labDemo.port'),
-      value: Array.from({ length: 10 }, () =>
-        Object.assign(
-          {},
-          {
-            external: 0,
-            internal: 0
-          }
-        )
-      )
+      component: 'RedInput',
+      label: t('labDemo.port')
     },
     table: {
       hidden: true
-    }
-  },
-  {
-    field: 'labstatus',
-    label: t('labDemo.status'),
-    form: {
-      component: 'Select',
-      componentProps: {
-        multiple: false,
-        collapseTags: true,
-        maxCollapseTags: 1
-      },
-      hidden: true,
-      optionApi: async () => {
-        const res = ['Pending', 'Completed']
-        return res.map((v, i) => ({
-          label: v,
-          value: i
-        }))
-      }
-    },
-    search: {
-      component: 'Select',
-      componentProps: {
-        options: [
-          { label: t('labDemo.completed'), value: 'completed' }, // 已完成
-          { label: t('labDemo.pending'), value: 'pending' } // 未完成
-        ],
-        defaultValue: ''
-      }
-    },
-    table: {
-      slots: {
-        default: ({ row }: any) => {
-          return row.labstatus ? t('labDemo.completed') : t('labDemo.pending')
-        }
-      }
     }
   },
   {
@@ -303,14 +258,26 @@ const save = async () => {
   const formData = await write?.submit()
   if (formData) {
     saveLoading.value = true
+    let portMappingList = Array.from(document.querySelectorAll('.inputList input')).map(
+      (item: any) => {
+        const array = item.value.split(',')
+        return {
+          external: Number(array[0]) || 8080,
+          internal: Number(array[1]) || Number(array[0]) || 8080
+        }
+      }
+    )
+    portMappingList = Array.from(new Set(portMappingList.map(JSON.stringify as any))).map(
+      JSON.parse as any
+    )
+    console.log('portMappingList', portMappingList)
+
     try {
       const realForm = {
         name: formData.containerName || '',
         userId: Number((userStore.getUserInfo as any).userId) || -1,
         imageId: formData.imageId || '',
-        portMappingList: formData.portMappingList.filter(
-          (item) => item.external !== 0 && item.internal !== 0
-        ),
+        portMappingList: portMappingList,
         extraConfig: ''
       }
       const res = await saveContainerApi(realForm)

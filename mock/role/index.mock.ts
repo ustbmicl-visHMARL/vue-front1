@@ -191,15 +191,15 @@ const adminList = [
       icon: "gravity-ui:logo-docker"
     }
   },
-  {
-    path: '/authorization/container',
-    component: 'views/Authorization/Container/Container',
-    name: 'Container',
-    meta: {
-      title: 'router.container',
-      icon: "mdi:docker"
-    }
-  },
+  // {
+  //   path: '/authorization/container',
+  //   component: 'views/Authorization/Container/Container',
+  //   name: 'Container',
+  //   meta: {
+  //     title: 'router.container',
+  //     icon: "mdi:docker"
+  //   }
+  // },
   {
     path: '/authorization/message',
     component: 'views/Authorization/Message/Message',
@@ -247,15 +247,15 @@ const adminList = [
           icon: "gravity-ui:logo-docker"
         }
       },
-      {
-        path: 'container',
-        component: 'views/Authorization/Container/Container',
-        name: 'Container',
-        meta: {
-          title: 'router.container',
-          icon: "mdi:docker"
-        }
-      },
+      // {
+      //   path: 'container',
+      //   component: 'views/Authorization/Container/Container',
+      //   name: 'Container',
+      //   meta: {
+      //     title: 'router.container',
+      //     icon: "mdi:docker"
+      //   }
+      // },
       {
         path: 'user',
         component: 'views/Authorization/User/User',
