@@ -138,6 +138,7 @@ export default {
     analysis: 'Analysis',
     workplace: 'Workplace',
     lida: 'Lida',
+    reduction: 'Reduction',
     problem: 'Feedback',
     notify: 'Notify',
     algorithm: 'Algorithm',

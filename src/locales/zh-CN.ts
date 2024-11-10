@@ -139,6 +139,7 @@ export default {
     workplace: '工作台',
     algorithm: '算法管理',
     lida: 'lida',
+    reduction: '数据降维',
     problem: '问题反馈',
     notify: '通知',
     guide: '引导',

@@ -22,7 +22,7 @@ import {
 } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
 import { imagesApi } from '@/api/containers'
-import RedInput from '@/components/RedInput/RedInput.vue'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 
@@ -214,6 +214,13 @@ const toDocument = () => {
   window.open('https://www.yuque.com/xucheng-iq3fa/rltyby/nnneskleg2avp7i3?singleDoc#')
 }
 
+const router = useRouter()
+const toReduction = () => {
+  router.push({
+    name: 'Reduction'
+  })
+}
+
 const delLoading = ref(false)
 const ids = ref('')
 
@@ -241,13 +248,6 @@ const stopContainer = async (row: any) => {
   stopContainerApi(row.containerId)
 }
 
-const action = (row: DepartmentUserItem, type: string) => {
-  dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
-  actionType.value = type
-  currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
-  dialogVisible.value = true
-}
-
 const writeRef = ref<ComponentRef<typeof Write>>()
 
 const saveLoading = ref(false)
@@ -258,15 +258,20 @@ const save = async () => {
   const formData = await write?.submit()
   if (formData) {
     saveLoading.value = true
-    let portMappingList = Array.from(document.querySelectorAll('.inputList input')).map(
-      (item: any) => {
-        const array = item.value.split(',')
-        return {
-          external: Number(array[0]) || 8080,
-          internal: Number(array[1]) || Number(array[0]) || 8080
-        }
-      }
+    const externalList = Array.from(document.querySelectorAll('.inputList .external input'))
+    const internalList = Array.from(document.querySelectorAll('.inputList .internal input'))
+    let portMappingList: any = []
+    for (let i = 0; i < externalList.length; i++) {
+      portMappingList.push({
+        external: Number((externalList[i] as any).value) || null,
+        internal: Number((internalList[i] as any).value) || null
+      })
+    }
+    // 过滤出所有端口为null的对象
+    portMappingList = portMappingList.filter(
+      (item) => item.external !== null && item.internal !== null
     )
+
     portMappingList = Array.from(new Set(portMappingList.map(JSON.stringify as any))).map(
       JSON.parse as any
     )
@@ -310,6 +315,9 @@ const save = async () => {
       <div class="mb-10px">
         <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
         <BaseButton type="success" @click="toDocument()">
+          {{ t('exampleDemo.document') }}
+        </BaseButton>
+        <BaseButton type="success" @click="toReduction()">
           {{ t('exampleDemo.document') }}
         </BaseButton>
       </div>
