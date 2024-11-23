@@ -3,8 +3,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
 import { ref, unref, reactive } from 'vue'
-import { ElMessage, ElTree } from 'element-plus'
-import { usersApi } from '@/api/user'
+import { ElMessage } from 'element-plus'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
 import { Search } from '@/components/Search'
@@ -22,7 +21,6 @@ import {
 } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
 import { imagesApi } from '@/api/containers'
-import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 
@@ -193,8 +191,6 @@ const setSearchParams = (params: any) => {
   getList()
 }
 
-const treeEl = ref<typeof ElTree>()
-
 const currentNodeKey = ref('')
 
 const dialogVisible = ref(false)
@@ -212,13 +208,6 @@ const AddAction = () => {
 
 const toDocument = () => {
   window.open('https://www.yuque.com/xucheng-iq3fa/rltyby/nnneskleg2avp7i3?singleDoc#')
-}
-
-const router = useRouter()
-const toReduction = () => {
-  router.push({
-    name: 'Reduction'
-  })
 }
 
 const delLoading = ref(false)
@@ -315,9 +304,6 @@ const save = async () => {
       <div class="mb-10px">
         <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
         <BaseButton type="success" @click="toDocument()">
-          {{ t('exampleDemo.document') }}
-        </BaseButton>
-        <BaseButton type="success" @click="toReduction()">
           {{ t('exampleDemo.document') }}
         </BaseButton>
       </div>

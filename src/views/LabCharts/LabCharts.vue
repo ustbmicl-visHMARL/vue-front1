@@ -7,12 +7,11 @@ import {
   lineOptions,
   actionScatterOptions,
   valueScatterOptions,
-  importanceBarOptions,
   rewardLineOptions,
   learnLineOptions,
   qvalueSquareOptions
 } from '../Dashboard/echarts-data'
-import { ref, reactive, Ref, nextTick, onMounted } from 'vue'
+import { ref, reactive, Ref, nextTick, onMounted, computed } from 'vue'
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
@@ -26,6 +25,7 @@ import { BaseButton } from '@/components/Button'
 const { t } = useI18n()
 
 const loading = ref(true)
+const loadingIframe = ref(true)
 
 const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption
 
@@ -100,14 +100,6 @@ const getMonthlySales = async () => {
     ])
   }
 }
-
-// const actionScatterData = reactive<EChartsOption>(actionScatterOptions) as EChartsOption
-// const valueScatterData = reactive<EChartsOption>(valueScatterOptions) as EChartsOption
-const importanceBarData = reactive<EChartsOption>(importanceBarOptions) as EChartsOption
-// const rewardLineData = reactive<EChartsOption>(rewardLineOptions) as EChartsOption
-// const learnLineData = reactive<EChartsOption>(learnLineOptions) as EChartsOption
-// const qvalueData = reactive<EChartsOption>(qvalueSquareOptions) as EChartsOption
-
 const num = ref(1)
 const handleChange = (value: number) => {
   barOptionsData.series![0].data[0] *= 2
@@ -161,37 +153,6 @@ onMounted(() => {
   fetchImages()
 })
 
-// return {
-//   pics,
-//   currentIndex,
-//   totalPics,
-//   blockElement,
-//   lastImg,
-//   nextImg
-// }
-
-// const pics = ref([])
-// let totalPics = 1
-// const currentIndex = ref(0)
-// const blockElement: Ref<HTMLElement | null> = ref(null)
-// const lastImg = () => {
-//   currentIndex.value = !currentIndex.value ? totalPics - 1 : (currentIndex.value - 1) % totalPics
-//   blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
-//   console.log(pics.value, currentIndex.value, pics.value[currentIndex.value])
-// }
-// const nextImg = () => {
-//   currentIndex.value = (currentIndex.value + 1) % totalPics
-//   blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
-// }
-
-// const getSwiperImg = async () => {
-//   const res = await getSwiperApi({ name: '122' })
-//   if (res) {
-//     pics.value = res.data.imgs
-//     totalPics = res.data.imgs.length
-//   }
-// }
-
 const getAllApi = async () => {
   await Promise.all([
     // getSwiperImg(),
@@ -205,14 +166,42 @@ const getAllApi = async () => {
   })
 }
 
-getAllApi()
-
 const learnLineData = ref({}) // 使用ref创建响应式引用
 const rewardLineData = ref({})
 const actionScatterData = ref({})
 const valueScatterData = ref({})
 const qvalueData = ref({})
 onMounted(async () => {
+  getAllApi()
+
+  const iframe = document.getElementById('myIframe') as HTMLIFrameElement
+  iframe.addEventListener('load', () => {
+    loadingIframe.value = false
+  })
+  function inSteps(n, steps) {
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i]
+      if (n >= step[0] && n <= step[1]) {
+        return true
+      }
+    }
+    return false
+  }
+  window.addEventListener('message', function (event) {
+    if (event.origin === 'http://127.0.0.1:8282') {
+      const { chosen } = event.data
+      console.log('用户选择的step区间为：', chosen)
+      if (chosen.length === 0) return
+      ;(actionScatterData.value as any).series[0].data.forEach((item: any, index) => {
+        if (!inSteps(item[0], chosen)) {
+          ;(actionScatterData.value as any).series[0].data[index][1] += ' '
+        } else if (item[1].endsWith(' ')) {
+          ;(actionScatterData.value as any).series[0].data[index][1] = item[1].trim()
+        }
+      })
+    }
+  })
+
   try {
     const actionOptions = await actionScatterOptions(1)
     actionScatterData.value = actionOptions // 更新响应式引用的值
@@ -229,6 +218,18 @@ onMounted(async () => {
     // 处理错误情况，例如设置一个错误信息或默认配置
   }
 })
+
+const isSelected = ref('t-SNE')
+
+// 'http://127.0.0.1:8282/iframe.html?scenario=' + isSelected == 't-SNE' ? '1' : '2'
+const iframeSrc = computed(() => {
+  return 'http://127.0.0.1:8282/iframe.html?scenario=2&method=' + isSelected.value
+})
+const selectButton = (buttonName: string) => {
+  if (isSelected.value === buttonName) return
+  isSelected.value = buttonName
+  console.log(buttonName, iframeSrc.value)
+}
 </script>
 <template>
   <ElRow class="header">
@@ -312,10 +313,25 @@ onMounted(async () => {
       </ElCard>
     </ElCol>
     <ElCol :span="12">
-      <ElCard shadow="hover">
-        <ElSkeleton :loading="loading" animated :rows="14" class="mb-10px">
-          <Echart :options="importanceBarData" :height="300" />
+      <ElCard style="position: relative" shadow="hover">
+        <ElSkeleton :loading="loadingIframe" animated :rows="14" class="mb-10px">
+          <!-- <Echart :options="importanceBarData" :height="300" /> -->
         </ElSkeleton>
+        <iframe id="myIframe" :src="iframeSrc" frameborder="0" height="300px"></iframe>
+        <div style="position: absolute; bottom: 20px; left: 270px"
+          ><ElButton
+            :type="isSelected === 't-SNE' ? 'primary' : 'default'"
+            @click="selectButton('t-SNE')"
+            >t-SNE</ElButton
+          ></div
+        >
+        <div style="position: absolute; bottom: 20px; right: 270px"
+          ><ElButton
+            :type="isSelected === 'UMAP' ? 'primary' : 'default'"
+            @click="selectButton('UMAP')"
+            >UMAP</ElButton
+          ></div
+        >
       </ElCard>
     </ElCol>
   </ElRow>
@@ -402,5 +418,10 @@ onMounted(async () => {
 .step-input {
   width: 100px;
   height: 20px;
+}
+
+iframe {
+  width: 100%;
+  transform: translateY(-10%);
 }
 </style>

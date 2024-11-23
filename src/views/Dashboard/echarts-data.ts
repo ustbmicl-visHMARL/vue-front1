@@ -328,6 +328,7 @@ export const actionScatterOptions = async (episodeId: number): Promise<EChartsOp
   // console.log(episodes)
 
   const maxX = Math.max(...steps)
+
   // const minY = Math.min(...values)
   // const maxY = Math.max(...values)
   // 返回动态生成的图表配置
@@ -758,7 +759,7 @@ export const qvalueSquareOptions = async (episodeId: number): Promise<EChartsOpt
 
   const result = await response.json()
   const parsedData = result.data.qvalue // 解析返回的 data
-  console.log(parsedData.length)
+  // console.log(parsedData.length)
 
   // const episodes = parsedData.map((item) => parseInt(item.episode, 10))
   // console.log(episodes)

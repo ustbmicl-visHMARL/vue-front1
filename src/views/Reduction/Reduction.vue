@@ -27,6 +27,11 @@ onMounted(() => {
     loading.value = false
   }
   iframe.addEventListener('load', iframeOnload)
+  window.addEventListener('message', function (event) {
+    if (event.origin === 'http://127.0.0.1:8282') {
+      console.log('@@@@', event.data)
+    }
+  })
 })
 </script>
 
