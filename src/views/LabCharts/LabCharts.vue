@@ -11,7 +11,7 @@ import {
   learnLineOptions,
   qvalueSquareOptions
 } from '../Dashboard/echarts-data'
-import { ref, reactive, Ref, nextTick, onMounted, computed } from 'vue'
+import { ref, reactive, Ref, nextTick, onMounted, computed, watch } from 'vue'
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
@@ -139,14 +139,20 @@ const lastImg = () => {
   currentIndex.value = !currentIndex.value
     ? totalPics.value - 1
     : (currentIndex.value - 1) % totalPics.value
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
 }
 
 // 切换到下一张图片
 const nextImg = () => {
   currentIndex.value = (currentIndex.value + 1) % totalPics.value
-  blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
 }
+
+// 监听currentIndex的变化
+watch(
+  () => currentIndex.value,
+  () => {
+    blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
+  }
+)
 
 // 组件挂载时调用获取图片列表
 onMounted(() => {

@@ -107,7 +107,7 @@ const crudSchemas = reactive<CrudSchema[]>([
           pageIndex: 1,
           pageSize: 100000
         })
-        return res.data.map((v) => ({
+        return res.data.list.map((v) => ({
           label: v.version,
           value: v.id
         }))
@@ -224,12 +224,17 @@ const delData = async (row?: DepartmentUserItem) => {
 
 const startContainer = async (row: any) => {
   console.log('startContainer', row)
-  startContainerApi(row.containerId)
+  const res = await startContainerApi(row.id)
+  if (res.code == 0) {
+    ElMessage.success('启动成功')
+  } else {
+    ElMessage.error('启动失败')
+  }
 }
 
 const openContainer = async (row: any) => {
   console.log('openContainer', row)
-  window.open(`http://115.25.41.98:${row.webIdePort || 8848}`)
+  window.open(`http://115.25.41.98:${row.webIDEPort || 8848}`)
 }
 
 const stopContainer = async (row: any) => {
