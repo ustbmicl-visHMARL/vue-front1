@@ -173,27 +173,27 @@ const adminList = [
       icon: "icomoon-free:lab"
     }
   },
-  {
-    path: '/reduction',
-    component: '#',
-    redirect: '/reduction/index',
-    name: 'Reduction',
-    meta: {
-      title: 'router.dashboard',
-    },
-    children: [
-      {
-        path: 'index',
-        component: 'views/Reduction/Reduction',
-        name: 'Reduction',
-        meta: {
-          title: 'router.reduction',
-          icon: 'eos-icons:edge-computing-outlined',
-          noCache: true,
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/reduction',
+  //   component: '#',
+  //   redirect: '/reduction/index',
+  //   name: 'Reduction',
+  //   meta: {
+  //     title: 'router.dashboard',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: 'views/Reduction/Reduction',
+  //       name: 'Reduction',
+  //       meta: {
+  //         title: 'router.reduction',
+  //         icon: 'eos-icons:edge-computing-outlined',
+  //         noCache: true,
+  //       }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/authorization/containerList',
   //   component: 'views/Authorization/ContainerList/index',
