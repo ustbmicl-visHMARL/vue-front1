@@ -77,28 +77,28 @@ const crudSchemas = reactive<CrudSchema[]>([
     field: 'account',
     label: t('userDemo.account')
   },
-  {
-    field: 'permission',
-    label: t('userDemo.permission'),
-    search: {
-      hidden: true
-    },
-    form: {
-      component: 'Select',
-      componentProps: {
-        multiple: false,
-        collapseTags: true,
-        maxCollapseTags: 1
-      },
-      optionApi: async () => {
-        const res = await getRoleListApi()
-        return res.data?.list?.map((v) => ({
-          label: v.roleName,
-          value: v.roleName
-        }))
-      }
-    }
-  },
+  // {
+  //   field: 'permission',
+  //   label: t('userDemo.permission'),
+  //   search: {
+  //     hidden: true
+  //   },
+  //   form: {
+  //     component: 'Select',
+  //     componentProps: {
+  //       multiple: false,
+  //       collapseTags: true,
+  //       maxCollapseTags: 1
+  //     },
+  //     optionApi: async () => {
+  //       const res = await getRoleListApi()
+  //       return res.data?.list?.map((v) => ({
+  //         label: v.roleName,
+  //         value: v.roleName
+  //       }))
+  //     }
+  //   }
+  // },
   {
     field: 'email',
     label: t('userDemo.email'),

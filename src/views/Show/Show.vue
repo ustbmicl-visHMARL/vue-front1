@@ -1,133 +1,226 @@
 <script setup lang="ts">
-import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
-import { Echart } from '@/components/Echart'
-import { pieOptions, barOptions, lineOptions } from '../Dashboard/echarts-data'
-import { ref, reactive } from 'vue'
-import {
-  getUserAccessSourceApi,
-  getWeeklyUserActivityApi,
-  getMonthlySalesApi
-} from '@/api/dashboard/analysis'
-import { set } from 'lodash-es'
-import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
-
 const { t } = useI18n()
-
-const loading = ref(true)
-
-const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption
-
-// 用户来源
-const getUserAccessSource = async () => {
-  const res = await getUserAccessSourceApi().catch(() => {})
-  if (res) {
-    set(
-      pieOptionsData,
-      'legend.data',
-      res.data.map((v) => t(v.name))
-    )
-    console.log('pieOptionsData1', pieOptionsData)
-    pieOptionsData!.series![0].data = res.data.map((v) => {
-      return {
-        name: t(v.name),
-        value: v.value
-      }
-    })
-  }
-}
-
-const barOptionsData = reactive<EChartsOption>(barOptions) as EChartsOption
-
-// 周活跃量
-const getWeeklyUserActivity = async () => {
-  const res = await getWeeklyUserActivityApi().catch(() => {})
-  if (res) {
-    set(
-      barOptionsData,
-      'xAxis.data',
-      res.data.map((v) => t(v.name))
-    )
-    set(barOptionsData, 'series', [
-      {
-        name: t('analysis.activeQuantity'),
-        data: res.data.map((v) => v.value),
-        type: 'bar'
-      }
-    ])
-  }
-}
-
-const lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
-
-// 每月销售总额
-const getMonthlySales = async () => {
-  const res = await getMonthlySalesApi().catch(() => {})
-  if (res) {
-    set(
-      lineOptionsData,
-      'xAxis.data',
-      res.data.map((v) => t(v.name))
-    )
-    set(lineOptionsData, 'series', [
-      {
-        name: t('analysis.estimate'),
-        smooth: true,
-        type: 'line',
-        data: res.data.map((v) => v.estimate),
-        animationDuration: 2800,
-        animationEasing: 'cubicInOut'
-      },
-      {
-        name: t('analysis.actual'),
-        smooth: true,
-        type: 'line',
-        itemStyle: {},
-        data: res.data.map((v) => v.actual),
-        animationDuration: 2800,
-        animationEasing: 'quadraticOut'
-      }
-    ])
-  }
-}
-
-const getAllApi = async () => {
-  await Promise.all([getUserAccessSource(), getWeeklyUserActivity(), getMonthlySales()])
-  loading.value = false
-}
-
-getAllApi()
 </script>
 
 <template>
-  <ElRow :gutter="20" justify="space-between">
-    <!-- 第一列，包含两个卡片 -->
-    <ElCol :xl="8" :lg="8" :md="24" :sm="24" :xs="24">
-      <ElRow>
-        <ElCol :span="24">
-          <ElCard shadow="hover" class="mb-20px">
-            <ElSkeleton :loading="loading" animated :rows="6">
-              <Echart :options="pieOptionsData" :height="300" />
-            </ElSkeleton>
-          </ElCard>
-        </ElCol>
-        <ElCol :span="24">
-          <ElCard shadow="hover" class="mb-20px">
-            <ElSkeleton :loading="loading" animated :rows="6">
-              <Echart :options="barOptionsData" :height="300" />
-            </ElSkeleton>
-          </ElCard>
-        </ElCol>
-      </ElRow>
-    </ElCol>
-
-    <!-- 第二列，包含一个卡片 -->
-    <ElCol :xl="16" :lg="16" :md="24" :sm="24" :xs="24">
-      <ElCard shadow="hover">
-        <ElSkeleton :loading="loading" animated :rows="14" class="mb-10px">
-          <Echart :options="lineOptionsData" :height="660" />
-        </ElSkeleton>
-      </ElCard>
-    </ElCol>
-  </ElRow>
+  <div class="title">
+    <h1>{{ t('showDemo.title') }}</h1>
+    <div class="cards">
+      <el-card>
+        <template #header>
+          <div class="card-header">
+            <h3>{{ t('router.user') }}</h3>
+          </div>
+        </template>
+        <div class="content">
+          <p>{{ t('showDemo.userInfo') }}</p>
+        </div>
+        <template #footer>
+          <router-link to="/authorization/user"> {{ t('showDemo.detail') }} </router-link>
+        </template>
+      </el-card>
+      <el-card>
+        <template #header>
+          <div class="card-header">
+            <h3>{{ t('router.lab') }}</h3>
+          </div>
+        </template>
+        <div class="content">
+          <p>{{ t('showDemo.labInfo') }}</p>
+        </div>
+        <template #footer>
+          <router-link to="/authorization/lab"> {{ t('showDemo.detail') }} </router-link>
+        </template>
+      </el-card>
+      <el-card>
+        <template #header>
+          <div class="card-header">
+            <h3>{{ t('router.containerList') }}</h3>
+          </div>
+        </template>
+        <div class="content">
+          <p>{{ t('showDemo.containerInfo') }}</p>
+        </div>
+        <template #footer>
+          <router-link to="/authorization/containers">
+            {{ t('showDemo.detail') }}
+          </router-link>
+        </template>
+      </el-card>
+    </div>
+  </div>
+  <svg
+    width="100%"
+    height="100%"
+    id="svg"
+    viewBox="0 0 1440 590"
+    xmlns="http://www.w3.org/2000/svg"
+    class="transition duration-300 ease-in-out delay-150"
+  >
+    <path
+      d="M 0,600 L 0,150 C 93.7129186602871,104.38277511961724 187.4258373205742,58.76555023923446 272,84 C 356.5741626794258,109.23444976076554 432.0095693779904,205.3205741626794 525,204 C 617.9904306220096,202.6794258373206 728.5358851674641,103.95215311004785 846,84 C 963.4641148325359,64.04784688995215 1087.846889952153,122.87081339712918 1188,147 C 1288.153110047847,171.12918660287082 1364.0765550239234,160.56459330143542 1440,150 L 1440,600 L 0,600 Z"
+      stroke="none"
+      stroke-width="0"
+      fill="#8ed1fc"
+      fill-opacity="0.53"
+      class="transition-all duration-300 ease-in-out delay-150 path-0"
+    />
+    <path
+      d="M 0,600 L 0,350 C 105.64593301435409,371.85645933014354 211.29186602870817,393.7129186602871 318,395 C 424.70813397129183,396.2870813397129 532.4784688995215,377.0047846889952 617,369 C 701.5215311004785,360.9952153110048 762.7942583732058,364.26794258373207 863,363 C 963.2057416267942,361.73205741626793 1102.3444976076557,355.9234449760766 1205,353 C 1307.6555023923443,350.0765550239234 1373.8277511961721,350.0382775119617 1440,350 L 1440,600 L 0,600 Z"
+      stroke="none"
+      stroke-width="0"
+      fill="#8ed1fc"
+      fill-opacity="1"
+      class="transition-all duration-300 ease-in-out delay-150 path-1"
+    />
+  </svg>
 </template>
+<style>
+/* section.flex-1 {
+  padding: 0;
+  width: 100%;
+} */
+.cards .el-card .el-card__body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.cards .el-card .el-card__footer {
+  font-size: 15px;
+  padding: 0;
+  text-align: center;
+}
+.cards .el-card .el-card__footer:hover {
+  background-color: skyblue;
+  cursor: pointer;
+}
+.cards .el-card .el-card__footer:hover a {
+  color: #fff;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+<style scoped>
+.title {
+  position: relative;
+}
+.title h1 {
+  font-size: 50px;
+  position: absolute;
+  margin-top: 50px;
+  width: 900px;
+  left: 23%;
+  color: #fff;
+  /* 字体间距 */
+  letter-spacing: 5px;
+  /* 字体阴影 */
+  text-shadow: 3px 7px 10px black;
+}
+.content {
+  text-align: center;
+}
+.cards {
+  display: flex;
+  position: absolute;
+  z-index: 3;
+  opacity: 0.7;
+  width: 100%;
+  top: 270px;
+  justify-content: space-around;
+}
+.cards a {
+  line-height: 52px;
+  font-size: 14px;
+  color: #409eff;
+  text-align: center;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cards h3 {
+  font-size: 20px;
+  margin: 0;
+  text-align: center;
+}
+.cards .el-card:hover {
+  /* 使用transform属性实现向上移动（ translateY 控制垂直方向移动，向上移动为负值） */
+  transform: translateY(-5px);
+  /* 设置过渡效果，让移动在0.5s内以线性方式完成 */
+  transition: transform 0.3s linear;
+  /* 添加阴影效果，示例中为水平方向和垂直方向的阴影偏移量都为0，模糊半径为5px，阴影颜色为灰色 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.cards .el-card {
+  width: 25%;
+}
+svg {
+  /* 透明度50% */
+  opacity: 0.5;
+}
+.path-0 {
+  animation: pathAnim-0 4s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pathAnim-0 {
+  0% {
+    d: 'M 0,600 L 0,150 C 93.7129186602871,104.38277511961724 187.4258373205742,58.76555023923446 272,84 C 356.5741626794258,109.23444976076554 432.0095693779904,205.3205741626794 525,204 C 617.9904306220096,202.6794258373206 728.5358851674641,103.95215311004785 846,84 C 963.4641148325359,64.04784688995215 1087.846889952153,122.87081339712918 1188,147 C 1288.153110047847,171.12918660287082 1364.0765550239234,160.56459330143542 1440,150 L 1440,600 L 0,600 Z';
+  }
+  25% {
+    d: 'M 0,600 L 0,150 C 98.2583732057416,158.59330143540672 196.5167464114832,167.1866028708134 291,159 C 385.4832535885168,150.8133971291866 476.19138755980873,125.84688995215313 574,127 C 671.8086124401913,128.15311004784687 776.7177033492823,155.42583732057417 883,165 C 989.2822966507177,174.57416267942583 1096.9377990430621,166.44976076555022 1190,161 C 1283.0622009569379,155.55023923444978 1361.531100478469,152.7751196172249 1440,150 L 1440,600 L 0,600 Z';
+  }
+  50% {
+    d: 'M 0,600 L 0,150 C 70.59330143540669,169.89473684210526 141.18660287081337,189.78947368421055 236,203 C 330.8133971291866,216.21052631578945 449.846889952153,222.73684210526318 561,205 C 672.153110047847,187.26315789473682 775.4258373205743,145.26315789473682 885,125 C 994.5741626794257,104.73684210526316 1110.44976076555,106.21052631578948 1204,114 C 1297.55023923445,121.78947368421052 1368.7751196172248,135.89473684210526 1440,150 L 1440,600 L 0,600 Z';
+  }
+  75% {
+    d: 'M 0,600 L 0,150 C 73.17703349282297,177.40669856459328 146.35406698564594,204.8133971291866 245,206 C 343.64593301435406,207.1866028708134 467.7607655502393,182.15311004784687 560,162 C 652.2392344497607,141.84688995215313 712.6028708133971,126.57416267942585 816,131 C 919.3971291866029,135.42583732057415 1065.8277511961721,159.55023923444978 1177,166 C 1288.1722488038279,172.44976076555022 1364.0861244019138,161.2248803827751 1440,150 L 1440,600 L 0,600 Z';
+  }
+  100% {
+    d: 'M 0,600 L 0,150 C 93.7129186602871,104.38277511961724 187.4258373205742,58.76555023923446 272,84 C 356.5741626794258,109.23444976076554 432.0095693779904,205.3205741626794 525,204 C 617.9904306220096,202.6794258373206 728.5358851674641,103.95215311004785 846,84 C 963.4641148325359,64.04784688995215 1087.846889952153,122.87081339712918 1188,147 C 1288.153110047847,171.12918660287082 1364.0765550239234,160.56459330143542 1440,150 L 1440,600 L 0,600 Z';
+  }
+}
+
+.path-1 {
+  animation: pathAnim-1 4s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pathAnim-1 {
+  0% {
+    d: path(
+      'M 0,600 L 0,350 C 105.64593301435409,371.85645933014354 211.29186602870817,393.7129186602871 318,395 C 424.70813397129183,396.2870813397129 532.4784688995215,377.0047846889952 617,369 C 701.5215311004785,360.9952153110048 762.7942583732058,364.26794258373207 863,363 C 963.2057416267942,361.73205741626793 1102.3444976076557,355.9234449760766 1205,353 C 1307.6555023923443,350.0765550239234 1373.8277511961721,350.0382775119617 1440,350 L 1440,600 L 0,600 Z'
+    );
+  }
+
+  25% {
+    d: path(
+      'M 0,600 L 0,350 C 116.89952153110048,319.88516746411483 233.79904306220095,289.77033492822966 330,293 C 426.20095693779905,296.22966507177034 501.7033492822966,332.8038277511962 595,352 C 688.2966507177034,371.1961722488038 799.3875598086123,373.0143540669856 894,371 C 988.6124401913877,368.9856459330144 1066.7464114832537,363.1387559808613 1155,359 C 1243.2535885167463,354.8612440191387 1341.6267942583731,352.43062200956933 1440,350 L 1440,600 L 0,600 Z'
+    );
+  }
+
+  50% {
+    d: path(
+      'M 0,600 L 0,350 C 86.79425837320576,347.9138755980861 173.58851674641153,345.82775119617224 265,357 C 356.4114832535885,368.17224880382776 452.4401913875597,392.60287081339715 548,385 C 643.5598086124403,377.39712918660285 738.6507177033493,337.7607655502392 852,344 C 965.3492822966507,350.2392344497608 1096.956937799043,402.35406698564594 1198,411 C 1299.043062200957,419.64593301435406 1369.5215311004786,384.82296650717706 1440,350 L 1440,600 L 0,600 Z'
+    );
+  }
+
+  75% {
+    d: path(
+      'M 0,600 L 0,350 C 77.94258373205744,316.5933014354067 155.8851674641149,283.1866028708134 244,279 C 332.1148325358851,274.8133971291866 430.4019138755981,299.8468899521531 541,308 C 651.5980861244019,316.1531100478469 774.507177033493,307.42583732057415 865,318 C 955.492822966507,328.57416267942585 1013.5693779904304,358.44976076555025 1104,367 C 1194.4306220095696,375.55023923444975 1317.2153110047848,362.77511961722485 1440,350 L 1440,600 L 0,600 Z'
+    );
+  }
+
+  100% {
+    d: path(
+      'M 0,600 L 0,350 C 105.64593301435409,371.85645933014354 211.29186602870817,393.7129186602871 318,395 C 424.70813397129183,396.2870813397129 532.4784688995215,377.0047846889952 617,369 C 701.5215311004785,360.9952153110048 762.7942583732058,364.26794258373207 863,363 C 963.2057416267942,361.73205741626793 1102.3444976076557,355.9234449760766 1205,353 C 1307.6555023923443,350.0765550239234 1373.8277511961721,350.0382775119617 1440,350 L 1440,600 L 0,600 Z'
+    );
+  }
+}
+</style>

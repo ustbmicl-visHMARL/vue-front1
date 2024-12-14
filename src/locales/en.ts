@@ -666,5 +666,13 @@ export default {
     step2: '2. Describe your goals',
     step1: '1. Choose a visualization library',
     codeTitle: 'Visualize code'
+  },
+  showDemo: {
+    title: 'Welcome to use the algorithm experiment presentation system',
+    detail: 'View details',
+    userInfo:
+      'User management module provides user registration, login, permission management, password modification, etc.',
+    labInfo: 'Experiment management module provides experiment creation, editing, deletion, etc.',
+    containerInfo: 'Container list module provides container creation, editing, deletion, etc.'
   }
 }
