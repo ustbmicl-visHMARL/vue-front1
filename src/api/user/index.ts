@@ -17,7 +17,7 @@ export const saveUserApi = (data: any) => {
   return request.post({ url: '/localapi/user/save', data })
 }
 
-export const updateUserApiUserApi = (data: any) => {
+export const updateUserApi = (data: any) => {
   return request.post({ url: '/localapi/user/update', data })
 }
 

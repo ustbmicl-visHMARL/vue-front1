@@ -5,7 +5,7 @@ import { Table } from '@/components/Table'
 import { ref, unref, reactive } from 'vue'
 import { ElMessage, ElTree } from 'element-plus'
 import { deleteUserByIdApi } from '@/api/user'
-import { usersApi, saveUserApi, updateUserApiUserApi } from '@/api/user'
+import { usersApi, saveUserApi, updateUserApi } from '@/api/user'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
 import { Search } from '@/components/Search'
@@ -249,10 +249,14 @@ const save = async () => {
     try {
       const res =
         addType.value !== 'edit' ? await saveUserApi(formData) : await updateUserApi(formData)
-      if (res) {
+      if (res && res.code === 1) {
+        ElMessage.error((res as any).msg)
+      } else if (res) {
         // currentPage.value = 1
         getList()
-        ElMessage.success('编辑成功')
+        ElMessage.success('操作成功')
+      } else {
+        ElMessage.error('操作失败')
       }
     } catch (error) {
       console.log(error)
