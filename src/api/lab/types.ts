@@ -1,7 +1,7 @@
 export interface LabParams {
   pageSize: number
   pageIndex: number
-  id: string
+  account: string
   username?: string
   labname?: string
   labstatus?: string

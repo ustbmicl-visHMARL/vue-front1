@@ -25,10 +25,10 @@ const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
     const res = await labsApi({
-      id: unref(currentNodeKey),
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
-      ...unref(searchParams)
+      ...unref(searchParams),
+      account: (userStore as any).getUserInfo.account
     })
     return {
       list: res.data.list || [],
@@ -69,7 +69,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      width: 70
+      width: 70,
+      type: 'index'
     }
   },
   {
@@ -77,7 +78,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.labname')
   },
   {
-    field: 'containerId',
+    field: 'containerName',
     label: t('labDemo.containerName'),
     form: {
       component: 'Select',
@@ -100,7 +101,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'username',
+    field: 'userName',
     label: t('labDemo.username')
   },
   {
@@ -129,8 +130,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'Select',
       componentProps: {
         options: [
-          { label: t('labDemo.completed'), value: 'completed' }, // 已完成
-          { label: t('labDemo.pending'), value: 'pending' } // 未完成
+          { label: t('labDemo.completed'), value: '已完成' }, // 已完成
+          { label: t('labDemo.pending'), value: '未完成' } // 未完成
         ],
         defaultValue: ''
       }
@@ -225,8 +226,15 @@ const dialogTitle = ref('')
 const currentRow = ref<DepartmentUserItem>()
 const actionType = ref('')
 
+const addType = ref('add')
 const AddAction = () => {
   dialogTitle.value = t('exampleDemo.add')
+  crudSchemas.forEach((v) => {
+    if (v.field === 'userName' || v.field === 'imageName') {
+      v.form!.componentProps!.disabled = false
+    }
+  })
+  addType.value = 'add'
   currentRow.value = undefined
   dialogVisible.value = true
   actionType.value = ''
@@ -249,6 +257,12 @@ const delData = async (row?: DepartmentUserItem) => {
 
 const action = (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
+  crudSchemas.forEach((v) => {
+    if (v.field === 'userName' || v.field === 'imageName') {
+      v.form!.componentProps!.disabled = true
+    }
+  })
+  addType.value = type === 'edit' ? 'edit' : 'add'
   actionType.value = type
   currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
   dialogVisible.value = true
