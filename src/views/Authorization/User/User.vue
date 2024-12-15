@@ -15,6 +15,7 @@ import { Dialog } from '@/components/Dialog'
 import { getRoleListApi } from '@/api/role'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
+import axios from 'axios'
 
 const { t } = useI18n()
 
@@ -187,8 +188,6 @@ const setSearchParams = (params: any) => {
 
 const treeEl = ref<typeof ElTree>()
 
-const currentNodeKey = ref('')
-
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 
@@ -248,11 +247,11 @@ const save = async () => {
     saveLoading.value = true
     try {
       if (addType.value === 'add') {
-        saveUserApi(formData).then((res) => {
-          if (res && res.code === 1) {
-            ElMessage.error((res as any).msg)
-          } else if (res) {
-            // currentPage.value = 1
+        console.log(formData)
+        axios.post('/localapi/user/save', formData).then((res: any) => {
+          if (res.data && res.data.code === 1) {
+            ElMessage.error((res.data as any).msg)
+          } else if (res.data) {
             getList()
             ElMessage.success('操作成功')
           } else {
@@ -260,10 +259,10 @@ const save = async () => {
           }
         })
       } else {
-        updateUserApi(formData).then((res) => {
-          if (res && res.code === 1) {
-            ElMessage.error((res as any).msg)
-          } else if (res) {
+        axios.post('/localapi/user/update', formData).then((res: any) => {
+          if (res.data && res.data.code === 1) {
+            ElMessage.error((res.data as any).msg)
+          } else if (res.data) {
             getList()
             ElMessage.success('操作成功')
           } else {
