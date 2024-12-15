@@ -3,33 +3,20 @@ import { Form, FormSchema } from '@/components/Form'
 import { reactive, ref, unref } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useForm } from '@/hooks/web/useForm'
-import { ElInput, FormRules } from 'element-plus'
+import { ElMessage, FormRules } from 'element-plus'
 import { useValidator } from '@/hooks/web/useValidator'
 import { BaseButton } from '@/components/Button'
 import { IAgree } from '@/components/IAgree'
+import { regUserApi } from '@/api/user'
 
 const emit = defineEmits(['to-login'])
 
 const { formRegister, formMethods } = useForm()
-const { getElFormExpose } = formMethods
+const { getElFormExpose, getFormData } = formMethods
 
 const { t } = useI18n()
 
 const { required, check } = useValidator()
-
-const getCodeTime = ref(60)
-const getCodeLoading = ref(false)
-const getCode = () => {
-  getCodeLoading.value = true
-  const timer = setInterval(() => {
-    getCodeTime.value--
-    if (getCodeTime.value <= 0) {
-      clearInterval(timer)
-      getCodeTime.value = 60
-      getCodeLoading.value = false
-    }
-  }, 1000)
-}
 
 const schema = reactive<FormSchema[]>([
   {
@@ -150,9 +137,35 @@ const schema = reactive<FormSchema[]>([
 
 const rules: FormRules = {
   username: [required()],
-  password: [required()],
-  check_password: [required()],
-  code: [required()],
+  password: [
+    required(),
+    {
+      validator: (_rule, value, callback) => {
+        if (!/^[\S]{6,20}$/.test(value)) {
+          callback(new Error('密码长度必须在6到20个字符之间，且不能包含空格'))
+        } else {
+          callback() // 验证通过
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
+  check_password: [
+    required(),
+    {
+      validator: (_rule, value, callback) => {
+        const formData = getFormData()
+        formData.then((data) => {
+          if (value !== data.password) {
+            callback(new Error('两次输入的密码不一致'))
+          } else {
+            callback()
+          }
+        })
+      },
+      trigger: 'blur'
+    }
+  ],
   iAgree: [required(), check()]
 }
 
@@ -163,15 +176,26 @@ const toLogin = () => {
 const loading = ref(false)
 
 const loginRegister = async () => {
-  const formRef = await getElFormExpose()
-  formRef?.validate(async (valid) => {
+  const formMethods = await getElFormExpose() // 获取表单的实例方法
+
+  formMethods!.validate(async (valid, fields) => {
     if (valid) {
-      try {
-        loading.value = true
-        toLogin()
-      } finally {
-        loading.value = false
+      const formData = await getFormData()
+      let data = unref(formData)
+      data = {
+        username: data.username,
+        password: data.password
       }
+      const res = await regUserApi(data)
+      if (res.code == 0) {
+        ElMessage.error('注册失败')
+      } else {
+        ElMessage.success('注册成功, 请登录')
+        toLogin()
+      }
+    } else {
+      console.error('表单验证失败:', fields)
+      // 处理验证失败的逻辑
     }
   })
 }

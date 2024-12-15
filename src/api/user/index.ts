@@ -17,6 +17,10 @@ export const saveUserApi = (data: any) => {
   return request.post({ url: '/localapi/user/update', data })
 }
 
+export const regUserApi = (data: any) => {
+  return request.post({ url: '/localapi/user/reg', data })
+}
+
 export const deleteUserByIdApi = (ids: string[] | number[]) => {
   return request.post({ url: '/localapi/user/del', data: ids })
 }
