@@ -84,9 +84,10 @@ const crudSchemas = reactive<CrudSchema[]>([
       },
       optionApi: async () => {
         const res = await usersApi({
-          id: '',
           pageIndex: 1,
-          pageSize: 100000
+          pageSize: 100000,
+          username: '',
+          account: ''
         })
         return res.data.list.map((v) => ({
           label: v.username,

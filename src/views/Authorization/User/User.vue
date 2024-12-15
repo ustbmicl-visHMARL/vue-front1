@@ -22,9 +22,10 @@ const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
     const res = await usersApi({
-      id: unref(currentNodeKey),
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
+      username: '',
+      account: '',
       ...unref(searchParams)
     })
     return {

@@ -49,8 +49,8 @@ const schema = reactive<FormSchema[]>([
     }
   },
   {
-    field: 'username',
-    label: t('login.username'),
+    field: 'account',
+    label: t('login.account'),
     // value: 'admin',
     component: 'Input',
     colProps: {
@@ -191,8 +191,8 @@ const remember = ref(userStore.getRememberMe)
 const initLoginInfo = () => {
   const loginInfo = userStore.getLoginInfo
   if (loginInfo) {
-    const { username, password } = loginInfo
-    setValues({ username, password })
+    const { account, password } = loginInfo
+    setValues({ account, password })
   }
 }
 onMounted(() => {
@@ -234,7 +234,7 @@ const signIn = async () => {
           // 是否记住我
           if (unref(remember)) {
             userStore.setLoginInfo({
-              username: formData.username,
+              account: formData.account,
               password: formData.password
             })
           } else {
@@ -267,7 +267,7 @@ const signIn = async () => {
 const getRole = async () => {
   const formData = await getFormData<UserType>()
   const params = {
-    roleName: formData.username
+    roleName: formData.account
   }
   const res =
     appStore.getDynamicRouter && appStore.getServerDynamicRouter && userStore.getUserInfo?.admin

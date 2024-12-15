@@ -1,10 +1,10 @@
 export interface UserLoginType {
-  username: string
+  account: string
   password: string
 }
 
 export interface UserType {
-  username: string
+  account: string
   password: string
   role: string
   roleId: string
@@ -14,7 +14,6 @@ export interface UserType {
 export interface UserParams {
   pageSize: number
   pageIndex: number
-  id: string
   username?: string
   account?: string
 }

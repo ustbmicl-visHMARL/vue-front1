@@ -111,6 +111,7 @@ export default {
     message: 'Algorithm experiment backstage management system',
     username: 'Username',
     password: 'Password',
+    account: 'Account',
     register: 'Register',
     checkPassword: 'Confirm password',
     login: 'Sign in',

@@ -109,6 +109,7 @@ export default {
     message: '算法实验中后台管理系统',
     username: '用户名',
     password: '密码',
+    account: '账号',
     register: '注册',
     checkPassword: '确认密码',
     login: '登录',
