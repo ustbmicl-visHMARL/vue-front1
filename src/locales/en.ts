@@ -565,6 +565,7 @@ export default {
     image: 'Image',
     port: 'Port',
     expNote: 'Exp note',
+    imageName: 'Image name',
     message:
       'Because it is simulated data, only two accounts with different permissions are provided, which can be modified and combined by developers according to the actual situation.',
     index: 'Index',

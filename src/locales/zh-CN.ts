@@ -558,6 +558,7 @@ export default {
     image: '镜像',
     port: '端口',
     expNote: '实验备注',
+    imageName: '镜像名',
     message: '由于是模拟数据，所以只提供了两种不同权限的帐号，开发者可根据实际情况自行改造结合。',
     containerName: '容器名',
     algName: '算法名',
