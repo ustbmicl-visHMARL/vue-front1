@@ -250,12 +250,15 @@ const save = async () => {
       const res =
         addType.value !== 'edit' ? await saveUserApi(formData) : await updateUserApi(formData)
       if (res && res.code === 1) {
+        console.log('1111')
         ElMessage.error((res as any).msg)
       } else if (res) {
         // currentPage.value = 1
+        console.log('2222')
         getList()
         ElMessage.success('操作成功')
       } else {
+        console.log('3333')
         ElMessage.error('操作失败')
       }
     } catch (error) {
