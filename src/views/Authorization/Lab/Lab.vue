@@ -302,7 +302,7 @@ const save = async () => {
       </div>
 
       <div class="mb-10px">
-        <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+        <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.regLab') }}</BaseButton>
         <BaseButton :loading="delLoading" type="danger" @click="delData()">
           {{ t('exampleDemo.del') }}
         </BaseButton>

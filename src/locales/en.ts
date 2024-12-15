@@ -515,6 +515,7 @@ export default {
     document: 'Document',
     title: 'Title',
     add: 'Add',
+    regLab: 'Register lab',
     del: 'Delete',
     delOne: 'Delete',
     start: 'Start',

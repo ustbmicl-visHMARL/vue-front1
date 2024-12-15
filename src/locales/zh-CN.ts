@@ -508,6 +508,7 @@ export default {
     document: '文档',
     title: '标题',
     add: '新增',
+    regLab: '注册实验',
     start: '启动',
     open: '打开',
     close: '关闭',
