@@ -5,7 +5,7 @@ import { Table } from '@/components/Table'
 import { ref, unref, reactive } from 'vue'
 import { ElMessage, ElTree } from 'element-plus'
 import { deleteUserByIdApi } from '@/api/user'
-import { usersApi, saveUserApi } from '@/api/user'
+import { usersApi, saveUserApi, updateUserApiUserApi } from '@/api/user'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
 import { Search } from '@/components/Search'
@@ -194,6 +194,7 @@ const dialogTitle = ref('')
 
 const currentRow = ref<DepartmentUserItem>()
 const actionType = ref('')
+const addType = ref('edit')
 
 const AddAction = () => {
   dialogTitle.value = t('exampleDemo.add')
@@ -202,6 +203,7 @@ const AddAction = () => {
       v.form!.componentProps!.disabled = false
     }
   })
+  addType.value = 'add'
   currentRow.value = undefined
   dialogVisible.value = true
   actionType.value = ''
@@ -220,7 +222,6 @@ const delData = async (row?: DepartmentUserItem) => {
     delLoading.value = false
   })
 }
-
 const action = (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   crudSchemas.forEach((v) => {
@@ -228,6 +229,9 @@ const action = (row: DepartmentUserItem, type: string) => {
       v.form!.componentProps!.disabled = true
     }
   })
+  if (type == 'edit') {
+    addType.value = 'edit'
+  }
   actionType.value = type
   currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
   dialogVisible.value = true
@@ -243,7 +247,8 @@ const save = async () => {
   if (formData) {
     saveLoading.value = true
     try {
-      const res = await saveUserApi(formData)
+      const res =
+        addType.value !== 'edit' ? await saveUserApi(formData) : await updateUserApi(formData)
       if (res) {
         // currentPage.value = 1
         getList()
