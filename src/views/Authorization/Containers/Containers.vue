@@ -173,7 +173,7 @@ const crudSchemas = reactive<CrudSchema[]>([
                 {t('exampleDemo.close')}
               </BaseButton>
               <BaseButton type="danger" loading={delLoading.value} onClick={() => delData(row)}>
-                {t('exampleDemo.del')}
+                {t('exampleDemo.delOne')}
               </BaseButton>
             </>
           )

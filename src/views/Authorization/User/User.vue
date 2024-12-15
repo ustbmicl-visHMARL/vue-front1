@@ -75,7 +75,12 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'account',
-    label: t('userDemo.account')
+    label: t('userDemo.account'),
+    form: {
+      componentProps: {
+        disabled: true
+      }
+    }
   },
   // {
   //   field: 'permission',
@@ -160,7 +165,7 @@ const crudSchemas = reactive<CrudSchema[]>([
                 {t('exampleDemo.detail')}
               </BaseButton>
               <BaseButton type="danger" onClick={() => delData(row)}>
-                {t('exampleDemo.del')}
+                {t('exampleDemo.delOne')}
               </BaseButton>
             </>
           )
@@ -191,6 +196,11 @@ const actionType = ref('')
 
 const AddAction = () => {
   dialogTitle.value = t('exampleDemo.add')
+  crudSchemas.forEach((v) => {
+    if (v.field === 'account') {
+      v.form!.componentProps!.disabled = false
+    }
+  })
   currentRow.value = undefined
   dialogVisible.value = true
   actionType.value = ''
@@ -202,10 +212,9 @@ const ids = ref<string[]>([])
 const delData = async (row?: DepartmentUserItem) => {
   const elTableExpose = await getElTableExpose()
   ids.value = row
-    ? [row.id]
-    : elTableExpose?.getSelectionRows().map((v: DepartmentUserItem) => v.id) || []
+    ? [row.account]
+    : elTableExpose?.getSelectionRows().map((v: DepartmentUserItem) => v.account) || []
   delLoading.value = true
-
   await delList(unref(ids).length).finally(() => {
     delLoading.value = false
   })
@@ -213,6 +222,11 @@ const delData = async (row?: DepartmentUserItem) => {
 
 const action = (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
+  crudSchemas.forEach((v) => {
+    if (v.field === 'account') {
+      v.form!.componentProps!.disabled = true
+    }
+  })
   actionType.value = type
   currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
   dialogVisible.value = true

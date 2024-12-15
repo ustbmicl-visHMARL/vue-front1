@@ -10,15 +10,15 @@ export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
 }
 
 export const usersApi = (params: UserParams) => {
-  return request.get<UserResponse>({ url: '/localapi/user/users', params })
+  return request.get<UserResponse>({ url: '/localapi/user/getLikeUsers', params })
 }
 
 export const saveUserApi = (data: any) => {
-  return request.post({ url: '/localapi/user/save', data })
+  return request.post({ url: '/localapi/user/update', data })
 }
 
 export const deleteUserByIdApi = (ids: string[] | number[]) => {
-  return request.post({ url: '/localapi/user/del', data: { ids } })
+  return request.post({ url: '/localapi/user/del', data: ids })
 }
 
 export const loginOutApi = (): Promise<IResponse> => {

@@ -516,6 +516,7 @@ export default {
     title: 'Title',
     add: 'Add',
     del: 'Delete',
+    delOne: 'Delete',
     start: 'Start',
     open: 'Open',
     close: 'Close',

@@ -190,7 +190,7 @@ const crudSchemas = reactive<CrudSchema[]>([
                 {t('exampleDemo.detail')}
               </BaseButton>
               <BaseButton type="danger" onClick={() => delData(row)}>
-                {t('exampleDemo.del')}
+                {t('exampleDemo.delOne')}
               </BaseButton>
               <BaseButton type="warning" onClick={() => toView(row)}>
                 {t('exampleDemo.view')}
