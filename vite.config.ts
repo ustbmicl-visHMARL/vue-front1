@@ -150,7 +150,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         //   rewrite: (path) => path.replace(/^\/localapi/, '')
         // },
         '/localapi': {
-          target: 'http://127.0.0.1:8888',
+          target: 'http://127.0.0.1:8010',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/localapi/, '/api')
         },
