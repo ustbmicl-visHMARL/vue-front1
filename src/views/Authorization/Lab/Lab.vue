@@ -102,11 +102,21 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'userName',
-    label: t('labDemo.username')
+    label: t('labDemo.username'),
+    form: {
+      componentProps: {
+        disabled: true
+      }
+    }
   },
   {
     field: 'imageName',
-    label: t('labDemo.imageName')
+    label: t('labDemo.imageName'),
+    form: {
+      componentProps: {
+        disabled: true
+      }
+    }
   },
   {
     field: 'status',
@@ -130,8 +140,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'Select',
       componentProps: {
         options: [
-          { label: t('labDemo.completed'), value: '已完成' }, // 已完成
-          { label: t('labDemo.pending'), value: '未完成' } // 未完成
+          { label: t('labDemo.completed'), value: 1 }, // 已完成
+          { label: t('labDemo.pending'), value: 0 } // 未完成
         ],
         defaultValue: ''
       }
@@ -139,7 +149,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     table: {
       slots: {
         default: ({ row }: any) => {
-          return row.labstatus ? t('labDemo.completed') : t('labDemo.pending')
+          return row.status ? t('labDemo.completed') : t('labDemo.pending')
         }
       }
     }
