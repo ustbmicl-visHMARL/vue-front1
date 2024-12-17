@@ -60,7 +60,6 @@ const testList = [
     path: '/lida',
     component: '#',
     redirect: '/lida/index',
-    name: 'Lida',
     meta: {
       title: 'router.dashboard',
     },
@@ -81,7 +80,6 @@ const testList = [
     path: '/problem',
     component: '#',
     redirect: '/problem/index',
-    name: 'Problem',
     meta: {
       title: 'router.problem',
     },
@@ -102,7 +100,7 @@ const testList = [
     path: '/notify',
     component: '#',
     redirect: '/notify/index',
-    name: 'Notify',
+    // name: 'Notify',
     meta: {
       title: 'router.notify',
     },

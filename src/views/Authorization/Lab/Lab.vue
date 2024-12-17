@@ -85,7 +85,8 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         multiple: false,
         collapseTags: true,
-        maxCollapseTags: 1
+        maxCollapseTags: 1,
+        disabled: true
       },
       optionApi: async () => {
         const res = await containersApi({
@@ -95,18 +96,28 @@ const crudSchemas = reactive<CrudSchema[]>([
         })
         return res.data.list.map((v) => ({
           label: v.containerName,
-          value: v.containerId
+          value: v.containerName
         }))
       }
     }
   },
   {
     field: 'userName',
-    label: t('labDemo.username')
+    label: t('labDemo.username'),
+    form: {
+      componentProps: {
+        disabled: true
+      }
+    }
   },
   {
     field: 'imageName',
-    label: t('labDemo.imageName')
+    label: t('labDemo.imageName'),
+    form: {
+      componentProps: {
+        disabled: true
+      }
+    }
   },
   {
     field: 'status',
@@ -119,7 +130,7 @@ const crudSchemas = reactive<CrudSchema[]>([
         maxCollapseTags: 1
       },
       optionApi: async () => {
-        const res = ['Pending', 'Completed']
+        const res = ['未完成', '已完成']
         return res.map((v, i) => ({
           label: v,
           value: i
@@ -130,18 +141,26 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'Select',
       componentProps: {
         options: [
-          { label: t('labDemo.completed'), value: '已完成' }, // 已完成
-          { label: t('labDemo.pending'), value: '未完成' } // 未完成
+          { label: t('labDemo.completed'), value: 1 }, // 已完成
+          { label: t('labDemo.pending'), value: 0 } // 未完成
         ],
         defaultValue: ''
       }
     },
     table: {
+      width: 90,
       slots: {
         default: ({ row }: any) => {
-          return row.labstatus ? t('labDemo.completed') : t('labDemo.pending')
+          return row.status ? t('labDemo.completed') : t('labDemo.pending')
         }
       }
+    }
+  },
+  {
+    field: 'expNote',
+    label: t('labDemo.expNote'),
+    table: {
+      hidden: true
     }
   },
   {
@@ -160,6 +179,7 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
+      width: 170,
       slots: {
         default: ({ row }: any) => {
           const date = new Date(row.createTime)
@@ -230,7 +250,7 @@ const addType = ref('add')
 const AddAction = () => {
   dialogTitle.value = t('exampleDemo.add')
   crudSchemas.forEach((v) => {
-    if (v.field === 'userName' || v.field === 'imageName') {
+    if (v.field === 'userName' || v.field === 'imageName' || v.field === 'containerName') {
       v.form!.componentProps!.disabled = false
     }
   })
@@ -258,7 +278,7 @@ const delData = async (row?: DepartmentUserItem) => {
 const action = (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   crudSchemas.forEach((v) => {
-    if (v.field === 'userName' || v.field === 'imageName') {
+    if (v.field === 'userName' || v.field === 'imageName' || v.field === 'containerName') {
       v.form!.componentProps!.disabled = true
     }
   })
