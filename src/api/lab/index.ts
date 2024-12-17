@@ -11,6 +11,11 @@ export const saveLabApi = (data: any) => {
   return request.post({ url: '/localapi/exp/registerexp', data })
 }
 
+export const updateLabApi = (data: any) => {
+  // return request.post({ url: '/localapi/lab/save', data })
+  return request.post({ url: '/localapi/exp/update', data })
+}
+
 export const deleteLabByIdApi = (ids: string[] | number[]) => {
   return request.post({ url: '/localapi/exp/del', data: ids })
 }

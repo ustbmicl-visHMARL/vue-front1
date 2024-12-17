@@ -12,7 +12,7 @@ import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
-import { deleteLabByIdApi, labsApi, saveLabApi } from '@/api/lab'
+import { deleteLabByIdApi, labsApi, saveLabApi, updateLabApi } from '@/api/lab'
 import { useRouter } from 'vue-router'
 import { containersApi } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
@@ -241,8 +241,6 @@ const setSearchParams = (params: any) => {
 
 const treeEl = ref<typeof ElTree>()
 
-const currentNodeKey = ref('')
-
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 
@@ -308,14 +306,28 @@ const save = async () => {
   if (formData) {
     saveLoading.value = true
     try {
-      const res = await saveLabApi({
-        ...formData,
-        userId: Number((userStore.getUserInfo as any).userId)
-      })
-      if (res) {
-        // currentPage.value = 1
-        getList()
-        ElMessage.success('编辑成功')
+      if (addType.value === 'add') {
+        const res = await saveLabApi({
+          ...formData,
+          userId: Number((userStore.getUserInfo as any).userId)
+        })
+        if (res) {
+          // currentPage.value = 1
+          getList()
+          ElMessage.success('添加成功')
+        }
+      } else {
+        const res = await updateLabApi({
+          expName: formData.expName,
+          status: formData.status,
+          note: formData.note,
+          id: Number((userStore.getUserInfo as any).userId)
+        })
+        if (res) {
+          // currentPage.value = 1
+          getList()
+          ElMessage.success('编辑成功')
+        }
       }
     } catch (error) {
       console.log(error)
