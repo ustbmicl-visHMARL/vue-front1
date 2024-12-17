@@ -12,5 +12,5 @@ export const saveLabApi = (data: any) => {
 }
 
 export const deleteLabByIdApi = (ids: string[] | number[]) => {
-  return request.post({ url: '/localapi/lab/del', data: { ids } })
+  return request.post({ url: '/localapi/exp/del', data: { ids } })
 }
