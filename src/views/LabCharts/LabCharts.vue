@@ -324,14 +324,14 @@ const selectButton = (buttonName: string) => {
           <!-- <Echart :options="importanceBarData" :height="300" /> -->
         </ElSkeleton>
         <iframe id="myIframe" :src="iframeSrc" frameborder="0" height="300px"></iframe>
-        <div style="position: absolute; bottom: 20px; left: 270px"
+        <div style="position: absolute; bottom: 20px; left: 230px"
           ><ElButton
             :type="isSelected === 't-SNE' ? 'primary' : 'default'"
             @click="selectButton('t-SNE')"
             >t-SNE</ElButton
           ></div
         >
-        <div style="position: absolute; bottom: 20px; right: 270px"
+        <div style="position: absolute; bottom: 20px; right: 230px"
           ><ElButton
             :type="isSelected === 'UMAP' ? 'primary' : 'default'"
             @click="selectButton('UMAP')"

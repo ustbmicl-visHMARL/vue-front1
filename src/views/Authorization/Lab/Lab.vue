@@ -161,6 +161,9 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.expNote'),
     table: {
       hidden: true
+    },
+    search: {
+      hidden: true
     }
   },
   {
