@@ -51,6 +51,20 @@ const { getList, delList } = tableMethods
 
 const crudSchemas = reactive<CrudSchema[]>([
   {
+    field: 'id',
+    label: t('labDemo.index'),
+    form: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    },
+    table: {
+      width: 70,
+      type: 'index'
+    }
+  },
+  {
     field: 'selection',
     search: {
       hidden: true

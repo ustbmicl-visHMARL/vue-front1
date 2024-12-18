@@ -319,7 +319,8 @@ const save = async () => {
         const res = await updateLabApi({
           expName: formData.expName,
           status: formData.status,
-          note: formData.note
+          note: formData.note,
+          id: formData.id
         })
         if (res) {
           // currentPage.value = 1
