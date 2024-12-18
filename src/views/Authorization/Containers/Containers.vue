@@ -128,11 +128,17 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'userName',
-    label: t('labDemo.username_')
+    label: t('labDemo.username_'),
+    form: {
+      hidden: true
+    }
   },
   {
     field: 'status',
     label: t('labDemo.containerStatus'),
+    form: {
+      hidden: true
+    },
     search: {
       component: 'Select',
       componentProps: {
