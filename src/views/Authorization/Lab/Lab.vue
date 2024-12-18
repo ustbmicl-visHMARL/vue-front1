@@ -327,9 +327,12 @@ const action = (row: DepartmentUserItem, type: string) => {
 
 const router = useRouter()
 const toView = (row: DepartmentUserItem) => {
-  console.log(row)
+  console.log(row, row.id)
   router.push({
-    name: 'LabCharts'
+    path: '/index/lab-charts',
+    query: {
+      expId: row.id
+    }
   })
 }
 const writeRef = ref<ComponentRef<typeof Write>>()

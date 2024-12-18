@@ -21,9 +21,12 @@ import { set } from 'lodash-es'
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { BaseButton } from '@/components/Button'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const { t } = useI18n()
 
+const expId = ref(parseInt(route.query.expId as string))
 const loading = ref(true)
 const loadingIframe = ref(true)
 
@@ -209,15 +212,15 @@ onMounted(async () => {
   })
 
   try {
-    const actionOptions = await actionScatterOptions(1)
+    const actionOptions = await actionScatterOptions(expId.value, num.value)
     actionScatterData.value = actionOptions // 更新响应式引用的值
-    const valueOptions = await valueScatterOptions(1)
+    const valueOptions = await valueScatterOptions(expId.value, num.value)
     valueScatterData.value = valueOptions
-    const learnOptions = await learnLineOptions(1)
+    const learnOptions = await learnLineOptions(expId.value, num.value)
     learnLineData.value = learnOptions // 更新响应式引用的值
-    const rewardOptions = await rewardLineOptions(1)
+    const rewardOptions = await rewardLineOptions(expId.value, num.value)
     rewardLineData.value = rewardOptions
-    const qvalueOptions = await qvalueSquareOptions(1)
+    const qvalueOptions = await qvalueSquareOptions(expId.value, num.value)
     qvalueData.value = qvalueOptions
   } catch (error) {
     console.error('Failed to load chart data:', error)

@@ -308,8 +308,11 @@ export const wordOptions = {
   ]
 }
 //动作函数
-export const actionScatterOptions = async (episodeId: number): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartAction?episodeId=${episodeId}`, {
+export const actionScatterOptions = async (
+  expId: number,
+  episodeId: number
+): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartAction?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -401,8 +404,11 @@ export const actionScatterOptions = async (episodeId: number): Promise<EChartsOp
   }
 }
 //价值函数
-export const valueScatterOptions = async (episodeId: number): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartValue?episodeId=${episodeId}`, {
+export const valueScatterOptions = async (
+  expId: number,
+  episodeId: number
+): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartValue?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -543,8 +549,11 @@ export const importanceBarOptions: EChartsOption = {
   ]
 }
 // 奖励
-export const rewardLineOptions = async (experimentId: number): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartReward?experimentId=${experimentId}`, {
+export const rewardLineOptions = async (
+  expId: number,
+  episodeId: number
+): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartReward?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -644,8 +653,11 @@ export const rewardLineOptions = async (experimentId: number): Promise<EChartsOp
 }
 
 // 学习曲线
-export const learnLineOptions = async (experimentId: number): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartLoss?experimentId=${experimentId}`, {
+export const learnLineOptions = async (
+  expId: number,
+  episodeId: number
+): Promise<EChartsOption> => {
+  const response = await fetch(`/java/chart/getChartLoss?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -745,8 +757,12 @@ export const learnLineOptions = async (experimentId: number): Promise<EChartsOpt
 }
 
 // Q值函数
-export const qvalueSquareOptions = async (episodeId: number): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartQValue?episodeId=${episodeId}`, {
+export const qvalueSquareOptions = async (
+  expId: number,
+  episodeId: number
+): Promise<EChartsOption> => {
+  console.log('episodeId', episodeId)
+  const response = await fetch(`/java/chart/getChartQValue?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
