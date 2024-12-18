@@ -157,7 +157,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'expNote',
+    field: 'note',
     label: t('labDemo.expNote'),
     table: {
       hidden: true
@@ -308,8 +308,7 @@ const save = async () => {
     try {
       if (addType.value === 'add') {
         const res = await saveLabApi({
-          ...formData,
-          userId: Number((userStore.getUserInfo as any).userId)
+          ...formData
         })
         if (res) {
           // currentPage.value = 1
@@ -320,8 +319,7 @@ const save = async () => {
         const res = await updateLabApi({
           expName: formData.expName,
           status: formData.status,
-          note: formData.note,
-          id: Number((userStore.getUserInfo as any).userId)
+          note: formData.note
         })
         if (res) {
           // currentPage.value = 1
