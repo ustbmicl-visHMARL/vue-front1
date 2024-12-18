@@ -47,23 +47,9 @@ const { tableRegister, tableState, tableMethods } = useTable({
   }
 })
 const { total, loading, dataList, pageSize, currentPage } = tableState
-const { getList, delList } = tableMethods
+const { getList, delList, getElTableExpose } = tableMethods
 
 const crudSchemas = reactive<CrudSchema[]>([
-  {
-    field: 'id',
-    label: t('labDemo.index'),
-    form: {
-      hidden: true
-    },
-    search: {
-      hidden: true
-    },
-    table: {
-      width: 70,
-      type: 'index'
-    }
-  },
   {
     field: 'selection',
     search: {
@@ -76,8 +62,7 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     table: {
-      type: 'selection',
-      hidden: true
+      type: 'selection'
     }
   },
   {
@@ -91,7 +76,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     },
     table: {
       width: 70,
-      hidden: true
+      type: 'index'
     }
   },
   {
@@ -135,6 +120,48 @@ const crudSchemas = reactive<CrudSchema[]>([
       label: t('labDemo.port')
     },
     table: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    }
+  },
+  {
+    field: 'userName',
+    label: t('labDemo.username_')
+  },
+  {
+    field: 'status',
+    label: t('labDemo.containerStatus'),
+    search: {
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: t('labDemo.on'), value: 1 }, // 已完成
+          { label: t('labDemo.off'), value: 0 } // 未完成
+        ],
+        defaultValue: ''
+      }
+    },
+    table: {
+      slots: {
+        default: ({ row }: any) => {
+          return row.status ? t('labDemo.on') : t('labDemo.off')
+        }
+      }
+    }
+  },
+  {
+    field: 'id',
+    label: t('labDemo.index'),
+    form: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    },
+    table: {
+      width: 70,
       hidden: true
     }
   },
@@ -228,8 +255,12 @@ const delLoading = ref(false)
 const ids = ref('')
 
 const delData = async (row?: DepartmentUserItem) => {
+  const elTableExpose = await getElTableExpose()
   console.log('delData', row)
-  ids.value = row!.id
+  ids.value = row
+    ? [row.id]
+    : elTableExpose?.getSelectionRows().map((v: DepartmentUserItem) => v.id) || []
+  delLoading.value = true
   delLoading.value = true
   await delList(1).finally(() => {
     delLoading.value = false
@@ -322,6 +353,9 @@ const save = async () => {
 
       <div class="mb-10px">
         <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+        <BaseButton :loading="delLoading" type="danger" @click="delData()">
+          {{ t('exampleDemo.del') }}
+        </BaseButton>
         <BaseButton type="success" @click="toDocument()">
           {{ t('exampleDemo.document') }}
         </BaseButton>

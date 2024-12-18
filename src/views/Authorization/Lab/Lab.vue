@@ -137,6 +137,13 @@ const crudSchemas = reactive<CrudSchema[]>([
         }))
       }
     },
+    detail: {
+      slots: {
+        default: (data: any) => {
+          return <>{data.status ? t('labDemo.completed') : t('labDemo.pending')}</>
+        }
+      }
+    },
     search: {
       component: 'Select',
       componentProps: {
