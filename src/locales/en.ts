@@ -574,6 +574,7 @@ export default {
       'Because it is simulated data, only two accounts with different permissions are provided, which can be modified and combined by developers according to the actual situation.',
     index: 'Index',
     containerName: 'containerName',
+    dataSource: 'dataSource',
     algName: 'algName',
     dataPath: 'dataPath',
     envName: 'envName',

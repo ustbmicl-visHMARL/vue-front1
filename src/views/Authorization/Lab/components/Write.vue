@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form, FormSchema } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
-import { PropType, reactive, watch } from 'vue'
+import { nextTick, PropType, reactive, watch } from 'vue'
 import { DepartmentUserItem } from '@/api/department/types'
 import { useValidator } from '@/hooks/web/useValidator'
 
@@ -19,11 +19,58 @@ const props = defineProps({
 })
 
 const rules = reactive({
-  expname: [required()]
+  containerName: [
+    required(),
+    {
+      validator: (_rule, value, callback) => {
+        const formData = getFormData()
+        formData.then((data) => {
+          ;(props as any).formSchema[5].hidden = false
+          ;(props as any).formSchema[7].hidden = false
+          ;(props as any).formSchema[6].hidden = false
+          callback()
+        })
+      },
+      trigger: 'change'
+    }
+  ],
+  expName: [
+    required(),
+    {
+      validator: (_rule, value, callback) => {
+        const formData = getFormData()
+
+        formData.then((data) => {
+          if (!data.containerName) {
+            callback(new Error('请先选择容器名称'))
+          } else {
+            callback()
+          }
+        })
+      },
+      trigger: 'blur'
+    }
+  ],
+  dataSource: [
+    required(),
+    {
+      validator: (_rule, value, callback) => {
+        const formData = getFormData()
+        formData.then((data) => {
+          if (!data.containerName) {
+            callback(new Error('请先选择容器名称'))
+          } else {
+            callback()
+          }
+        })
+      },
+      trigger: 'blur'
+    }
+  ]
 })
 
 const { formRegister, formMethods } = useForm()
-const { setValues, getFormData, getElFormExpose } = formMethods
+const { setValues, setSchema, getFormData, getElFormExpose } = formMethods
 
 const submit = async () => {
   const elForm = await getElFormExpose()
@@ -31,6 +78,9 @@ const submit = async () => {
     console.log(err)
   })
   if (valid) {
+    ;(props as any).formSchema[7].hidden = false
+    ;(props as any).formSchema[5].hidden = false
+    ;(props as any).formSchema[6].hidden = false
     const formData = await getFormData()
     return formData
   }
@@ -47,9 +97,18 @@ watch(
     immediate: true
   }
 )
+// 折叠函数
+const fold = () => {
+  ;(props as any).formSchema[5].hidden = true
+  ;(props as any).formSchema[7].hidden = true
+  ;(props as any).formSchema[6].hidden = true
+}
 
 defineExpose({
-  submit
+  submit,
+  getFormData,
+  getElFormExpose,
+  fold
 })
 </script>
 

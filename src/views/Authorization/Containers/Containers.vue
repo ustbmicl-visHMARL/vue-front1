@@ -321,7 +321,11 @@ const save = async () => {
       JSON.parse as any
     )
     console.log('portMappingList', portMappingList)
-
+    if (portMappingList.length === 0) {
+      ElMessage.error('端口至少填写一个')
+      saveLoading.value = false
+      return
+    }
     try {
       const realForm = {
         name: formData.containerName || '',

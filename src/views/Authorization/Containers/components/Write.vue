@@ -19,7 +19,8 @@ const props = defineProps({
 })
 
 const rules = reactive({
-  labname: [required()]
+  containerName: [required()],
+  imageId: [required()]
 })
 
 const { formRegister, formMethods } = useForm()

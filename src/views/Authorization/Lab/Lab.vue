@@ -2,7 +2,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
-import { ref, unref, reactive } from 'vue'
+import { ref, unref, reactive, watch, watchEffect, isProxy, isRef } from 'vue'
 import { ElMessage, ElTree } from 'element-plus'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
@@ -16,6 +16,8 @@ import { deleteLabByIdApi, labsApi, saveLabApi, updateLabApi } from '@/api/lab'
 import { useRouter } from 'vue-router'
 import { containersApi } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
+import { is } from '@/utils/is'
+import { isReactive } from 'vue'
 
 const userStore = useUserStore()
 
@@ -74,8 +76,24 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'expName',
-    label: t('labDemo.labname')
+    field: 'userName',
+    label: t('labDemo.username'),
+    form: {
+      componentProps: {
+        disabled: true
+      },
+      hidden: true
+    }
+  },
+  {
+    field: 'imageName',
+    label: t('labDemo.imageName'),
+    form: {
+      componentProps: {
+        disabled: true
+      },
+      hidden: true
+    }
   },
   {
     field: 'containerName',
@@ -86,7 +104,11 @@ const crudSchemas = reactive<CrudSchema[]>([
         multiple: false,
         collapseTags: true,
         maxCollapseTags: 1,
-        disabled: true
+        disabled: true,
+        onselectionchange: (e: any) => {
+          const val = e.target.parentElement.parentElement.querySelector('span').innerText
+          console.log('val', val != '请选择', crudSchemas)
+        }
       },
       optionApi: async () => {
         const res = await containersApi({
@@ -102,21 +124,37 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'userName',
-    label: t('labDemo.username'),
+    field: 'expName',
+    label: t('labDemo.labname'),
     form: {
-      componentProps: {
-        disabled: true
-      }
+      hidden: true
     }
   },
   {
-    field: 'imageName',
-    label: t('labDemo.imageName'),
+    field: 'dataSource',
+    label: t('labDemo.dataSource'),
+    table: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    },
     form: {
-      componentProps: {
-        disabled: true
-      }
+      hidden: true
+    }
+  },
+
+  {
+    field: 'note',
+    label: t('labDemo.expNote'),
+    table: {
+      hidden: true
+    },
+    search: {
+      hidden: true
+    },
+    form: {
+      hidden: true
     }
   },
   {
@@ -124,6 +162,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('labDemo.status'),
     form: {
       component: 'Select',
+      hidden: true,
       componentProps: {
         multiple: false,
         collapseTags: true,
@@ -161,16 +200,6 @@ const crudSchemas = reactive<CrudSchema[]>([
           return row.status ? t('labDemo.completed') : t('labDemo.pending')
         }
       }
-    }
-  },
-  {
-    field: 'note',
-    label: t('labDemo.expNote'),
-    table: {
-      hidden: true
-    },
-    search: {
-      hidden: true
     }
   },
   {
@@ -238,14 +267,12 @@ const crudSchemas = reactive<CrudSchema[]>([
   }
 ])
 
-const { allSchemas } = useCrudSchemas(crudSchemas)
 const searchParams = ref({})
 const setSearchParams = (params: any) => {
   currentPage.value = 1
   searchParams.value = params
   getList()
 }
-
 const treeEl = ref<typeof ElTree>()
 
 const dialogVisible = ref(false)
@@ -267,6 +294,8 @@ const AddAction = () => {
   dialogVisible.value = true
   actionType.value = ''
 }
+const { allSchemas } = useCrudSchemas(crudSchemas)
+const writeKey = ref(0)
 
 const delLoading = ref(false)
 const ids = ref<string[]>([])
@@ -309,10 +338,14 @@ const saveLoading = ref(false)
 
 const save = async () => {
   const write = unref(writeRef)
+  console.log('save')
   const formData = await write?.submit()
+  console.log('save2')
+
   if (formData) {
     saveLoading.value = true
     try {
+      console.log(addType.value)
       if (addType.value === 'add') {
         const res = await saveLabApi({
           ...formData
@@ -342,6 +375,12 @@ const save = async () => {
       dialogVisible.value = false
     }
   }
+}
+
+const close = () => {
+  const write = unref(writeRef)
+  write?.fold()
+  dialogVisible.value = false
 }
 </script>
 
@@ -381,6 +420,7 @@ const save = async () => {
         ref="writeRef"
         :form-schema="allSchemas.formSchema"
         :current-row="currentRow"
+        :key="writeKey"
       />
 
       <Detail
@@ -398,7 +438,7 @@ const save = async () => {
         >
           {{ t('exampleDemo.save') }}
         </BaseButton>
-        <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>
+        <BaseButton @click="close">{{ t('dialogDemo.close') }}</BaseButton>
       </template>
     </Dialog>
   </div>

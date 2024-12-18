@@ -559,6 +559,7 @@ export default {
     title: '实验管理',
     image: '镜像',
     port: '端口',
+    dataSource: '数据来源',
     expNote: '实验备注',
     username_: '用户名',
     containerStatus: '容器状态',
