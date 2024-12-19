@@ -104,11 +104,16 @@ const fold = () => {
   ;(props as any).formSchema[6].hidden = true
 }
 
+const shiftDataSource = (v) => {
+  ;(props as any).formSchema[2].hidden = v
+  if (!v) (props as any).formSchema[6].hidden = true
+  ;(props as any).formSchema[8].hidden = v
+}
+
 defineExpose({
   submit,
-  getFormData,
-  getElFormExpose,
-  fold
+  fold,
+  shiftDataSource
 })
 </script>
 

@@ -140,7 +140,10 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     form: {
-      hidden: true
+      hidden: true,
+      componentProps: {
+        disabled: false
+      }
     }
   },
 
@@ -160,6 +163,9 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     field: 'status',
     label: t('labDemo.status'),
+    formItemProps: {
+      labelWidth: '500px'
+    },
     form: {
       component: 'Select',
       hidden: true,
@@ -283,11 +289,14 @@ const actionType = ref('')
 
 const addType = ref('add')
 const AddAction = () => {
-  dialogTitle.value = t('exampleDemo.add')
+  dialogTitle.value = t('exampleDemo.regLab')
   crudSchemas.forEach((v) => {
     if (v.field === 'userName' || v.field === 'imageName' || v.field === 'containerName') {
       v.form!.componentProps!.disabled = false
     }
+  })
+  setTimeout(() => {
+    unref(writeRef)?.shiftDataSource(true)
   })
   addType.value = 'add'
   currentRow.value = undefined
@@ -312,7 +321,7 @@ const delData = async (row?: DepartmentUserItem) => {
   })
 }
 
-const action = (row: DepartmentUserItem, type: string) => {
+const action = async (row: DepartmentUserItem, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   crudSchemas.forEach((v) => {
     if (v.field === 'userName' || v.field === 'imageName' || v.field === 'containerName') {
@@ -320,6 +329,12 @@ const action = (row: DepartmentUserItem, type: string) => {
     }
   })
   addType.value = type === 'edit' ? 'edit' : 'add'
+  setTimeout(() => {
+    if (addType.value === 'edit') {
+      unref(writeRef)?.shiftDataSource(false)
+      console.log('cccc', crudSchemas)
+    }
+  })
   actionType.value = type
   currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
   dialogVisible.value = true
@@ -421,6 +436,7 @@ const close = () => {
       <Write
         v-if="actionType !== 'detail'"
         ref="writeRef"
+        :is-col="false"
         :form-schema="allSchemas.formSchema"
         :current-row="currentRow"
         :key="writeKey"
