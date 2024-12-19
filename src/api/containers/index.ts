@@ -10,7 +10,7 @@ export const expsApi = (params: any) => {
 }
 
 export const containersApi = (params: any) => {
-  return request.get({ url: '/localapi/container/list', params })
+  return request.get({ url: '/localapi/container/getConList', params })
 }
 
 export const imagesApi = (params: any) => {

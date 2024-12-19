@@ -16,8 +16,6 @@ import { deleteLabByIdApi, labsApi, saveLabApi, updateLabApi } from '@/api/lab'
 import { useRouter } from 'vue-router'
 import { containersApi } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
-import { is } from '@/utils/is'
-import { isReactive } from 'vue'
 
 const userStore = useUserStore()
 

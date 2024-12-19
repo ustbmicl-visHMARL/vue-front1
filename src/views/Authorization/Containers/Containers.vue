@@ -30,7 +30,7 @@ const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
     const { pageSize, currentPage } = tableState
     const res = await containersApi({
-      account: '',
+      account: (userStore.getUserInfo as any).account,
       pageIndex: unref(currentPage),
       pageSize: unref(pageSize),
       ...unref(searchParams)
