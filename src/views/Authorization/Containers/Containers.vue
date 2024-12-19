@@ -80,7 +80,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     }
   },
   {
-    field: 'containerName',
+    field: 'name',
     label: t('labDemo.containerName')
   },
   {

@@ -3,7 +3,7 @@ import type { LabParams, LabResponse } from './types'
 
 export const labsApi = (params: LabParams) => {
   // return request.get<LabResponse>({ url: '/localapi/lab/labs', params })
-  return request.get({ url: '/localapi/exp/getexplist', params })
+  return request.get({ url: '/localapi/exp/getExpList', params })
 }
 
 export const saveLabApi = (data: any) => {
