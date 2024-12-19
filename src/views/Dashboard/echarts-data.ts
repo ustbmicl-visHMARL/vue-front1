@@ -308,32 +308,11 @@ export const wordOptions = {
   ]
 }
 //动作函数
-export const actionScatterOptions = async (
-  expId: number,
-  episodeId: number
-): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartAction?expId=${expId}&episodeId=${episodeId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  if (!response.ok) {
-    const errorData = await response.text()
-    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
-  }
-
-  const result = await response.json()
-  const parsedData = result.data // 解析返回的 data
-  // console.log(parsedData.length)
-
+export const actionScatterOptions = (action) => {
+  const parsedData = action
   const steps = parsedData.map((item) => parseInt(item.step, 10))
-  // console.log(episodes)
-
   const maxX = Math.max(...steps)
 
-  // const minY = Math.min(...values)
-  // const maxY = Math.max(...values)
   // 返回动态生成的图表配置
   return {
     tooltip: {
@@ -403,12 +382,8 @@ export const actionScatterOptions = async (
     ]
   }
 }
-//价值函数
-export const valueScatterOptions = async (
-  expId: number,
-  episodeId: number
-): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartValue?expId=${expId}&episodeId=${episodeId}`, {
+export const getAllViews = async (expId: number, episodeId: number) => {
+  const response = await fetch(`/java/exp/getViews?expId=${expId}&episodeId=${episodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -420,9 +395,13 @@ export const valueScatterOptions = async (
   }
 
   const result = await response.json()
-  const parsedData = result.data // 解析返回的 data
-  // console.log(parsedData.length)
+  const parsedData = result.data
+  return parsedData
+}
 
+//价值函数
+export const valueScatterOptions = (value) => {
+  const parsedData = value
   const steps = parsedData.map((item) => parseInt(item.step, 10))
   const values = parsedData.map((item) => parseFloat(item.value))
 
@@ -549,24 +528,8 @@ export const importanceBarOptions: EChartsOption = {
   ]
 }
 // 奖励
-export const rewardLineOptions = async (
-  expId: number,
-  episodeId: number
-): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartReward?expId=${expId}&episodeId=${episodeId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  if (!response.ok) {
-    const errorData = await response.text()
-    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
-  }
-
-  const result = await response.json()
-  const parsedData = result.data // 解析返回的 data
-  // console.log(parsedData.length)
+export const rewardLineOptions = (reward) => {
+  const parsedData = reward
 
   const episodes = parsedData.map((item) => parseInt(item.episode, 10))
   // console.log(episodes)
@@ -653,24 +616,8 @@ export const rewardLineOptions = async (
 }
 
 // 学习曲线
-export const learnLineOptions = async (
-  expId: number,
-  episodeId: number
-): Promise<EChartsOption> => {
-  const response = await fetch(`/java/chart/getChartLoss?expId=${expId}&episodeId=${episodeId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  if (!response.ok) {
-    const errorData = await response.text()
-    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
-  }
-
-  const result = await response.json()
-  const parsedData = result.data // 解析返回的 data
-  // console.log(parsedData.length)
+export const learnLineOptions = async (loss): Promise<EChartsOption> => {
+  const parsedData = loss
 
   const episodes = parsedData.map((item) => parseInt(item.episode, 10))
   // console.log(episodes)
@@ -757,29 +704,9 @@ export const learnLineOptions = async (
 }
 
 // Q值函数
-export const qvalueSquareOptions = async (
-  expId: number,
-  episodeId: number
-): Promise<EChartsOption> => {
-  console.log('episodeId', episodeId)
-  const response = await fetch(`/java/chart/getChartQValue?expId=${expId}&episodeId=${episodeId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  if (!response.ok) {
-    const errorData = await response.text()
-    throw new Error(`HTTP error! status: ${response.status}, message:${errorData}`)
-  }
-
-  const result = await response.json()
-  const parsedData = result.data.qvalue // 解析返回的 data
-  // console.log(parsedData.length)
-
-  // const episodes = parsedData.map((item) => parseInt(item.episode, 10))
-  // console.log(episodes)
-  // const values = parsedData.map((item) => parseFloat(item.loss))
+export const qvalueSquareOptions = (qValue) => {
+  const parsedData = qValue.qvalue
+  console.log('parsedData', parsedData)
   const xdata = Array.from({ length: parsedData.length }, (_, index) => index)
   const ydata = ['右下', '右上', '左下', '左上']
   type TransformedArrayType = [number, string, number]

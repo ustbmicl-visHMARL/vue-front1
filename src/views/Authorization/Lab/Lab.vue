@@ -110,13 +110,13 @@ const crudSchemas = reactive<CrudSchema[]>([
       },
       optionApi: async () => {
         const res = await containersApi({
-          id: '',
+          account: (userStore.getUserInfo as any).account,
           pageIndex: 1,
           pageSize: 100000
         })
         return res.data.list.map((v) => ({
-          label: v.containerName,
-          value: v.containerName
+          label: v.name,
+          value: v.name
         }))
       }
     }

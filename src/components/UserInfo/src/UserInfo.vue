@@ -9,7 +9,7 @@ import { useLockStore } from '@/store/modules/lock'
 import { useUserStore } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 
-const { push, getRoutes, removeRoute } = useRouter()
+const { push } = useRouter()
 
 const userStore = useUserStore()
 

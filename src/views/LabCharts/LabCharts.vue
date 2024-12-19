@@ -2,22 +2,15 @@
 // import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
 import { Echart } from '@/components/Echart'
 import {
-  pieOptions,
   barOptions,
-  lineOptions,
   actionScatterOptions,
   valueScatterOptions,
   rewardLineOptions,
   learnLineOptions,
-  qvalueSquareOptions
+  qvalueSquareOptions,
+  getAllViews
 } from '../Dashboard/echarts-data'
 import { ref, reactive, Ref, nextTick, onMounted, computed, watch } from 'vue'
-import {
-  getUserAccessSourceApi,
-  getWeeklyUserActivityApi,
-  getMonthlySalesApi
-} from '@/api/dashboard/analysis'
-import { set } from 'lodash-es'
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { BaseButton } from '@/components/Button'
@@ -29,80 +22,9 @@ const { t } = useI18n()
 const expId = ref(parseInt(route.query.expId as string))
 const loading = ref(true)
 const loadingIframe = ref(true)
-
-const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption
-
-// 用户来源
-const getUserAccessSource = async () => {
-  const res = await getUserAccessSourceApi().catch(() => {})
-  if (res) {
-    set(
-      pieOptionsData,
-      'legend.data',
-      res.data.map((v) => t(v.name))
-    )
-    pieOptionsData!.series![0].data = res.data.map((v) => {
-      return {
-        name: t(v.name),
-        value: v.value
-      }
-    })
-  }
-}
-
 const barOptionsData = reactive<EChartsOption>(barOptions) as EChartsOption
 
-// 周活跃量
-const getWeeklyUserActivity = async () => {
-  const res = await getWeeklyUserActivityApi().catch(() => {})
-  if (res) {
-    set(
-      barOptionsData,
-      'xAxis.data',
-      res.data.map((v) => t(v.name))
-    )
-    set(barOptionsData, 'series', [
-      {
-        name: t('analysis.activeQuantity'),
-        data: res.data.map((v) => v.value),
-        type: 'bar'
-      }
-    ])
-  }
-}
-
-const lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
-
 // 每月销售总额
-const getMonthlySales = async () => {
-  const res = await getMonthlySalesApi().catch(() => {})
-  if (res) {
-    set(
-      lineOptionsData,
-      'xAxis.data',
-      res.data.map((v) => t(v.name))
-    )
-    set(lineOptionsData, 'series', [
-      {
-        name: t('analysis.estimate'),
-        smooth: true,
-        type: 'line',
-        data: res.data.map((v) => v.estimate),
-        animationDuration: 2800,
-        animationEasing: 'cubicInOut'
-      },
-      {
-        name: t('analysis.actual'),
-        smooth: true,
-        type: 'line',
-        itemStyle: {},
-        data: res.data.map((v) => v.actual),
-        animationDuration: 2800,
-        animationEasing: 'quadraticOut'
-      }
-    ])
-  }
-}
 const num = ref(1)
 const handleChange = (value: number) => {
   barOptionsData.series![0].data[0] *= 2
@@ -163,12 +85,8 @@ onMounted(() => {
 })
 
 const getAllApi = async () => {
-  await Promise.all([
-    // getSwiperImg(),
-    getUserAccessSource(),
-    getWeeklyUserActivity(),
-    getMonthlySales()
-  ])
+  // 等待1s
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   loading.value = false
   nextTick(() => {
     blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`
@@ -212,15 +130,18 @@ onMounted(async () => {
   })
 
   try {
-    const actionOptions = await actionScatterOptions(expId.value, num.value)
+    const allViews = await getAllViews(expId.value, num.value)
+    const { action, loss, value, reward, qValue } = allViews
+    console.log('allViews', allViews)
+    const actionOptions = actionScatterOptions(action)
     actionScatterData.value = actionOptions // 更新响应式引用的值
-    const valueOptions = await valueScatterOptions(expId.value, num.value)
+    const valueOptions = valueScatterOptions(value)
     valueScatterData.value = valueOptions
-    const learnOptions = await learnLineOptions(expId.value, num.value)
+    const learnOptions = learnLineOptions(loss)
     learnLineData.value = learnOptions // 更新响应式引用的值
-    const rewardOptions = await rewardLineOptions(expId.value, num.value)
+    const rewardOptions = rewardLineOptions(reward)
     rewardLineData.value = rewardOptions
-    const qvalueOptions = await qvalueSquareOptions(expId.value, num.value)
+    const qvalueOptions = qvalueSquareOptions(qValue)
     qvalueData.value = qvalueOptions
   } catch (error) {
     console.error('Failed to load chart data:', error)
