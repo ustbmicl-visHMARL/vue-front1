@@ -6,7 +6,7 @@ export const labsApi = (params: LabParams) => {
 }
 
 export const expsApi = (params: any) => {
-  return request.get<LabResponse>({ url: '/localapi/exp/getexplist', params })
+  return request.get<LabResponse>({ url: '/localapi/exp/getExpList', params })
 }
 
 export const containersApi = (params: any) => {
