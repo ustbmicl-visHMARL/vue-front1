@@ -140,6 +140,7 @@ export default {
     workplace: '工作台',
     algorithm: '算法管理',
     lida: 'lida',
+    robo: 'Robo管理',
     reduction: '数据降维',
     problem: '问题反馈',
     notify: '通知',

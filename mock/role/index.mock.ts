@@ -229,6 +229,26 @@ const adminList = [
     }
   },
   {
+    path: '/robo',
+    component: '#',
+    redirect: '/robo/index',
+    meta: {
+      title: 'router.robo',
+    },
+    children: [
+      {
+        path: 'index',
+        component: 'views/Robo/Robo',
+        name: 'Robo',
+        meta: {
+          title: 'router.robo',
+          icon: 'mdi:robot-outline',
+          noCache: true,
+        }
+      }
+    ]
+  },
+  {
     path: '/authorization',
     component: '#',
     name: 'Authorization',

@@ -175,6 +175,7 @@ export default {
     authorization: 'Authorization',
     user: 'User management',
     lab: 'Lab management',
+    robo: 'Robo Management',
     containerList: 'Container List',
     container: 'Container management',
     role: 'Role management',
