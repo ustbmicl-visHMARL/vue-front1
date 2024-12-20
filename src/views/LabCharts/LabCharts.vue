@@ -138,6 +138,7 @@ onMounted(async () => {
     const valueOptions = valueScatterOptions(value)
     valueScatterData.value = valueOptions
     const learnOptions = learnLineOptions(loss)
+    console.log('loss', loss)
     learnLineData.value = learnOptions // 更新响应式引用的值
     const rewardOptions = rewardLineOptions(reward)
     rewardLineData.value = rewardOptions

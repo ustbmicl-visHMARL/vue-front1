@@ -616,7 +616,7 @@ export const rewardLineOptions = (reward) => {
 }
 
 // 学习曲线
-export const learnLineOptions = async (loss): Promise<EChartsOption> => {
+export const learnLineOptions = (loss) => {
   const parsedData = loss
 
   const episodes = parsedData.map((item) => parseInt(item.episode, 10))
