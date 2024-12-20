@@ -27,6 +27,7 @@ import SelectorPosition from './SelectorPosition.vue'
 
 <style scoped>
 .middle {
+  margin-top: 0;
   display: grid !important;
   grid-template-columns: 2fr 1fr;
   gap: 5px;
@@ -41,7 +42,12 @@ import SelectorPosition from './SelectorPosition.vue'
 .el-card {
   margin-bottom: 0;
 }
-
+.left .el-card:nth-child(1) {
+  margin-bottom: 5px;
+}
+.left .el-card:nth-child(2) {
+  margin-bottom: 5px;
+}
 .left > div {
   flex-grow: 1;
 }

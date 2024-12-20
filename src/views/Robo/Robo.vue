@@ -41,8 +41,11 @@ import TimeOfFlight from './TimeOfFlight.vue'
 .right {
   display: flex;
   flex-direction: column;
-  gap: 5px;
   justify-content: space-between;
+}
+.left,
+.right {
+  gap: 5px;
 }
 .left > div,
 .middle > div,
