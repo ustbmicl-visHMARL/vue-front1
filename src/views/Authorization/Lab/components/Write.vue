@@ -99,7 +99,6 @@ const { setValues, setSchema, getFormData, getElFormExpose } = formMethods
 
 const submit = async () => {
   const elForm = await getElFormExpose()
-  console.log('submit', elForm)
   const valid = await elForm?.validate().catch(async (err) => {
     console.log('err', err)
   })
@@ -116,6 +115,8 @@ const submit = async () => {
       ;(props as any).formSchema[6].hidden = true
       // ;(props as any).formSchema[7].hidden = true
     }
+    console.log('submit', formData)
+    formData.status = formData.status ? '1' : '0'
     return formData
   }
 }

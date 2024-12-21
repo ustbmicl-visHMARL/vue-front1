@@ -200,8 +200,7 @@ const crudSchemas = reactive<CrudSchema[]>([
         options: [
           { label: t('labDemo.completed'), value: 1 }, // 已完成
           { label: t('labDemo.pending'), value: 0 } // 未完成
-        ],
-        defaultValue: ''
+        ]
       }
     },
     table: {
