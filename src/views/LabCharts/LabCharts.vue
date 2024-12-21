@@ -43,12 +43,19 @@ const totalPics = ref(0) // 总图片数量
 const blockElement: Ref<HTMLElement | null> = ref(null)
 
 // 获取图片列表的函数
-const fetchImages = async () => {
+const fetchImages = async (expId, episodeId) => {
   try {
-    const response = await fetch('/java/images/list') // 从后端获取图片列表
+    // POST方法从后端获取图片列表
+    const response = await fetch(`/java/exp/images/list?expId=${expId}&episodeId=${episodeId}`, {
+      method: 'Get'
+    })
     const data = await response.json()
-    pics.value = data.map((img) => `/java/images/${img}`) // 构建完整的图片URL
+    console.log('data', data)
+    pics.value = data.map(
+      (img) => `/java/exp/images/serve?expId=${expId}&episodeId=${episodeId}&filename=${img}`
+    ) // 构建完整的图片URL
     totalPics.value = pics.value.length
+
     await nextTick()
     if (totalPics.value > 0 && blockElement.value) {
       // 初始化显示第一张图片
@@ -81,7 +88,7 @@ watch(
 
 // 组件挂载时调用获取图片列表
 onMounted(() => {
-  fetchImages()
+  fetchImages(expId.value, num.value)
 })
 
 const getAllApi = async () => {

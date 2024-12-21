@@ -26,11 +26,11 @@ const testList = [
     ]
   },
   {
-    path: '/authorization/algorithm',
-    component: 'views/Authorization/Algorithm/Algorithm',
-    name: 'Algorithm',
+    path: '/authorization/lab',
+    component: 'views/Authorization/Lab/Lab',
+    name: 'Lab',
     meta: {
-      title: 'router.algorithm',
+      title: 'router.lab',
       noCache: true,
       icon: 'tabler:math',
     },
@@ -47,11 +47,11 @@ const testList = [
     },
     children: [
       {
-        path: 'algorithm',
-        component: 'views/Authorization/Algorithm/Algorithm',
-        name: 'Algorithm',
+        path: 'lab',
+        component: 'views/Authorization/Lab/Lab',
+        name: 'Lab',
         meta: {
-          title: 'router.algorithm'
+          title: 'router.lab'
         }
       }
     ]
