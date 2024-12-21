@@ -83,7 +83,7 @@ const rules = reactive({
             callback(new Error('请先选择容器名称'))
           }
           if (!data.dataSource && props.addType === 'add') {
-            callback(new Error('请输入dataSource'))
+            callback(new Error('该项为必填项'))
           } else {
             callback()
           }
