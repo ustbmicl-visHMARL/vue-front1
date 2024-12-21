@@ -369,6 +369,9 @@ const save = async () => {
     try {
       console.log(addType.value)
       if (addType.value === 'add') {
+        // 移除res中的containerName字段
+        formData.containerId = formData.containerName
+        delete formData.containerName
         const res = await saveLabApi({
           ...formData,
           account: (userStore.getUserInfo as any).account
