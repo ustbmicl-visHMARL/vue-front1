@@ -105,6 +105,7 @@ const crudSchemas = reactive<CrudSchema[]>([
         onselectionchange: (e: any) => {
           const val = e.target.parentElement.parentElement.querySelector('span').innerText
           console.log('val', val != '请选择', crudSchemas)
+          console.log('allSchemas', allSchemas)
         }
       },
       optionApi: async () => {
@@ -335,6 +336,7 @@ const action = async (row: DepartmentUserItem, type: string) => {
   addType.value = type === 'edit' ? 'edit' : 'add'
   setTimeout(() => {
     if (addType.value === 'edit') {
+      // 编辑时，显示userName和status
       unref(writeRef)?.shiftDataSource(false)
       console.log('cccc', crudSchemas)
     }
@@ -360,14 +362,11 @@ const saveLoading = ref(false)
 
 const save = async () => {
   const write = unref(writeRef)
-  console.log('save')
   const formData = await write?.submit()
-  console.log('save2')
 
   if (formData) {
     saveLoading.value = true
     try {
-      console.log(addType.value)
       if (addType.value === 'add') {
         // 移除res中的containerName字段
         formData.containerId = formData.containerName
@@ -449,6 +448,7 @@ const close = () => {
         :current-row="currentRow"
         :key="writeKey"
         :account="(userStore as any).getUserInfo.account"
+        :addType="addType"
       />
 
       <Detail

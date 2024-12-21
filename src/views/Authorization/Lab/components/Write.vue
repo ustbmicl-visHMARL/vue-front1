@@ -20,6 +20,10 @@ const props = defineProps({
   account: {
     type: String,
     default: ''
+  },
+  addType: {
+    type: String,
+    default: 'add'
   }
 })
 
@@ -36,7 +40,8 @@ const rules = reactive({
 
           getDataSourceApi({ account: props.account, containerId: data.containerName }).then(
             (res) => {
-              console.log('res', res)
+              // console.log('666', (props as any).formSchema[6])
+
               ;(props as any).formSchema[6].componentProps.options = res.data.map((v) => {
                 return {
                   label: v,
@@ -69,13 +74,16 @@ const rules = reactive({
     }
   ],
   dataSource: [
-    required(),
+    // required(),
     {
       validator: (_rule, value, callback) => {
         const formData = getFormData()
         formData.then((data) => {
           if (!data.containerName) {
             callback(new Error('请先选择容器名称'))
+          }
+          if (!data.dataSource && props.addType === 'add') {
+            callback(new Error('请输入dataSource'))
           } else {
             callback()
           }
@@ -91,14 +99,23 @@ const { setValues, setSchema, getFormData, getElFormExpose } = formMethods
 
 const submit = async () => {
   const elForm = await getElFormExpose()
-  const valid = await elForm?.validate().catch((err) => {
-    console.log(err)
+  console.log('submit', elForm)
+  const valid = await elForm?.validate().catch(async (err) => {
+    console.log('err', err)
   })
   if (valid) {
-    ;(props as any).formSchema[7].hidden = false
-    ;(props as any).formSchema[5].hidden = false
-    ;(props as any).formSchema[6].hidden = false
+    console.log('formData')
     const formData = await getFormData()
+    setTimeout(() => {
+      ;(props as any).formSchema[7].hidden = true
+      ;(props as any).formSchema[5].hidden = true
+    }, 1000)
+    // ;(props as any).formSchema[6].hidden = false
+    if (props.addType === 'edit') {
+      // ;(props as any).formSchema[5].hidden = true
+      ;(props as any).formSchema[6].hidden = true
+      // ;(props as any).formSchema[7].hidden = true
+    }
     return formData
   }
 }
@@ -123,7 +140,10 @@ const fold = () => {
 
 const shiftDataSource = (v) => {
   ;(props as any).formSchema[2].hidden = v
-  if (!v) (props as any).formSchema[6].hidden = true
+  if (!v) {
+    ;(props as any).formSchema[6].hidden = true
+    console.log('props', props)
+  }
   ;(props as any).formSchema[8].hidden = v
 }
 
