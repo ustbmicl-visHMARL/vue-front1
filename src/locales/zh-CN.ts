@@ -667,6 +667,7 @@ export default {
     detail: '查看详情',
     userInfo: '用户管理模块提供了用户的注册、登录、权限管理、修改密码等功能。',
     labInfo: '实验管理模块提供了实验的创建、编辑、删除等功能。',
-    containerInfo: '容器列表模块提供了容器的创建、编辑、删除等功能。'
+    containerInfo: '容器列表模块提供了容器的创建、编辑、删除等功能。',
+    lidaInfo: 'lida提供了基于LLMs的可视化和信息图自动生成功能'
   }
 }

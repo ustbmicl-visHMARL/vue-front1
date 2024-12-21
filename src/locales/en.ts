@@ -680,6 +680,7 @@ export default {
     userInfo:
       'User management module provides user registration, login, permission management, password modification, etc.',
     labInfo: 'Experiment management module provides experiment creation, editing, deletion, etc.',
-    containerInfo: 'Container list module provides container creation, editing, deletion, etc.'
+    containerInfo: 'Container list module provides container creation, editing, deletion, etc.',
+    lidaInfo: 'Automatic Generation of Visualizations and Infographics with LLMs'
   }
 }

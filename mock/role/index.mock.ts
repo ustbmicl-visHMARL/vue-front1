@@ -76,47 +76,47 @@ const testList = [
       }
     ]
   },
-  {
-    path: '/problem',
-    component: '#',
-    redirect: '/problem/index',
-    meta: {
-      title: 'router.problem',
-    },
-    children: [
-      {
-        path: 'index',
-        component: 'views/Problem/Problem',
-        name: 'Problem',
-        meta: {
-          title: 'router.problem',
-          icon: 'fluent:person-feedback-16-regular',
-          noCache: true,
-        }
-      }
-    ]
-  },
-  {
-    path: '/notify',
-    component: '#',
-    redirect: '/notify/index',
-    // name: 'Notify',
-    meta: {
-      title: 'router.notify',
-    },
-    children: [
-      {
-        path: 'index',
-        component: 'views/Notify/Notify',
-        name: 'Notify',
-        meta: {
-          title: 'router.notify',
-          icon: 'ic:outline-message',
-          noCache: true,
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/problem',
+  //   component: '#',
+  //   redirect: '/problem/index',
+  //   meta: {
+  //     title: 'router.problem',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: 'views/Problem/Problem',
+  //       name: 'Problem',
+  //       meta: {
+  //         title: 'router.problem',
+  //         icon: 'fluent:person-feedback-16-regular',
+  //         noCache: true,
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/notify',
+  //   component: '#',
+  //   redirect: '/notify/index',
+  //   // name: 'Notify',
+  //   meta: {
+  //     title: 'router.notify',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: 'views/Notify/Notify',
+  //       name: 'Notify',
+  //       meta: {
+  //         title: 'router.notify',
+  //         icon: 'ic:outline-message',
+  //         noCache: true,
+  //       }
+  //     }
+  //   ]
+  // },
 ]
 
 const adminList = [
@@ -219,15 +219,15 @@ const adminList = [
   //     icon: "mdi:docker"
   //   }
   // },
-  {
-    path: '/authorization/message',
-    component: 'views/Authorization/Message/Message',
-    name: 'Message',
-    meta: {
-      title: 'router.message',
-      icon: "ic:outline-message"
-    }
-  },
+  // {
+  //   path: '/authorization/message',
+  //   component: 'views/Authorization/Message/Message',
+  //   name: 'Message',
+  //   meta: {
+  //     title: 'router.message',
+  //     icon: "ic:outline-message"
+  //   }
+  // },
   {
     path: '/robo',
     component: '#',
@@ -304,15 +304,15 @@ const adminList = [
           icon: "mdi:user"
         }
       },
-      {
-        path: 'message',
-        component: 'views/Authorization/Message/Message',
-        name: 'Message',
-        meta: {
-          title: 'router.message',
-          icon: "ic:outline-message"
-        }
-      }
+      // {
+      //   path: 'message',
+      //   component: 'views/Authorization/Message/Message',
+      //   name: 'Message',
+      //   meta: {
+      //     title: 'router.message',
+      //     icon: "ic:outline-message"
+      //   }
+      // }
     ]
   }
 ]
