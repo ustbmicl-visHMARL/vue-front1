@@ -8,7 +8,7 @@ export const labsApi = (params: LabParams) => {
 
 export const saveLabApi = (data: any) => {
   // return request.post({ url: '/localapi/lab/save', data })
-  return request.post({ url: '/localapi/exp/registerexp', data })
+  return request.post({ url: '/localapi/exp/registerExp', data })
 }
 
 export const getDataSourceApi = (data: any) => {
