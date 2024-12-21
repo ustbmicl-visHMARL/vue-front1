@@ -4,6 +4,7 @@ import { useForm } from '@/hooks/web/useForm'
 import { nextTick, PropType, reactive, watch } from 'vue'
 import { DepartmentUserItem } from '@/api/department/types'
 import { useValidator } from '@/hooks/web/useValidator'
+import { getDataSourceApi } from '@/api/lab'
 
 const { required } = useValidator()
 
@@ -15,6 +16,10 @@ const props = defineProps({
   formSchema: {
     type: Array as PropType<FormSchema[]>,
     default: () => []
+  },
+  account: {
+    type: String,
+    default: ''
   }
 })
 
@@ -28,6 +33,18 @@ const rules = reactive({
           ;(props as any).formSchema[5].hidden = false
           ;(props as any).formSchema[7].hidden = false
           ;(props as any).formSchema[6].hidden = false
+
+          getDataSourceApi({ account: props.account, containerId: data.containerName }).then(
+            (res) => {
+              console.log('res', res)
+              ;(props as any).formSchema[6].componentProps.options = res.data.map((v) => {
+                return {
+                  label: v,
+                  value: v
+                }
+              })
+            }
+          )
           callback()
         })
       },

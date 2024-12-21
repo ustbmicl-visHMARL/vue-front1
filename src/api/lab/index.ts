@@ -11,6 +11,13 @@ export const saveLabApi = (data: any) => {
   return request.post({ url: '/localapi/exp/registerexp', data })
 }
 
+export const getDataSourceApi = (data: any) => {
+  // return request.post({ url: '/localapi/lab/save', data })
+  return request.post({
+    url: `/localapi/exp/getDataSource?containerId=${data.containerId}&account=${data.account}`
+  })
+}
+
 export const updateLabApi = (data: any) => {
   // return request.post({ url: '/localapi/lab/save', data })
   return request.post({ url: '/localapi/exp/update', data })

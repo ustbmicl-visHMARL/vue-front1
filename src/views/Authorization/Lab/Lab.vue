@@ -42,7 +42,6 @@ const { tableRegister, tableState, tableMethods } = useTable({
 })
 const { total, loading, dataList, pageSize, currentPage } = tableState
 const { getList, getElTableExpose, delList } = tableMethods
-
 const crudSchemas = reactive<CrudSchema[]>([
   {
     field: 'selection',
@@ -116,7 +115,7 @@ const crudSchemas = reactive<CrudSchema[]>([
         })
         return res.data.list.map((v) => ({
           label: v.name,
-          value: v.name
+          value: v.id
         }))
       }
     }
@@ -138,13 +137,20 @@ const crudSchemas = reactive<CrudSchema[]>([
       hidden: true
     },
     form: {
+      component: 'Select',
       hidden: true,
       componentProps: {
         disabled: false
+      },
+      optionApi: async () => {
+        const res = ['aaa', 'bbb']
+        return res.map((v, i) => ({
+          label: v,
+          value: i
+        }))
       }
     }
   },
-
   {
     field: 'note',
     label: t('labDemo.expNote'),
@@ -364,7 +370,8 @@ const save = async () => {
       console.log(addType.value)
       if (addType.value === 'add') {
         const res = await saveLabApi({
-          ...formData
+          ...formData,
+          account: (userStore.getUserInfo as any).account
         })
         if (res) {
           // currentPage.value = 1
@@ -438,6 +445,7 @@ const close = () => {
         :form-schema="allSchemas.formSchema"
         :current-row="currentRow"
         :key="writeKey"
+        :account="(userStore as any).getUserInfo.account"
       />
 
       <Detail
