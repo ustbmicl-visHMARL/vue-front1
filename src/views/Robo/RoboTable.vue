@@ -1,6 +1,5 @@
 <script setup lang="tsx">
 import { reactive, ref, unref } from 'vue'
-import { getRoleListApi } from '@/api/role'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
@@ -12,6 +11,7 @@ import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
+import { labsApi } from '@/api/lab'
 
 const { t } = useI18n()
 
