@@ -448,6 +448,7 @@ const close = () => {
         :key="writeKey"
         :account="(userStore as any).getUserInfo.account"
         :addType="addType"
+        :hide-required-asterisk="true"
       />
 
       <Detail
