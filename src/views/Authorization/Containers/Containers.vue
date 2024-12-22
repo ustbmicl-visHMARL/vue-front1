@@ -277,6 +277,7 @@ const startContainer = async (row: any) => {
   console.log('startContainer', row)
   const res = await startContainerApi(row.id)
   if (res.code == 0) {
+    getList()
     ElMessage.success('启动成功')
   } else {
     ElMessage.error('启动失败')
@@ -292,6 +293,7 @@ const stopContainer = async (row: any) => {
   console.log('stopContainer', row)
   const res = await stopContainerApi(row.id)
   if (res.code == 0) {
+    getList()
     ElMessage.success('关闭成功')
   } else {
     ElMessage.error('关闭失败')
