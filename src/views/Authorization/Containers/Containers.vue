@@ -21,6 +21,7 @@ import {
 } from '@/api/containers'
 import { useUserStore } from '@/store/modules/user'
 import { imagesApi } from '@/api/containers'
+import axios from 'axios'
 
 const userStore = useUserStore()
 
@@ -343,15 +344,16 @@ const save = async () => {
       }
       await nextTick()
       console.log('realForm', realForm)
-      const res = await saveContainerApi(realForm)
-      await nextTick()
-      if (res && res.code == 1) {
-        ElMessage.error((res as any).msg)
-      } else {
-        // currentPage.value = 1
-        getList()
-        ElMessage.success('编辑成功')
-      }
+      axios.post('/localapi/container/create', realForm).then((res: any) => {
+        if (res.data && res.data.code === 1) {
+          ElMessage.error((res.data as any).msg)
+        } else if (res.data) {
+          getList()
+          ElMessage.success('操作成功')
+        } else {
+          ElMessage.error('操作失败')
+        }
+      })
     } catch (error) {
       console.log(error)
     } finally {
