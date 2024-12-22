@@ -290,7 +290,12 @@ const openContainer = async (row: any) => {
 
 const stopContainer = async (row: any) => {
   console.log('stopContainer', row)
-  stopContainerApi(row.containerId)
+  const res = await stopContainerApi(row.id)
+  if (res.code == 0) {
+    ElMessage.success('关闭成功')
+  } else {
+    ElMessage.error('关闭失败')
+  }
 }
 
 const writeRef = ref<ComponentRef<typeof Write>>()
