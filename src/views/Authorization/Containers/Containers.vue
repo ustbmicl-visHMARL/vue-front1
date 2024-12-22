@@ -2,7 +2,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
-import { ref, unref, reactive } from 'vue'
+import { ref, unref, reactive, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
@@ -341,7 +341,10 @@ const save = async () => {
         portMappingList: portMappingList,
         extraConfig: ''
       }
+      await nextTick()
+      console.log('realForm', realForm)
       const res = await saveContainerApi(realForm)
+      await nextTick()
       if (res && res.code == 1) {
         ElMessage.error((res as any).msg)
       } else {
