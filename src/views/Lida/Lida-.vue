@@ -1,6 +1,5 @@
 <template>
   <ContentWrap :title="t('lidaDemo.title')" :message="t('lidaDemo.message')">
-    <!--
     <div class="lida">
       <Form
         :schema="schema"
@@ -34,8 +33,6 @@
         <CodeEditor v-if="selectedImageUrl" :code="selectedCode" />
       </div>
     </div>
-    -->
-    <iframe src="http://127.0.0.1:8088/demo" frameborder="0"></iframe>
   </ContentWrap>
 </template>
 
