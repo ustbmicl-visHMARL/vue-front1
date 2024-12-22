@@ -342,7 +342,9 @@ const save = async () => {
         extraConfig: ''
       }
       const res = await saveContainerApi(realForm)
-      if (res) {
+      if (res && res.code == 1) {
+        ElMessage.error((res as any).msg)
+      } else {
         // currentPage.value = 1
         getList()
         ElMessage.success('编辑成功')
