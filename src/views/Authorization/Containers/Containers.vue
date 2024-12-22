@@ -335,7 +335,8 @@ const save = async () => {
     }
     try {
       const realForm = {
-        userId: Number((userStore.getUserInfo as any).userId) || -1,
+        name: formData.name || '',
+        account: Number((userStore.getUserInfo as any).account) || '',
         imageId: formData.imageId || '',
         portMappingList: portMappingList,
         extraConfig: ''
