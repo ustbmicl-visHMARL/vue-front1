@@ -26,7 +26,6 @@ const rules = reactive({
         const formData = getFormData()
 
         formData.then((data) => {
-          console.log('666', data)
           if (data.name) {
             // 如果data.containerName[0]不是字母、数字则提示错误
             if (!/^[a-zA-Z0-9]+$/.test(data.name[0])) {

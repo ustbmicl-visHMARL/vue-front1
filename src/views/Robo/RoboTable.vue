@@ -3,7 +3,7 @@ import { reactive, ref, unref } from 'vue'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
-import { ElTag } from 'element-plus'
+import { ElMessage, ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { FormSchema } from '@/components/Form'
 import { ContentWrap } from '@/components/ContentWrap'
@@ -12,6 +12,7 @@ import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
 import { labsApi } from '@/api/lab'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
@@ -20,7 +21,8 @@ const { tableRegister, tableState, tableMethods } = useTable({
     const res = await labsApi({
       pageIndex: 1,
       pageSize: 10,
-      account: 'admin'
+      account: 'admin',
+      ...unref(searchParams)
     })
     return {
       list: res.data.list || [],
@@ -32,15 +34,26 @@ const { tableRegister, tableState, tableMethods } = useTable({
 const { dataList, loading, total } = tableState
 const { getList } = tableMethods
 
+const router = useRouter()
+const toView = (row) => {
+  console.log(row, row.id)
+  router.push({
+    path: '/robo/view',
+    query: {
+      expId: row.id
+    }
+  })
+}
+
 const tableColumns = reactive<TableColumn[]>([
+  {
+    field: 'selection',
+    type: 'selection'
+  },
   {
     field: 'index',
     label: t('userDemo.index'),
     type: 'index'
-  },
-  {
-    field: 'roleName',
-    label: t('role.roleName')
   },
   {
     field: 'status',
@@ -62,13 +75,9 @@ const tableColumns = reactive<TableColumn[]>([
     label: t('tableDemo.displayTime')
   },
   {
-    field: 'remark',
-    label: t('userDemo.remark')
-  },
-  {
     field: 'action',
     label: t('userDemo.action'),
-    width: 240,
+    width: 320,
     slots: {
       default: (data: any) => {
         const row = data.row
@@ -80,7 +89,12 @@ const tableColumns = reactive<TableColumn[]>([
             <BaseButton type="success" onClick={() => action(row, 'detail')}>
               {t('exampleDemo.detail')}
             </BaseButton>
-            <BaseButton type="danger">{t('exampleDemo.del')}</BaseButton>
+            <BaseButton type="danger" onClick={() => delData(row)}>
+              {t('exampleDemo.delOne')}
+            </BaseButton>
+            <BaseButton type="warning" onClick={() => toView(row)}>
+              {t('exampleDemo.view')}
+            </BaseButton>
           </>
         )
       }
@@ -91,8 +105,20 @@ const tableColumns = reactive<TableColumn[]>([
 const searchSchema = reactive<FormSchema[]>([
   {
     field: 'roleName',
-    label: t('role.roleName'),
-    component: 'Input'
+    label: t('robo.status'),
+    component: 'Select',
+    componentProps: {
+      options: [
+        {
+          label: '禁用',
+          value: 0
+        },
+        {
+          label: '启动',
+          value: 1
+        }
+      ]
+    }
   }
 ])
 
@@ -137,6 +163,18 @@ const save = async () => {
     }, 1000)
   }
 }
+
+const delLoading = ref(false)
+const delData = async (row?) => {
+  delLoading.value = true
+
+  const elTableExpose = await tableMethods.getElTableExpose()
+  const ids = row ? [row.id] : elTableExpose?.getSelectionRows().map((v) => v.id)
+
+  delLoading.value = false
+
+  ElMessage.success(`删除${JSON.stringify(ids)}成功`)
+}
 </script>
 
 <template>
@@ -144,6 +182,9 @@ const save = async () => {
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
     <div class="mb-10px">
       <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+      <BaseButton :loading="delLoading" type="danger" @click="delData()">
+        {{ t('exampleDemo.del') }}
+      </BaseButton>
     </div>
     <Table
       :columns="tableColumns"

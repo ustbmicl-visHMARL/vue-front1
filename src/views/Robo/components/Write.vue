@@ -1,13 +1,9 @@
 <script setup lang="tsx">
 import { Form, FormSchema } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
-import { PropType, reactive, watch, ref, unref, nextTick } from 'vue'
+import { PropType, reactive, watch, ref } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElTree, ElCheckboxGroup, ElCheckbox } from 'element-plus'
-import { filter, eachTree } from '@/utils/tree'
-import { findIndex } from '@/utils'
-
 const { t } = useI18n()
 
 const { required } = useValidator()
@@ -19,14 +15,7 @@ const props = defineProps({
   }
 })
 
-const treeRef = ref<typeof ElTree>()
-
 const formSchema = ref<FormSchema[]>([
-  {
-    field: 'roleName',
-    label: t('role.roleName'),
-    component: 'Input'
-  },
   {
     field: 'status',
     label: t('menu.status'),
@@ -42,52 +31,6 @@ const formSchema = ref<FormSchema[]>([
           value: 1
         }
       ]
-    }
-  },
-  {
-    field: 'menu',
-    label: t('role.menu'),
-    colProps: {
-      span: 24
-    },
-    formItemProps: {
-      slots: {
-        default: () => {
-          return (
-            <>
-              <div class="flex w-full">
-                <div class="flex-1">
-                  <ElTree
-                    ref={treeRef}
-                    show-checkbox
-                    node-key="id"
-                    highlight-current
-                    check-strictly
-                    expand-on-click-node={false}
-                    data={treeData.value}
-                    onNode-click={nodeClick}
-                  >
-                    {{
-                      default: (data) => {
-                        return <span>{data.data.meta.title}</span>
-                      }
-                    }}
-                  </ElTree>
-                </div>
-                <div class="flex-1">
-                  {unref(currentTreeData) && unref(currentTreeData)?.permissionList ? (
-                    <ElCheckboxGroup v-model={unref(currentTreeData).meta.permission}>
-                      {unref(currentTreeData)?.permissionList.map((v: any) => {
-                        return <ElCheckbox label={v.value}>{v.label}</ElCheckbox>
-                      })}
-                    </ElCheckboxGroup>
-                  ) : null}
-                </div>
-              </div>
-            </>
-          )
-        }
-      }
     }
   }
 ])
@@ -115,12 +58,6 @@ const submit = async () => {
   })
   if (valid) {
     const formData = await getFormData()
-    const checkedKeys = unref(treeRef)?.getCheckedKeys() || []
-    const data = filter(unref(treeData), (item: any) => {
-      return checkedKeys.includes(item.id)
-    })
-    formData.menu = data || []
-    console.log(formData)
     return formData
   }
 }

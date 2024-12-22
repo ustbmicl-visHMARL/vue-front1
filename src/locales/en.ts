@@ -127,7 +127,7 @@ export default {
   },
   router: {
     login: 'Login',
-    view: 'View',
+    view: 'Lab View',
     level: 'Multi level menu',
     menu: 'Menu',
     menu1: 'Menu1',
@@ -682,5 +682,9 @@ export default {
     labInfo: 'Experiment management module provides experiment creation, editing, deletion, etc.',
     containerInfo: 'Container list module provides container creation, editing, deletion, etc.',
     lidaInfo: 'Automatic Generation of Visualizations and Infographics with LLMs'
+  },
+  robo: {
+    status: 'Status',
+    roboView: 'Robo view'
   }
 }

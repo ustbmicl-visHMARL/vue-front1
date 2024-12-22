@@ -251,7 +251,7 @@ const adminList = [
         component: 'views/Robo/Robo',
         name: 'Robo',
         meta: {
-          title: 'router.robo',
+          title: 'robo.roboView',
           icon: 'mdi:robot-outline',
           noCache: true,
           hidden: true

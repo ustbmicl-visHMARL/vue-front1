@@ -125,7 +125,7 @@ export default {
   },
   router: {
     login: '登录',
-    view: '视图',
+    view: 'Lab视图',
     level: '多级菜单',
     menu: '菜单',
     menu1: '菜单1',
@@ -669,5 +669,9 @@ export default {
     labInfo: '实验管理模块提供了实验的创建、编辑、删除等功能。',
     containerInfo: '容器列表模块提供了容器的创建、编辑、删除等功能。',
     lidaInfo: 'lida提供了基于LLMs的可视化和信息图自动生成功能'
+  },
+  robo: {
+    status: '状态',
+    roboView: 'Robo视图'
   }
 }
