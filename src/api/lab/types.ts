@@ -1,10 +1,11 @@
 export interface LabParams {
   pageSize: number
   pageIndex: number
-  account: string
+  account?: string
   username?: string
   labname?: string
   labstatus?: string
+  id?: string
 }
 
 export interface LabResponse {

@@ -238,12 +238,23 @@ const adminList = [
     children: [
       {
         path: 'index',
+        component: 'views/Robo/RoboTable',
+        name: 'RoboTable',
+        meta: {
+          title: 'router.robo',
+          icon: 'mdi:robot-outline',
+          noCache: true,
+        }
+      },
+      {
+        path: 'view',
         component: 'views/Robo/Robo',
         name: 'Robo',
         meta: {
           title: 'router.robo',
           icon: 'mdi:robot-outline',
           noCache: true,
+          hidden: true
         }
       }
     ]

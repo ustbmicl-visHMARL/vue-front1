@@ -286,7 +286,7 @@ const startContainer = async (row: any) => {
 
 const openContainer = async (row: any) => {
   console.log('openContainer', row)
-  window.open(`http://115.25.41.98:${row.webIDEPort || 8848}`)
+  window.open(`http://115.25.41.98:${row.webIdePort || 8848}`)
 }
 
 const stopContainer = async (row: any) => {
