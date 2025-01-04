@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref, unref } from 'vue'
+import { computed, nextTick, reactive, ref, unref } from 'vue'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
@@ -8,20 +8,18 @@ import { Search } from '@/components/Search'
 import { FormSchema } from '@/components/Form'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
-import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
-import { labsApi } from '@/api/lab'
+import { robosApi, registerRobosApi, editRobosApi, deleteRobosByIdApi } from '@/api/robo'
 import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const res = await labsApi({
+    const res = await robosApi({
       pageIndex: 1,
       pageSize: 10,
-      account: 'admin',
       ...unref(searchParams)
     })
     return {
@@ -56,6 +54,10 @@ const tableColumns = reactive<TableColumn[]>([
     type: 'index'
   },
   {
+    field: 'ip',
+    label: t('userDemo.ip')
+  },
+  {
     field: 'status',
     label: t('menu.status'),
     slots: {
@@ -63,7 +65,7 @@ const tableColumns = reactive<TableColumn[]>([
         return (
           <>
             <ElTag type={data.row.status === 0 ? 'danger' : 'success'}>
-              {data.row.status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
+              {data.row.status === 1 ? t('userDemo.online') : t('userDemo.offline')}
             </ElTag>
           </>
         )
@@ -71,8 +73,12 @@ const tableColumns = reactive<TableColumn[]>([
     }
   },
   {
-    field: 'createTime',
-    label: t('tableDemo.displayTime')
+    field: 'feedbackFrequency',
+    label: t('userDemo.feedbackFrequency')
+  },
+  {
+    field: 'electricity',
+    label: t('userDemo.electricity')
   },
   {
     field: 'action',
@@ -83,18 +89,18 @@ const tableColumns = reactive<TableColumn[]>([
         const row = data.row
         return (
           <>
-            <BaseButton type="primary" onClick={() => action(row, 'edit')}>
+            <BaseButton type="primary" onClick={() => edit(row)}>
               {t('exampleDemo.edit')}
             </BaseButton>
-            <BaseButton type="success" onClick={() => action(row, 'detail')}>
+            <BaseButton type="success" onClick={() => toView(row)}>
               {t('exampleDemo.detail')}
             </BaseButton>
             <BaseButton type="danger" onClick={() => delData(row)}>
               {t('exampleDemo.delOne')}
             </BaseButton>
-            <BaseButton type="warning" onClick={() => toView(row)}>
+            {/* <BaseButton type="warning" onClick={() => toView(row)}>
               {t('exampleDemo.view')}
-            </BaseButton>
+            </BaseButton> */}
           </>
         )
       }
@@ -104,17 +110,17 @@ const tableColumns = reactive<TableColumn[]>([
 
 const searchSchema = reactive<FormSchema[]>([
   {
-    field: 'roleName',
+    field: 'status',
     label: t('robo.status'),
     component: 'Select',
     componentProps: {
       options: [
         {
-          label: '禁用',
+          label: '离线',
           value: 0
         },
         {
-          label: '启动',
+          label: '在线',
           value: 1
         }
       ]
@@ -125,6 +131,7 @@ const searchSchema = reactive<FormSchema[]>([
 const searchParams = ref({})
 const setSearchParams = (data: any) => {
   searchParams.value = data
+  console.log('searchParams', searchParams)
   getList()
 }
 
@@ -132,35 +139,49 @@ const dialogVisible = ref(false)
 const dialogTitle = ref('')
 
 const currentRow = ref()
-const actionType = ref('')
+const actionType = ref('add')
 
 const writeRef = ref<ComponentRef<typeof Write>>()
 
 const saveLoading = ref(false)
 
-const action = (row: any, type: string) => {
-  dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
-  actionType.value = type
+const edit = async (row: any) => {
+  dialogTitle.value = t('exampleDemo.edit')
+  actionType.value = 'edit'
   currentRow.value = row
   dialogVisible.value = true
+  await nextTick()
+  const write = unref(writeRef)
+  await write?.showElForm()
 }
 
 const AddAction = () => {
   dialogTitle.value = t('exampleDemo.add')
   currentRow.value = undefined
   dialogVisible.value = true
-  actionType.value = ''
+  actionType.value = 'add'
 }
 
 const save = async () => {
   const write = unref(writeRef)
+  console.log('write', write)
   const formData = await write?.submit()
   if (formData) {
     saveLoading.value = true
-    setTimeout(() => {
-      saveLoading.value = false
-      dialogVisible.value = false
-    }, 1000)
+    let res
+    if (actionType.value == 'edit') {
+      res = await editRobosApi(formData)
+    } else {
+      res = await registerRobosApi(formData)
+    }
+    if (res.code == 0) {
+      ElMessage.success(res.msg)
+    } else {
+      ElMessage.error(res.msg)
+    }
+    getList()
+    saveLoading.value = false
+    dialogVisible.value = false
   }
 }
 
@@ -170,10 +191,15 @@ const delData = async (row?) => {
 
   const elTableExpose = await tableMethods.getElTableExpose()
   const ids = row ? [row.id] : elTableExpose?.getSelectionRows().map((v) => v.id)
+  const res = await deleteRobosByIdApi(ids)
+  if (res.code == 0) {
+    ElMessage.success('删除成功')
+    getList()
+  } else {
+    ElMessage.error((res as any).msg)
+  }
 
   delLoading.value = false
-
-  ElMessage.success(`删除${JSON.stringify(ids)}成功`)
 }
 </script>
 
@@ -200,16 +226,15 @@ const delData = async (row?) => {
   </ContentWrap>
 
   <Dialog v-model="dialogVisible" :title="dialogTitle">
-    <Write v-if="actionType !== 'detail'" ref="writeRef" :current-row="currentRow" />
-    <Detail v-else :current-row="currentRow" />
+    <Write
+      v-if="actionType !== 'detail'"
+      ref="writeRef"
+      :actionType="actionType"
+      :current-row="currentRow"
+    />
 
     <template #footer>
-      <BaseButton
-        v-if="actionType !== 'detail'"
-        type="primary"
-        :loading="saveLoading"
-        @click="save"
-      >
+      <BaseButton type="primary" :loading="saveLoading" @click="save">
         {{ t('exampleDemo.save') }}
       </BaseButton>
       <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>

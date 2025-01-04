@@ -487,6 +487,8 @@ export default {
     dialog: '弹窗',
     dialogDes: '基于 ElementPlus 的 Dialog 组件二次封装',
     open: '打开',
+    setting: '模型配置',
+    save: '保存',
     close: '关闭',
     combineWithForm: '与表单结合',
     submit: '提交'
@@ -536,6 +538,11 @@ export default {
     password: '密码',
     role: '角色',
     permission: '权限',
+    online: '在线',
+    offline: '离线',
+    ip: 'IP',
+    feedbackFrequency: '反馈频率',
+    electricity: '电量',
     remark: '备注',
     remarkMessage1: '后端控制路由权限',
     remarkMessage2: '前端控制路由权限',
@@ -605,6 +612,7 @@ export default {
   },
   menu: {
     menuName: '菜单名称',
+    ip: 'IP',
     icon: '图标',
     permission: '按钮权限',
     component: '组件',

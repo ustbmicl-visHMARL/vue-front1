@@ -163,6 +163,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           target: 'http://127.0.0.1:8010',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/java/, '/api')
+        },
+        '/lida': {
+          target: 'http://127.0.0.1:8088',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/lida/, '/api')
         }
       },
       hmr: {

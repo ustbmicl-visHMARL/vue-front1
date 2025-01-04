@@ -12,14 +12,24 @@ const props = defineProps({
   currentRow: {
     type: Object as PropType<any>,
     default: () => null
+  },
+  addType: {
+    type: String,
+    default: () => null
   }
 })
 
 const formSchema = ref<FormSchema[]>([
   {
+    field: 'ip',
+    label: t('menu.ip'),
+    component: 'Input'
+  },
+  {
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
+    hidden: true,
     componentProps: {
       options: [
         {
@@ -32,6 +42,12 @@ const formSchema = ref<FormSchema[]>([
         }
       ]
     }
+  },
+  {
+    field: 'id',
+    label: 'ID',
+    component: 'Input',
+    hidden: true
   }
 ])
 
@@ -41,9 +57,7 @@ const nodeClick = (treeData: any) => {
 }
 
 const rules = reactive({
-  roleName: [required()],
-  role: [required()],
-  status: [required()]
+  ip: [required()]
 })
 
 const { formRegister, formMethods } = useForm()
@@ -61,6 +75,17 @@ const submit = async () => {
     return formData
   }
 }
+const showElForm = () => {
+  console.log('props.addType', props.addType)
+  // 将formSchema.value
+  formSchema.value.forEach((o) => {
+    if (o.field == 'status') {
+      console.log('ggg', props.addType == 'add')
+      o.hidden = props.addType == 'add'
+    }
+  })
+  console.log(formSchema.value[1].hidden)
+}
 
 watch(
   () => props.currentRow,
@@ -75,7 +100,8 @@ watch(
 )
 
 defineExpose({
-  submit
+  submit,
+  showElForm
 })
 </script>
 

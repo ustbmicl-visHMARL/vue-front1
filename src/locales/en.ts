@@ -494,6 +494,8 @@ export default {
     dialog: 'Dialog',
     dialogDes: 'Secondary packaging of Dialog components based on ElementPlus',
     open: 'Open',
+    save: 'Save',
+    setting: 'General setting',
     close: 'Close',
     combineWithForm: 'Combine with form',
     submit: 'Submit'
@@ -542,6 +544,11 @@ export default {
     action: 'Action',
     username: 'Username',
     password: 'Password',
+    online: 'Online',
+    offline: 'Offline',
+    ip: 'IP',
+    electricity: 'Electricity',
+    feedbackFrequency: 'Feedback frequency',
     role: 'Role',
     permission: 'Permission',
     show: 'Show',
@@ -613,6 +620,7 @@ export default {
   menu: {
     menuName: 'Menu name',
     icon: 'Icon',
+    ip: 'IP',
     // 权限
     permission: 'Permission',
     component: 'Component',
