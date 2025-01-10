@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, nextTick, reactive, ref, unref } from 'vue'
+import { nextTick, reactive, ref, unref } from 'vue'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'

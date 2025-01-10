@@ -17,7 +17,7 @@ const { t } = useI18n()
           <p>{{ t('showDemo.lidaInfo') }}</p>
         </div>
         <template #footer>
-          <router-link to="/authorization/user"> {{ t('showDemo.detail') }} </router-link>
+          <router-link to="/lida/index"> {{ t('showDemo.detail') }} </router-link>
         </template>
       </el-card>
       <el-card>
