@@ -26,7 +26,7 @@ import { Promotion } from '@element-plus/icons-vue'
 import CodeEditor from './CodeEditor.vue'
 import RecommendEditor from './RecommendEditor.vue'
 import { useUserStore } from '@/store/modules/user'
-import { useLidaStore } from '@/store/modules/lida'
+import { ChatItem, useLidaStore } from '@/store/modules/lida'
 import PythonCode from './PythonCode.vue'
 import { Echart } from '@/components/Echart'
 import {
@@ -320,7 +320,7 @@ const save = () => {
   // 保存三个数据
   if (visualizeData.value.charts.length == 0) return ElMessage.info('请先进行可视化')
   lidaStore.updateAccountData({
-    account: 'zhangyunfei',
+    account: userStore.userInfo?.account || '',
     lida: {
       filename: summary.value.data_filename,
       time: new Date().toLocaleString(),
@@ -349,7 +349,7 @@ const load = () => {
     summary.value = lida.summary
     goalExploration.value = lida.goalExploration
     visualizeData.value = lida.visualizeData
-    chatHistory.value = lida.chatHistory || []
+    chatHistory.value = JSON.parse(JSON.stringify(lida.chatHistory) || '[]')
     explainData.value = lida.explainData
       ? lida.explainData
       : {
@@ -378,12 +378,11 @@ const load = () => {
   }
 }
 const chatInput = ref('')
-const chatHistory = ref<{ content: string; timestamp: string }[]>([])
+const chatHistory: Ref<ChatItem[]> = ref([])
 const handleEnter = async () => {
   if (chatInput.value == '') return
   chatHistory.value.push({ content: chatInput.value, timestamp: new Date().toLocaleString() })
   chatInput.value = ''
-  console.log('chatHistory', chatHistory.value)
   const editParam = {
     summary: summary.value.summary,
     instructions: chatHistory.value.map((item) => item.content),
@@ -517,6 +516,9 @@ const handleRepair = async () => {
 // const handleTest = async () => {
 //   console.log('recommendData', recommendData.value)
 //   console.log('evaluateData', evaluateData.value)
+//   console.log('chatHistory', chatHistory.value)
+//   chatHistory.value.pop()
+//   console.log('lida', lidaStore.getAccountData(userStore.userInfo?.account || ''))
 // }
 const evaluateData: Ref<EvaluationData> = ref({
   status: false,

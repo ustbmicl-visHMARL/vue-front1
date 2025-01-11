@@ -3,6 +3,10 @@ import { store } from '../index' // 引入你的 store 实例
 import { useStorage } from '@/hooks/web/useStorage' // 引入自定义的存储 hook
 
 const { getStorage, setStorage } = useStorage('localStorage') // 使用 localStorage 存储
+export interface ChatItem {
+  content: string
+  timestamp: string
+}
 
 interface LidaItem {
   filename: string
@@ -10,7 +14,7 @@ interface LidaItem {
   summary: Record<string, any>
   goalExploration: Record<string, any>
   visualizeData: Record<string, any>
-  chatHistory: Record<string, any>
+  chatHistory: ChatItem[]
   explainData: Record<string, any>
   recommendData: Record<string, any>
   settings: Record<string, any>
