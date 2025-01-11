@@ -37,11 +37,11 @@ const formSchema = ref<FormSchema[]>([
     componentProps: {
       options: [
         {
-          label: t('userDemo.disable'),
+          label: t('userDemo.offline'),
           value: 0
         },
         {
-          label: t('userDemo.enable'),
+          label: t('userDemo.online'),
           value: 1
         }
       ]
