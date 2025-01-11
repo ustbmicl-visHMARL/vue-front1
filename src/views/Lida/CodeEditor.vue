@@ -18,7 +18,13 @@ const MonacoEditRef = ref<InstanceType<typeof CodeEditor>>()
 <template>
   <ContentWrap :title="t('lidaDemo.codeTitle')" :message="t('richText.codeEditorDes')">
     <div class="edit-container h-60vh">
-      <CodeEditor ref="MonacoEditRef" v-model="props!.code" language="python" />
+      <CodeEditor
+        ref="MonacoEditRef"
+        v-model="props!.code"
+        language="python"
+        :languageSelector="false"
+        :readOnly="true"
+      />
     </div>
   </ContentWrap>
 </template>

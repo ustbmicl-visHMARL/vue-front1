@@ -514,11 +514,7 @@ const handleRepair = async () => {
   }
 }
 // const handleTest = async () => {
-//   console.log('recommendData', recommendData.value)
-//   console.log('evaluateData', evaluateData.value)
-//   console.log('chatHistory', chatHistory.value)
-//   chatHistory.value.pop()
-//   console.log('lida', lidaStore.getAccountData(userStore.userInfo?.account || ''))
+//   console.log('recommendParam', visualizeData.value)
 // }
 const evaluateData: Ref<EvaluationData> = ref({
   status: false,
