@@ -93,7 +93,7 @@ onMounted(() => {
 
 const getAllApi = async () => {
   // 等待1s
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   loading.value = false
   nextTick(() => {
     blockElement.value!.style.backgroundImage = `url(${pics.value[currentIndex.value]})`

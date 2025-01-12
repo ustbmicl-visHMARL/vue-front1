@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, nextTick, reactive, ref, unref } from 'vue'
+import { nextTick, reactive, ref, unref } from 'vue'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
@@ -174,14 +174,18 @@ const save = async () => {
     } else {
       res = await registerRobosApi(formData)
     }
-    if (res.code == 0) {
-      ElMessage.success(res.msg)
-    } else {
-      ElMessage.error(res.msg)
-    }
-    getList()
-    saveLoading.value = false
-    dialogVisible.value = false
+    setTimeout(() => {
+      if (res && res.code == 0) {
+        ElMessage.success(res.msg)
+      } else if (res && res.code == 1) {
+        ElMessage.error(res.msg)
+      } else {
+        ElMessage.error('未知错误，操作失败')
+      }
+      getList()
+      saveLoading.value = false
+      dialogVisible.value = false
+    }, 500)
   }
 }
 

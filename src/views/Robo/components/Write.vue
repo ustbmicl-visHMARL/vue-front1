@@ -23,7 +23,11 @@ const formSchema = ref<FormSchema[]>([
   {
     field: 'ip',
     label: t('menu.ip'),
-    component: 'Input'
+    component: 'Input',
+    // 不可编辑
+    componentProps: {
+      disabled: false
+    }
   },
   {
     field: 'status',
@@ -33,11 +37,11 @@ const formSchema = ref<FormSchema[]>([
     componentProps: {
       options: [
         {
-          label: t('userDemo.disable'),
+          label: t('userDemo.offline'),
           value: 0
         },
         {
-          label: t('userDemo.enable'),
+          label: t('userDemo.online'),
           value: 1
         }
       ]
@@ -83,8 +87,11 @@ const showElForm = () => {
       console.log('ggg', props.addType == 'add')
       o.hidden = props.addType == 'add'
     }
+    if (o.field == 'ip') {
+      o.componentProps.disabled = props.addType != 'add'
+    }
   })
-  console.log(formSchema.value[1].hidden)
+  console.log(formSchema.value[0])
 }
 
 watch(

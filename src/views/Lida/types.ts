@@ -31,3 +31,56 @@ export type SummaryData = {
   summary: Summary
   data_filename: string
 }
+
+export type GoalExplorationData = {
+  status: boolean
+  data: {
+    question: string
+    visualization: string
+    rationale: string
+    index: string
+  }[]
+  message: string
+}
+
+export type Chart = {
+  spec: null | any // 这里假设spec可能为null或者其他类型，可根据实际情况细化类型
+  status: boolean
+  raster: string
+  code: string
+  library: string
+  error: null | any // 同理，error可能为null或其他类型，按需细化
+}
+
+export type VisualizeData = {
+  status: boolean
+  charts: Chart[]
+  message: string
+}
+
+export type ExplainData = {
+  status: boolean // 表示操作是否成功
+  explanations: Explanation[] // 包含多个解释的数组
+  message: string // 提示信息
+}
+
+// 定义 Explanation 类型
+export type Explanation = {
+  section: string // 说明部分的名称
+  code: string // 相关的代码内容
+  explanation: string // 对代码或部分的详细解释
+}
+
+// 定义 EvaluationData 类型
+export type EvaluationData = {
+  status: boolean // 表示操作是否成功
+  evaluations: Evaluation[] // 包含多个评估项的数组
+  message: string // 提示信息
+}
+
+// 定义 Evaluation 类型
+export type Evaluation = {
+  dimension: string // 评估的维度，例如 "bugs" 或 "transformation"
+  score: number // 该维度的得分
+  rationale: string // 对该维度评分的详细理由
+}
