@@ -1,46 +1,69 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
+import { createRosConnection, getRosConnection, closeRosConnection } from '@/utils/useRos'
+import { get } from 'http'
+
+
+// 表单数据
 const form = ref({
   ip: '',
   sensors: [],
   loading: false
 })
 
-const onConnect = () => {
-  console.log(form.value)
+
+
+// 连接按钮事件
+const onConnect = async () => {
   if (!form.value.ip) {
-    ElMessage({
-      message: 'IP is empty',
-      type: 'error'
+    await ElMessageBox.alert('IP is empty', 'Error', {
+      type: 'error',
+      confirmButtonText: 'OK'
     })
   } else {
     form.value.loading = true
-    setTimeout(() => {
+    setTimeout(async () => {
+      // 调用 useRos 创建连接
+      createRosConnection(form.value.ip)
+
       form.value.loading = false
-      ElMessage({
-        message: 'connect IP:' + form.value.ip + ' success',
-        type: 'success'
+      await ElMessageBox.alert(`Connected to IP: ${form.value.ip}`, 'Success', {
+        type: 'success',
+        confirmButtonText: 'OK'
       })
     }, 1000)
   }
 }
 
-const onDisconnect = () => {
-  ElMessage({
-    message: 'disconnect IP:' + form.value.ip + 'success',
-    type: 'success'
-  })
+// 断开连接按钮事件
+const onDisconnect = async () => {
+  if (getRosConnection()) {
+    closeRosConnection()  // 关闭现有的连接
+
+    await ElMessageBox.alert(`Disconnected from IP: ${form.value.ip}`, 'Success', {
+      type: 'success',
+      confirmButtonText: 'OK'
+    })
+  } else {
+    await ElMessageBox.alert('No active connection to disconnect', 'Error', {
+      type: 'error',
+      confirmButtonText: 'OK'
+    })
+  }
 }
 
-const onStartTest = () => {
-  ElMessage({
-    message: 'start test',
-    type: 'success'
+// 测试按钮事件
+const onStartTest = async () => {
+  await ElMessageBox.alert('Starting test...', 'Test Started', {
+    type: 'success',
+    confirmButtonText: 'OK'
   })
 }
 </script>
+
+
 
 <template>
   <el-card>
@@ -53,24 +76,29 @@ const onStartTest = () => {
       <!-- 按钮 -->
       <el-form-item>
         <div class="btns">
-          <el-button @click="onConnect" :loading="form.loading">connect</el-button>
-          <el-button @click="onDisconnect">disconnect</el-button>
+          <el-button @click="onConnect" :loading="form.loading">Connect</el-button>
+          <el-button @click="onDisconnect">Disconnect</el-button>
         </div>
       </el-form-item>
-      <!-- 多选框 -->
+      <!-- 多选框
       <el-form-item>
         <div class="sensors">
           <el-checkbox-group v-model="form.sensors">
             <el-checkbox label="1">Activate sensors</el-checkbox>
           </el-checkbox-group>
-          <el-button @click="onStartTest">Start test</el-button>
+          <el-button @click="onStartTest">Start Test</el-button>
         </div>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </el-card>
 </template>
 
 <style scoped>
+
+.el-card {
+  height: 35%;
+}
+
 .el-button {
   margin: 10px;
 }
@@ -80,10 +108,5 @@ const onStartTest = () => {
   text-align: center;
 }
 
-.sensors {
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-  align-items: center;
-}
+
 </style>

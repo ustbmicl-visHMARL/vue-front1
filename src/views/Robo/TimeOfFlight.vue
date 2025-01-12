@@ -1,20 +1,55 @@
-<script setup lang="ts">
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import ROSLIB from 'roslib';
+import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
+
+// 用于存储 TOF 传感器的距离数据
+const distance = ref(0);
+
+// 连接到 ROS 2
+const ros = getRosConnection();
+
+onMounted(() => {
+  const listener = new ROSLIB.Topic({
+    ros: ros,
+    name: '/tof',
+    messageType: 'sensor_msgs/msg/Range'  // 订阅 sensor_msgs/msg/Range 类型的消息
+  });
+
+  listener.subscribe((message) => {
+    // 获取距离值并更新
+    distance.value = message.range;  // 获取距离值
+  });
+});
+
+// 最大值假设为 10 米，您可以根据需要调整此值
+const maxDistance = 2;
+
+// 计算进度条的百分比，确保其范围在 0-100 之间
+const clampedPercentage = computed(() => {
+  const percentage = (distance.value / maxDistance) * 100;
+  return Math.max(0, Math.min(percentage, 100));  // 强制百分比范围在 0-100 之间
+});
 </script>
 
 <template>
   <el-card>
-    <div class="card-title">Time of Flight</div>
+    <div class="card-title">TOF Sensor Distance</div>
     <div class="container">
-      <div class="titiel">Distance (cm):</div>
-      <div class="progress">
-        <el-progress :text-inside="true" :percentage="50" :stroke-width="15" striped />
-        <span>2m</span>
+      <div class="item">
+        <!-- 显示距离值 -->
+        <p>{{ distance }} m</p>
+
+        <!-- 如果需要显示进度条，假设最大距离为 2 米 -->
+        <el-progress :percentage="clampedPercentage" :stroke-width="10" :show-text="false" />
       </div>
     </div>
   </el-card>
 </template>
 
+
 <style scoped>
+
 .progress {
   display: flex;
   justify-content: space-between;
