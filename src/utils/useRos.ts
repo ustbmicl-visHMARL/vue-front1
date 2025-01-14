@@ -18,6 +18,9 @@ export function createRosConnection(ip: string): ROSLIB.Ros {
 }
 
 export function getRosConnection(): ROSLIB.Ros {
+    if (!ros) {
+        createRosConnection('localhost');
+    }
     return ros;
 }
 
