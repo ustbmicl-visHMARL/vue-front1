@@ -4,41 +4,35 @@ import ROSLIB from 'roslib';
 import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
 const imageSrc = ref('');  // 用于存储图像的 base64 字符串
 
-// Base64 转换函数
-function arrayBufferToBase64(buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return window.btoa(binary);
-}
+// // Base64 转换函数
+// function arrayBufferToBase64(buffer) {
+//   let binary = '';
+//   const bytes = new Uint8Array(buffer);
+//   const len = bytes.byteLength;
+//   for (let i = 0; i < len; i++) {
+//     binary += String.fromCharCode(bytes[i]);
+//   }
+//   return window.btoa(binary);
+// }
 
-// 连接到 ROS 2
-const ros = getRosConnection();
-onMounted(() => {
-  const listener = new ROSLIB.Topic({
-    ros: ros,
-    name: '/camera/image_color',
-    messageType: 'sensor_msgs/msg/Image'  // 订阅 /camera/image_color 话题
-  });
+// // 连接到 ROS 2
+// const ros = getRosConnection();
+// onMounted(() => {
+//   const listener = new ROSLIB.Topic({
+//     ros: ros,
+//     name: '/camera/image_color',
+//     messageType: 'sensor_msgs/msg/Image'  // 订阅 /camera/image_color 话题
+//   });
 
-  listener.subscribe((message) => {
-    // 获取图像数据
-    const imageData = message.data;  // imageData 是一个包含图像像素的 Uint8Array
+//   listener.subscribe((message) => {
 
-    // 假设图像是 JPEG 编码，你可以根据实际情况调整编码类型
-    const byteArray = new Uint8Array(imageData);
+//     // 更新 imageSrc，以便显示图像
+//     imageSrc.value = `data:image/png;base64,${message.data}`;
 
-    // 转换 Uint8Array 到 base64 字符串
-    const base64String = arrayBufferToBase64(byteArray.buffer);
+//   });
+// });
+const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_color'); // 指向 web_video_server 提供的视频流地址
 
-    // 更新 imageSrc，以便显示图像
-    imageSrc.value = `data:image/png;base64,${base64String}`;
-
-  });
-});
 </script>
 
 <template>
@@ -46,7 +40,7 @@ onMounted(() => {
     <div class="card-title">Camera Image</div>
     <div class="container">
       <!-- 使用 base64 图像数据更新 img 元素 -->
-      <img :src="imageSrc" alt="Camera Image" />
+      <img :src="videoStreamUrl" alt="Camera Image" />
     </div>
   </el-card>
 </template>

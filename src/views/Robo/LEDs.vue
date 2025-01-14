@@ -1,11 +1,30 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import ROSLIB from 'roslib';
-import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
+import { ElSwitch } from 'element-plus'; // 引入开关组件
 
-const leds = ref(Array(10).fill(false));  // 假设所有 LED 都是关的
+// 创建一个数组用于存储 10 个 LED 的状态，假设为整数值 (0 或 1)
+const leds = ref(Array(10).fill(0));  // 假设所有 LED 初始为关闭（0）
 
-const ros = getRosConnection();
+// 连接到 ROS 2
+const ros = new ROSLIB.Ros({
+  url: 'ws://localhost:9090' // 根据你的 ROS 2 配置修改 WebSocket URL
+});
+
+// 发送 LED 状态到 ROS
+const sendLEDState = (index, state) => {
+  const ledTopic = new ROSLIB.Topic({
+    ros: ros,
+    name: `/led${index}`,
+    messageType: 'std_msgs/msg/Int32', // 使用 Int32 类型
+  });
+
+  const message = new ROSLIB.Message({
+    data: state, // 发送的状态 0 或 1
+  });
+
+  ledTopic.publish(message); // 发布消息
+};
 
 onMounted(() => {
   const topics = ['/led0', '/led1', '/led2', '/led3', '/led4', '/led5', '/led6', '/led7', '/led8', '/led9'];
@@ -14,11 +33,11 @@ onMounted(() => {
     const listener = new ROSLIB.Topic({
       ros: ros,
       name: topic,
-      messageType: 'std_msgs/msg/Int32', // 假设话题类型是 std_msgs/msg/Bool
+      messageType: 'std_msgs/msg/Int32', // 假设话题类型是 std_msgs/msg/Int32
     });
 
     listener.subscribe((message) => {
-      leds.value[index] = message.data;  // 更新 LED 的状态（true 或 false）
+      leds.value[index] = message.data;  // 更新 LED 的状态（0 或 1）
     });
   });
 });
@@ -32,13 +51,20 @@ onMounted(() => {
         <!-- v-for 遍历所有 10 个 LED -->
         <div class="item" v-for="(led, index) in leds" :key="index">
           <span class="title">LED{{ index }}</span>
-          <!-- 使用开关按钮显示 LED 的状态 -->
-          <el-switch v-model="leds[index]" active-color="#13ce66" inactive-color="#ff4949" />
+          <!-- 使用开关按钮控制 LED 状态 -->
+          <el-switch 
+            v-model="leds[index]" 
+            :active-value="1" 
+            :inactive-value="0" 
+            :active-text="'ON'" 
+            :inactive-text="'OFF'"
+            @change="sendLEDState(index, leds[index])" />
         </div>
       </div>
     </div>
   </el-card>
 </template>
+
 
 <style scoped>
 .el-card {
