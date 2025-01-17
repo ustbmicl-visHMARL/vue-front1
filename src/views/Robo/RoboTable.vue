@@ -178,9 +178,9 @@ const save = async () => {
       if (res && res.code == 0) {
         ElMessage.success(res.msg)
       } else if (res && res.code == 1) {
-        ElMessage.error(res.msg)
+        ElMessage.error('操作失败 ' + res.msg)
       } else {
-        ElMessage.error('未知错误，操作失败')
+        ElMessage.error('未知错误 操作失败')
       }
       getList()
       saveLoading.value = false
