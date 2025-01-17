@@ -3,9 +3,9 @@ import User from './User.vue'
 import Camera from './Camera.vue'
 
 import LEDs from './LEDs.vue'
-import Middle from './Middle.vue'
 
-import IMU from './IMU.vue'
+import Motors from './Motors.vue'
+
 import Infrareds from './Infrareds.vue'
 import TimeOfFlight from './TimeOfFlight.vue'
 </script>
@@ -14,14 +14,13 @@ import TimeOfFlight from './TimeOfFlight.vue'
   <div class="robo">
     <div class="left">
       <User />
-      <Camera />
+      <Motors />
     </div>
     <div class="middle">
+      <Camera />
       <LEDs />
-      <Middle />
     </div>
     <div class="right">
-      <IMU />
       <Infrareds />
       <TimeOfFlight />
     </div>
@@ -52,8 +51,7 @@ import TimeOfFlight from './TimeOfFlight.vue'
 .right > div {
   flex-grow: 1;
 }
-</style>
-<style>
+
 .card-title {
   color: #555;
   font-size: 20px;

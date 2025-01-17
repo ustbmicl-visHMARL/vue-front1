@@ -1,57 +1,91 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-const form = ref({
-  leds: []
-})
-const Rvalue = ref(0)
-const Gvalue = ref(0)
-const Bvalue = ref(0)
+<script setup>
+import { ref, onMounted } from 'vue';
+import ROSLIB from 'roslib';
+import { ElSwitch } from 'element-plus'; // 引入开关组件
 
-const formatTooltip = (val: number) => {
-  return (val * 2.56).toFixed()
-}
+// 创建一个数组用于存储 10 个 LED 的状态，假设为整数值 (0 或 1)
+const leds = ref(Array(10).fill(0));  // 假设所有 LED 初始为关闭（0）
+
+// 连接到 ROS 2
+const ros = new ROSLIB.Ros({
+  url: 'ws://localhost:9090' // 根据你的 ROS 2 配置修改 WebSocket URL
+});
+
+// 发送 LED 状态到 ROS
+const sendLEDState = (index, state) => {
+  const ledTopic = new ROSLIB.Topic({
+    ros: ros,
+    name: `/led${index}`,
+    messageType: 'std_msgs/msg/Int32', // 使用 Int32 类型
+  });
+
+  const message = new ROSLIB.Message({
+    data: state, // 发送的状态 0 或 1
+  });
+
+  ledTopic.publish(message); // 发布消息
+};
+
+onMounted(() => {
+  const topics = ['/led0', '/led1', '/led2', '/led3', '/led4', '/led5', '/led6', '/led7', '/led8', '/led9'];
+
+  topics.forEach((topic, index) => {
+    const listener = new ROSLIB.Topic({
+      ros: ros,
+      name: topic,
+      messageType: 'std_msgs/msg/Int32', // 假设话题类型是 std_msgs/msg/Int32
+    });
+
+    listener.subscribe((message) => {
+      leds.value[index] = message.data;  // 更新 LED 的状态（0 或 1）
+    });
+  });
+});
 </script>
 
 <template>
   <el-card>
-    <div class="card-title">LEDs</div>
+    <div class="card-title">LED Control</div>
     <div class="container">
-      <el-form v-model="form">
-        <el-checkbox-group v-model="form.leds">
-          <el-checkbox label="LED0">LED0</el-checkbox>
-          <el-checkbox label="LED_RGB5">LED_RGB5</el-checkbox>
-          <el-checkbox label="LED_RGB1">LED_RGB1</el-checkbox>
-          <el-checkbox label="LED6">LED6</el-checkbox>
-          <el-checkbox label="LED2">LED2</el-checkbox>
-          <el-checkbox label="LED_RGB7">LED_RGB7</el-checkbox>
-          <el-checkbox label="LED_RGB3">LED_RGB3</el-checkbox>
-          <el-checkbox label="BODY_LED8">BODY_LED8</el-checkbox>
-          <el-checkbox label="LED4">LED4</el-checkbox>
-          <el-checkbox label="FRONT_LED9">FRONT_LED9</el-checkbox>
-        </el-checkbox-group>
-      </el-form>
-      <div class="slider-demo-block">
-        <span>R</span>
-        <el-slider v-model="Rvalue" vertical height="120px" :format-tooltip="formatTooltip" />
-      </div>
-      <div class="slider-demo-block">
-        <span>G</span>
-        <el-slider v-model="Gvalue" vertical height="120px" :format-tooltip="formatTooltip" />
-      </div>
-      <div class="slider-demo-block">
-        <span>B</span>
-        <el-slider v-model="Bvalue" vertical height="120px" :format-tooltip="formatTooltip" />
+      <div class="left">
+        <!-- v-for 遍历所有 10 个 LED -->
+        <div class="item" v-for="(led, index) in leds" :key="index">
+          <span class="title">LED{{ index }}</span>
+          <!-- 使用开关按钮控制 LED 状态 -->
+          <el-switch 
+            v-model="leds[index]" 
+            :active-value="1" 
+            :inactive-value="0" 
+            :active-text="'ON'" 
+            :inactive-text="'OFF'"
+            @change="sendLEDState(index, leds[index])" />
+        </div>
       </div>
     </div>
   </el-card>
 </template>
 
+
 <style scoped>
 .el-card {
-  margin-bottom: 5px;
+  margin-top: 5px;
+  height: 20%;
+}
+.card-title {
+
+  margin-bottom: 20px;
 }
 .el-form {
   width: 65%;
+}
+
+.left {
+  display: flex;
+  flex-wrap: wrap;  /* 使进度条换行 */
+  gap: 10px;  /* 控制进度条之间的间距 */
+  width: 100%;  /* 控制左侧区域宽度 */
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
 .el-checkbox-group {
@@ -63,9 +97,18 @@ const formatTooltip = (val: number) => {
 .el-checkbox-group > * {
   width: 33%;
 }
+.item {
+  width: 45%;  /* 每个进度条的宽度，确保可以容纳 4 个进度条一行 */
+  margin-bottom: 10px;  /* 控制每个进度条的下间距 */
+
+}
 
 .container {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 
 .slider-demo-block {

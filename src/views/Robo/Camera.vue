@@ -1,66 +1,55 @@
-<script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
-const textarea = ref('')
-const radio = ref('Color')
-const rotate = ref([])
-const height = ref('')
-const width = ref('')
-const zoom = ref('')
-const onReceiving = () => {
-  ElMessage({
-    message: 'start receiving images',
-    type: 'success'
-  })
-}
-const onSend = () => {
-  ElMessage({
-    message: 'start sending images',
-    type: 'success'
-  })
-}
+<script setup>
+import { ref, onMounted } from 'vue';
+import ROSLIB from 'roslib';
+import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
+const imageSrc = ref('');  // 用于存储图像的 base64 字符串
+
+// // Base64 转换函数
+// function arrayBufferToBase64(buffer) {
+//   let binary = '';
+//   const bytes = new Uint8Array(buffer);
+//   const len = bytes.byteLength;
+//   for (let i = 0; i < len; i++) {
+//     binary += String.fromCharCode(bytes[i]);
+//   }
+//   return window.btoa(binary);
+// }
+
+// // 连接到 ROS 2
+// const ros = getRosConnection();
+// onMounted(() => {
+//   const listener = new ROSLIB.Topic({
+//     ros: ros,
+//     name: '/camera/image_color',
+//     messageType: 'sensor_msgs/msg/Image'  // 订阅 /camera/image_color 话题
+//   });
+
+//   listener.subscribe((message) => {
+
+//     // 更新 imageSrc，以便显示图像
+//     imageSrc.value = `data:image/png;base64,${message.data}`;
+
+//   });
+// });
+const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_color'); // 指向 web_video_server 提供的视频流地址
+
 </script>
 
 <template>
   <el-card>
-    <div class="card-title">Camera</div>
-    <el-form>
-      <el-form-item>
-        <el-button @click="onReceiving" style="width: 300px">Start receiving images</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="textarea" :rows="8" type="textarea" />
-      </el-form-item>
-      <el-form-item class="params">
-        <div class="left">
-          <el-form-item label="Height">
-            <el-input v-model="height" />
-          </el-form-item>
-          <el-form-item label="Width">
-            <el-input v-model="width" />
-          </el-form-item>
-          <el-form-item label="Zoom">
-            <el-input v-model="zoom" />
-          </el-form-item>
-        </div>
-        <div class="right">
-          <el-radio-group v-model="radio">
-            <el-radio value="Color">Color</el-radio>
-            <el-radio label="Grayscal">Grayscal</el-radio>
-          </el-radio-group>
-          <el-checkbox-group v-model="rotate">
-            <el-checkbox label="1">rotate</el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="onSend" style="width: 300px">Send paramters</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="card-title">Camera Image</div>
+    <div class="container">
+      <!-- 使用 base64 图像数据更新 img 元素 -->
+      <img :src="videoStreamUrl" alt="Camera Image" />
+    </div>
   </el-card>
 </template>
 
 <style scoped>
+.el-card {
+  height: 20%;
+  margin-bottom: 5px;
+}
 .el-form {
   display: flex;
   flex-direction: column;
@@ -69,23 +58,15 @@ const onSend = () => {
 
 .el-form-item {
   width: 300px;
+  
 }
 
-.left > .el-form-item {
-  width: 200px;
-}
 
 .params {
   display: flex;
   flex-direction: row;
 }
 
-.left {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
 .right {
   width: 30%;
