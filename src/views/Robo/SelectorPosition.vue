@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
-const value = ref(0);
-const angle = computed(() => Math.round(value.value * 3.6)); // 假设最大值100
-const isDragging = ref(false);
+const value = ref(0)
+const angle = computed(() => Math.round(value.value * 3.6)) // 假设最大值100
+const isDragging = ref(false)
 
 const startDrag = (event: any) => {
-  isDragging.value = true;
+  isDragging.value = true
   // 将鼠标设置为pointer
-  document.body.style.cursor = 'pointer';
-  const center = event.currentTarget.getBoundingClientRect();
-  const centerX = center.left + center.width / 2;
-  const centerY = center.top + center.height / 2;
+  document.body.style.cursor = 'pointer'
+  const center = event.currentTarget.getBoundingClientRect()
+  const centerX = center.left + center.width / 2
+  const centerY = center.top + center.height / 2
 
   const onMouseMove = (e: any) => {
-    if (!isDragging.value) return;
-    const dx = e.clientX - centerX;
-    const dy = e.clientY - centerY;
-    const radians = Math.atan2(dy, dx);
-    const degrees = (radians * (180 / Math.PI) + 90 + 360) % 360; // 保持正角度
-    value.value = Math.round((degrees / 360) * 100); // 最大值100
-  };
+    if (!isDragging.value) return
+    const dx = e.clientX - centerX
+    const dy = e.clientY - centerY
+    const radians = Math.atan2(dy, dx)
+    const degrees = (radians * (180 / Math.PI) + 90 + 360) % 360 // 保持正角度
+    value.value = Math.round((degrees / 360) * 100) // 最大值100
+  }
 
   const onMouseUp = () => {
-    isDragging.value = false;
+    isDragging.value = false
     // 将鼠标设置为默认
-    document.body.style.cursor = 'default';
-    window.removeEventListener('mousemove', onMouseMove);
-    window.removeEventListener('mouseup', onMouseUp);
-  };
+    document.body.style.cursor = 'default'
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', onMouseUp)
+  }
 
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('mouseup', onMouseUp);
+  window.addEventListener('mousemove', onMouseMove)
+  window.addEventListener('mouseup', onMouseUp)
 }
 </script>
 
@@ -45,7 +45,6 @@ const startDrag = (event: any) => {
       <div class="dial-value">{{ angle }}</div>
     </div>
   </el-card>
-
 </template>
 
 <style scoped>
@@ -84,8 +83,6 @@ const startDrag = (event: any) => {
   transform: rotate(0deg);
   cursor: pointer;
 }
-
-
 
 .dial-value {
   font-size: 14px;

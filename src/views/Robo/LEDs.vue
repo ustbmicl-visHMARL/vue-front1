@@ -1,46 +1,57 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import ROSLIB from 'roslib';
-import { ElSwitch } from 'element-plus'; // 引入开关组件
+import { ref, onMounted } from 'vue'
+import ROSLIB from 'roslib'
+import { ElSwitch } from 'element-plus' // 引入开关组件
 
 // 创建一个数组用于存储 10 个 LED 的状态，假设为整数值 (0 或 1)
-const leds = ref(Array(10).fill(0));  // 假设所有 LED 初始为关闭（0）
+const leds = ref(Array(10).fill(0)) // 假设所有 LED 初始为关闭（0）
 
 // 连接到 ROS 2
 const ros = new ROSLIB.Ros({
   url: 'ws://localhost:9090' // 根据你的 ROS 2 配置修改 WebSocket URL
-});
+})
 
 // 发送 LED 状态到 ROS
 const sendLEDState = (index, state) => {
   const ledTopic = new ROSLIB.Topic({
     ros: ros,
     name: `/led${index}`,
-    messageType: 'std_msgs/msg/Int32', // 使用 Int32 类型
-  });
+    messageType: 'std_msgs/msg/Int32' // 使用 Int32 类型
+  })
 
   const message = new ROSLIB.Message({
-    data: state, // 发送的状态 0 或 1
-  });
+    data: state // 发送的状态 0 或 1
+  })
 
-  ledTopic.publish(message); // 发布消息
-};
+  ledTopic.publish(message) // 发布消息
+}
 
 onMounted(() => {
-  const topics = ['/led0', '/led1', '/led2', '/led3', '/led4', '/led5', '/led6', '/led7', '/led8', '/led9'];
+  const topics = [
+    '/led0',
+    '/led1',
+    '/led2',
+    '/led3',
+    '/led4',
+    '/led5',
+    '/led6',
+    '/led7',
+    '/led8',
+    '/led9'
+  ]
 
   topics.forEach((topic, index) => {
     const listener = new ROSLIB.Topic({
       ros: ros,
       name: topic,
-      messageType: 'std_msgs/msg/Int32', // 假设话题类型是 std_msgs/msg/Int32
-    });
+      messageType: 'std_msgs/msg/Int32' // 假设话题类型是 std_msgs/msg/Int32
+    })
 
     listener.subscribe((message) => {
-      leds.value[index] = message.data;  // 更新 LED 的状态（0 或 1）
-    });
-  });
-});
+      leds.value[index] = message.data // 更新 LED 的状态（0 或 1）
+    })
+  })
+})
 </script>
 
 <template>
@@ -52,19 +63,19 @@ onMounted(() => {
         <div class="item" v-for="(led, index) in leds" :key="index">
           <span class="title">LED{{ index }}</span>
           <!-- 使用开关按钮控制 LED 状态 -->
-          <el-switch 
-            v-model="leds[index]" 
-            :active-value="1" 
-            :inactive-value="0" 
-            :active-text="'ON'" 
+          <el-switch
+            v-model="leds[index]"
+            :active-value="1"
+            :inactive-value="0"
+            :active-text="'ON'"
             :inactive-text="'OFF'"
-            @change="sendLEDState(index, leds[index])" />
+            @change="sendLEDState(index, leds[index])"
+          />
         </div>
       </div>
     </div>
   </el-card>
 </template>
-
 
 <style scoped>
 .el-card {
@@ -72,7 +83,6 @@ onMounted(() => {
   height: 20%;
 }
 .card-title {
-
   margin-bottom: 20px;
 }
 .el-form {
@@ -81,9 +91,9 @@ onMounted(() => {
 
 .left {
   display: flex;
-  flex-wrap: wrap;  /* 使进度条换行 */
-  gap: 10px;  /* 控制进度条之间的间距 */
-  width: 100%;  /* 控制左侧区域宽度 */
+  flex-wrap: wrap; /* 使进度条换行 */
+  gap: 10px; /* 控制进度条之间的间距 */
+  width: 100%; /* 控制左侧区域宽度 */
   margin-left: 20px;
   margin-top: 10px;
 }
@@ -98,9 +108,8 @@ onMounted(() => {
   width: 33%;
 }
 .item {
-  width: 45%;  /* 每个进度条的宽度，确保可以容纳 4 个进度条一行 */
-  margin-bottom: 10px;  /* 控制每个进度条的下间距 */
-
+  width: 45%; /* 每个进度条的宽度，确保可以容纳 4 个进度条一行 */
+  margin-bottom: 10px; /* 控制每个进度条的下间距 */
 }
 
 .container {

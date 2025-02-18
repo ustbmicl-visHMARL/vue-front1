@@ -50,7 +50,7 @@ const Fvalue = ref(70)
   justify-content: space-between;
 }
 
-.item>*:nth-child(2) {
+.item > *:nth-child(2) {
   width: 200px;
 }
 </style>

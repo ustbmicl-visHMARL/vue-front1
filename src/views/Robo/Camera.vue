@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import ROSLIB from 'roslib';
-import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
-const imageSrc = ref('');  // 用于存储图像的 base64 字符串
+import { ref, onMounted } from 'vue'
+import ROSLIB from 'roslib'
+import { getRosConnection } from '@/utils/useRos' // 引入 useRos
+const imageSrc = ref('') // 用于存储图像的 base64 字符串
 
 // // Base64 转换函数
 // function arrayBufferToBase64(buffer) {
@@ -31,8 +31,7 @@ const imageSrc = ref('');  // 用于存储图像的 base64 字符串
 
 //   });
 // });
-const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_color'); // 指向 web_video_server 提供的视频流地址
-
+const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_color') // 指向 web_video_server 提供的视频流地址
 </script>
 
 <template>
@@ -58,15 +57,12 @@ const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_col
 
 .el-form-item {
   width: 300px;
-  
 }
-
 
 .params {
   display: flex;
   flex-direction: row;
 }
-
 
 .right {
   width: 30%;

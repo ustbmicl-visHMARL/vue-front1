@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
 import { createRosConnection, getRosConnection, closeRosConnection } from '@/utils/useRos'
-import { get } from 'http'
-
 
 // 表单数据
 const form = ref({
@@ -12,8 +10,6 @@ const form = ref({
   sensors: [],
   loading: false
 })
-
-
 
 // 连接按钮事件
 const onConnect = async () => {
@@ -40,7 +36,7 @@ const onConnect = async () => {
 // 断开连接按钮事件
 const onDisconnect = async () => {
   if (getRosConnection()) {
-    closeRosConnection()  // 关闭现有的连接
+    closeRosConnection() // 关闭现有的连接
 
     await ElMessageBox.alert(`Disconnected from IP: ${form.value.ip}`, 'Success', {
       type: 'success',
@@ -62,8 +58,6 @@ const onStartTest = async () => {
   })
 }
 </script>
-
-
 
 <template>
   <el-card>
@@ -94,7 +88,6 @@ const onStartTest = async () => {
 </template>
 
 <style scoped>
-
 .el-card {
   height: 35%;
 }
@@ -107,6 +100,4 @@ const onStartTest = async () => {
   flex-grow: 1;
   text-align: center;
 }
-
-
 </style>

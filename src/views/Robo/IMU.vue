@@ -11,20 +11,35 @@ const Magnetometer = ref([11, 22, 13])
     <div class="container">
       <el-form>
         <el-form-item label="Acceleration">
-          <el-input></el-input>
+          <el-input />
         </el-form-item>
-        <el-card class="block"></el-card>
+        <el-card class="block" />
       </el-form>
       <div class="right">
         <div class="bars gyrn">
           <span>Gyrn</span>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="Gyro[0]" status="success">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="18"
+            :percentage="Gyro[0]"
+            status="success"
+          >
             <span>{{ Gyro[0] }}</span>
           </el-progress>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="Gyro[1]" status="success">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="18"
+            :percentage="Gyro[1]"
+            status="success"
+          >
             <span>{{ Gyro[1] }}</span>
           </el-progress>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="Gyro[2]" status="success">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="18"
+            :percentage="Gyro[2]"
+            status="success"
+          >
             <span>{{ Gyro[2] }}</span>
           </el-progress>
         </div>
@@ -81,7 +96,7 @@ const Magnetometer = ref([11, 22, 13])
   font-size: 14px;
 }
 
-.bars>* {
+.bars > * {
   margin: 2px 0;
 }
 </style>

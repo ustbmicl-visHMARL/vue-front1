@@ -127,6 +127,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // brotliSize: false,
       rollupOptions: {
         plugins: env.VITE_USE_BUNDLE_ANALYZER === 'true' ? [visualizer()] : undefined,
+        external: ['roslib'], // 将 roslib 标记为外部依赖
         // 拆包
         output: {
           manualChunks: {

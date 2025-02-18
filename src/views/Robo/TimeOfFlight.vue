@@ -1,35 +1,35 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import ROSLIB from 'roslib';
-import { getRosConnection } from '@/utils/useRos';  // 引入 useRos
+import { ref, onMounted, computed } from 'vue'
+import ROSLIB from 'roslib'
+import { getRosConnection } from '@/utils/useRos' // 引入 useRos
 
 // 用于存储 TOF 传感器的距离数据
-const distance = ref(0);
+const distance = ref(0)
 
 // 连接到 ROS 2
-const ros = getRosConnection();
+const ros = getRosConnection()
 
 onMounted(() => {
   const listener = new ROSLIB.Topic({
     ros: ros,
     name: '/tof',
-    messageType: 'sensor_msgs/msg/Range'  // 订阅 sensor_msgs/msg/Range 类型的消息
-  });
+    messageType: 'sensor_msgs/msg/Range' // 订阅 sensor_msgs/msg/Range 类型的消息
+  })
 
   listener.subscribe((message) => {
     // 获取距离值并更新
-    distance.value = message.range;  // 获取距离值
-  });
-});
+    distance.value = message.range // 获取距离值
+  })
+})
 
 // 最大值假设为 10 米，您可以根据需要调整此值
-const maxDistance = 2;
+const maxDistance = 2
 
 // 计算进度条的百分比，确保其范围在 0-100 之间
 const clampedPercentage = computed(() => {
-  const percentage = (distance.value / maxDistance) * 100;
-  return Math.max(0, Math.min(percentage, 100));  // 强制百分比范围在 0-100 之间
-});
+  const percentage = (distance.value / maxDistance) * 100
+  return Math.max(0, Math.min(percentage, 100)) // 强制百分比范围在 0-100 之间
+})
 </script>
 
 <template>
@@ -47,9 +47,7 @@ const clampedPercentage = computed(() => {
   </el-card>
 </template>
 
-
 <style scoped>
-
 .progress {
   display: flex;
   justify-content: space-between;
