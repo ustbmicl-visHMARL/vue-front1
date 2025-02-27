@@ -15,7 +15,6 @@ import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { BaseButton } from '@/components/Button'
 import { useRoute } from 'vue-router'
-import { json } from 'stream/consumers'
 
 const route = useRoute()
 const { t } = useI18n()
