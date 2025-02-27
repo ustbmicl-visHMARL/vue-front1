@@ -15,6 +15,7 @@ import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { BaseButton } from '@/components/Button'
 import { useRoute } from 'vue-router'
+import { json } from 'stream/consumers'
 
 const route = useRoute()
 const { t } = useI18n()
@@ -123,9 +124,10 @@ onMounted(async () => {
   }
   window.addEventListener('message', function (event) {
     if (event.origin === 'http://127.0.0.1:8282') {
-      const { chosen } = event.data
+      let { chosen } = event.data || []
       console.log('用户选择的step区间为：', chosen)
-      if (chosen.length === 0) return
+      if (chosen.length === 0 || JSON.stringify(chosen) == '[[0,0]]') chosen = [-Infinity, Infinity]
+      console.log('调整后的区间：', chosen)
       ;(actionScatterData.value as any).series[0].data.forEach((item: any, index) => {
         if (!inSteps(item[0], chosen)) {
           ;(actionScatterData.value as any).series[0].data[index][1] += ' '
