@@ -125,7 +125,8 @@ onMounted(async () => {
     if (event.origin === 'http://127.0.0.1:8282') {
       let { chosen } = event.data || []
       console.log('用户选择的step区间为：', chosen)
-      if (chosen.length === 0 || JSON.stringify(chosen) == '[[0,0]]') chosen = [-Infinity, Infinity]
+      if (chosen.length === 0 || JSON.stringify(chosen) == '[[0,0]]')
+        chosen = [[-Infinity, Infinity]]
       console.log('调整后的区间：', chosen)
       ;(actionScatterData.value as any).series[0].data.forEach((item: any, index) => {
         if (!inSteps(item[0], chosen)) {
