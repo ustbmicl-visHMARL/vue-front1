@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import ROSLIB from 'roslib'
+import { useI18n } from '@/hooks/web/useI18n'
 import { getRosConnection } from '@/utils/useRos' // 引入 useRos
 const imageSrc = ref('') // 用于存储图像的 base64 字符串
-
+const { t } = useI18n()
 // // Base64 转换函数
 // function arrayBufferToBase64(buffer) {
 //   let binary = '';
@@ -36,17 +37,16 @@ const videoStreamUrl = ref('http://localhost:8080/stream?topic=/camera/image_col
 
 <template>
   <el-card>
-    <div class="card-title">Camera Image</div>
+    <div class="card-title">{{ t('robo.cameraImage') }}</div>
     <div class="container">
       <!-- 使用 base64 图像数据更新 img 元素 -->
-      <img :src="videoStreamUrl" alt="Camera Image" />
+      <img :src="videoStreamUrl" :alt="t('robo.cameraImage')" />
     </div>
   </el-card>
 </template>
 
 <style scoped>
 .el-card {
-  height: 20%;
   margin-bottom: 5px;
 }
 .el-form {

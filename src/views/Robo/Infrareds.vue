@@ -2,7 +2,8 @@
 import { ref, onMounted } from 'vue'
 import ROSLIB from 'roslib'
 import { getRosConnection } from '@/utils/useRos' // 引入 useRos
-
+import { useI18n } from '@/hooks/web/useI18n'
+const { t } = useI18n()
 // 创建 IRs 数组
 const IRs = ref([0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -35,7 +36,7 @@ function clampedPercentage(item) {
 
 <template>
   <el-card>
-    <div class="card-title">Infrareds</div>
+    <div class="card-title">{{ t('robo.infrareds') }}</div>
     <div class="container">
       <div class="left">
         <!-- v-for -->
@@ -59,7 +60,6 @@ function clampedPercentage(item) {
 <style scoped>
 .el-card {
   margin-bottom: 5px;
-  height: 30%;
   width: 100%;
 }
 .container {

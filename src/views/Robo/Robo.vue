@@ -4,7 +4,7 @@ import Camera from './Camera.vue'
 
 import LEDs from './LEDs.vue'
 
-import Motors from './Motors.vue'
+import RoboControl from './RoboControl.vue'
 
 import Infrareds from './Infrareds.vue'
 import TimeOfFlight from './TimeOfFlight.vue'
@@ -14,7 +14,7 @@ import TimeOfFlight from './TimeOfFlight.vue'
   <div class="robo">
     <div class="left">
       <User />
-      <Motors />
+      <RoboControl />
     </div>
     <div class="middle">
       <Camera />
@@ -34,6 +34,7 @@ import TimeOfFlight from './TimeOfFlight.vue'
   gap: 5px;
   height: 100%;
   width: 100%;
+  user-select: none;
 }
 .left,
 .middle,

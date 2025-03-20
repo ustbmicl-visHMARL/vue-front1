@@ -2,7 +2,8 @@
 import { ref, onMounted, computed } from 'vue'
 import ROSLIB from 'roslib'
 import { getRosConnection } from '@/utils/useRos' // 引入 useRos
-
+import { useI18n } from '@/hooks/web/useI18n'
+const { t } = useI18n()
 // 用于存储 TOF 传感器的距离数据
 const distance = ref(0)
 
@@ -34,7 +35,7 @@ const clampedPercentage = computed(() => {
 
 <template>
   <el-card>
-    <div class="card-title">TOF Sensor Distance</div>
+    <div class="card-title">{{ t('robo.TOFSensorDistance') }}</div>
     <div class="container">
       <div class="item">
         <!-- 显示距离值 -->

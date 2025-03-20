@@ -693,6 +693,21 @@ export default {
   },
   robo: {
     status: 'Status',
-    roboView: 'Robo view'
+    roboView: 'Robo view',
+    user: 'User',
+    roboControl: 'Robo Control',
+    cameraImage: 'Camera Image',
+    LEDControl: 'LED Control',
+    infrareds: 'Infrareds',
+    TOFSensorDistance: 'TOF Sensor Distance',
+    connect: 'Connect',
+    disconnect: 'Disconnect',
+    forward: 'Forward',
+    backward: 'Backward',
+    left: 'Left',
+    right: 'Right',
+    stop: 'Stop',
+    linerSpeed: 'Liner Speed',
+    angularSpeed: 'Angular Speed'
   }
 }

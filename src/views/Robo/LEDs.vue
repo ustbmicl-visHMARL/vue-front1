@@ -2,7 +2,8 @@
 import { ref, onMounted } from 'vue'
 import ROSLIB from 'roslib'
 import { ElSwitch } from 'element-plus' // 引入开关组件
-
+import { useI18n } from '@/hooks/web/useI18n'
+const { t } = useI18n()
 // 创建一个数组用于存储 10 个 LED 的状态，假设为整数值 (0 或 1)
 const leds = ref(Array(10).fill(0)) // 假设所有 LED 初始为关闭（0）
 
@@ -56,19 +57,27 @@ onMounted(() => {
 
 <template>
   <el-card>
-    <div class="card-title">LED Control</div>
+    <div class="card-title">{{ t('robo.LEDControl') }}</div>
     <div class="container">
       <div class="left">
         <!-- v-for 遍历所有 10 个 LED -->
         <div class="item" v-for="(led, index) in leds" :key="index">
-          <span class="title">LED{{ index }}</span>
+          <div class="titleContent">
+            <span class="title">LED{{ index }}</span>
+          </div>
           <!-- 使用开关按钮控制 LED 状态 -->
-          <el-switch
+          <!-- <el-switch
             v-model="leds[index]"
             :active-value="1"
             :inactive-value="0"
             :active-text="'ON'"
             :inactive-text="'OFF'"
+            @change="sendLEDState(index, leds[index])"
+          /> -->
+          <el-switch
+            v-model="leds[index]"
+            :active-value="1"
+            :inactive-value="0"
             @change="sendLEDState(index, leds[index])"
           />
         </div>
@@ -128,5 +137,12 @@ onMounted(() => {
   span {
     text-align: center;
   }
+}
+.titleContent {
+  display: inline-block;
+  margin-right: 10px;
+}
+.el-switch {
+  width: 90px;
 }
 </style>

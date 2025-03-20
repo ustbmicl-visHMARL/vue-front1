@@ -3,7 +3,8 @@ import { ref, onMounted } from 'vue'
 import ROSLIB from 'roslib'
 import { ElProgress, ElButton } from 'element-plus'
 import { getRosConnection } from '@/utils/useRos' // 引入 useRos
-
+import { useI18n } from '@/hooks/web/useI18n'
+const { t } = useI18n()
 // 机器人的线速度和角速度
 const linearSpeed = ref(0) // 线速度
 const angularSpeed = ref(0) // 角速度
@@ -73,20 +74,24 @@ function stop() {
 
 <template>
   <el-card>
-    <div class="card-title">Robot Control</div>
+    <div class="card-title">{{ t('robo.roboControl') }}</div>
     <div class="container">
       <div class="left">
         <!-- 控制按钮 -->
-        <el-button @click="moveForward" style="margin-bottom: 10px">Move Forward</el-button>
-        <el-button @click="moveBackward" style="margin-bottom: 10px">Move Backward</el-button>
-        <el-button @click="turnLeft" style="margin-bottom: 10px">Turn Left</el-button>
-        <el-button @click="turnRight" style="margin-bottom: 10px">Turn Right</el-button>
-        <el-button @click="stop" type="danger">Stop</el-button>
+        <el-button @click="moveForward" style="margin-bottom: 10px; margin-left: 12px">{{
+          t('robo.forward')
+        }}</el-button>
+        <el-button @click="moveBackward" style="margin-bottom: 10px">{{
+          t('robo.backward')
+        }}</el-button>
+        <el-button @click="turnLeft" style="margin-bottom: 10px">{{ t('robo.left') }}</el-button>
+        <el-button @click="turnRight" style="margin-bottom: 10px">{{ t('robo.right') }}</el-button>
+        <el-button @click="stop" type="danger">{{ t('robo.stop') }}</el-button>
       </div>
       <div class="right">
         <!-- 速度进度条 -->
         <div>
-          <span>Linear Speed</span>
+          <span>{{ t('robo.linerSpeed') }}</span>
           <el-progress
             :percentage="linearSpeed * 100"
             :stroke-width="20"
@@ -95,7 +100,7 @@ function stop() {
           />
         </div>
         <div>
-          <span>Angular Speed</span>
+          <span>{{ t('robo.angularSpeed') }}</span>
           <el-progress
             :percentage="angularSpeed * 100"
             :stroke-width="20"
@@ -110,6 +115,7 @@ function stop() {
 
 <style scoped>
 .container {
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }

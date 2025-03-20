@@ -680,6 +680,21 @@ export default {
   },
   robo: {
     status: '状态',
-    roboView: 'Robo视图'
+    roboView: 'Robo视图',
+    user: '用户',
+    roboControl: 'Robo控制',
+    cameraImage: '摄像头图像',
+    LEDControl: 'LED控制',
+    infrareds: '红外传感器',
+    TOFSensorDistance: 'TOF传感器距离',
+    connect: '连接',
+    disconnect: '断开',
+    forward: '前进',
+    backward: '后退',
+    left: '左转',
+    right: '右转',
+    stop: '停止',
+    linerSpeed: '线速度',
+    angularSpeed: '角速度'
   }
 }

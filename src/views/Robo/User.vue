@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import { createRosConnection, getRosConnection, closeRosConnection } from '@/utils/useRos'
-
+import { useI18n } from '@/hooks/web/useI18n'
+const { t } = useI18n()
 // 表单数据
 const form = ref({
   ip: '',
@@ -61,7 +62,7 @@ const onStartTest = async () => {
 
 <template>
   <el-card>
-    <div class="card-title">User</div>
+    <div class="card-title">{{ t('robo.user') }}</div>
     <el-form v-model="form">
       <!-- 输入 -->
       <el-form-item label="IP" prop="ip">
@@ -70,8 +71,8 @@ const onStartTest = async () => {
       <!-- 按钮 -->
       <el-form-item>
         <div class="btns">
-          <el-button @click="onConnect" :loading="form.loading">Connect</el-button>
-          <el-button @click="onDisconnect">Disconnect</el-button>
+          <el-button @click="onConnect" :loading="form.loading">{{ t('robo.connect') }}</el-button>
+          <el-button @click="onDisconnect">{{ t('robo.disconnect') }}</el-button>
         </div>
       </el-form-item>
       <!-- 多选框
@@ -89,7 +90,7 @@ const onStartTest = async () => {
 
 <style scoped>
 .el-card {
-  height: 35%;
+  height: 0;
 }
 
 .el-button {
@@ -99,5 +100,9 @@ const onStartTest = async () => {
 .btns {
   flex-grow: 1;
   text-align: center;
+}
+
+form {
+  margin-top: 8px;
 }
 </style>
