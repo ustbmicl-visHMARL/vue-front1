@@ -90,11 +90,13 @@ const onStartTest = async () => {
 
 <style scoped>
 .el-card {
-  height: 0;
+  /* height: 0; */
 }
 
 .el-button {
-  margin: 10px;
+  display: inline-block;
+  margin-right: 10%;
+  margin-left: 10%;
 }
 
 .btns {
