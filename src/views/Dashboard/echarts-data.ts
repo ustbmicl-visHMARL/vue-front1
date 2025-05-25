@@ -420,7 +420,7 @@ export const valueScatterOptions = (value) => {
         // 对于散点图，params.data 是一个包含 x 和 y 值的数组
         // 对于折线图，params.value 也是一个包含 x 和 y 值的数组
         if (params.componentType === 'series') {
-          return `Episode: ${params.value[0]}, Reward:${params.value[1]}`
+          return `Step: ${params.value[0]}, Value:${params.value[1]}`
         }
         return ''
       }
